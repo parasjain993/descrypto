@@ -28,11 +28,6 @@
     <orderEntry type="library" name="Maven: org.springframework:spring-jdbc:5.3.15" level="project" />
     <orderEntry type="library" name="Maven: org.springframework:spring-beans:5.3.15" level="project" />
     <orderEntry type="library" name="Maven: org.springframework:spring-tx:5.3.15" level="project" />
-    <orderEntry type="library" name="Maven: org.springframework.boot:spring-boot-starter-security:2.6.3" level="project" />
-    <orderEntry type="library" name="Maven: org.springframework:spring-aop:5.3.15" level="project" />
-    <orderEntry type="library" name="Maven: org.springframework.security:spring-security-config:5.6.1" level="project" />
-    <orderEntry type="library" name="Maven: org.springframework.security:spring-security-web:5.6.1" level="project" />
-    <orderEntry type="library" name="Maven: org.springframework:spring-expression:5.3.15" level="project" />
     <orderEntry type="library" name="Maven: org.springframework.boot:spring-boot-starter-web:2.6.3" level="project" />
     <orderEntry type="library" name="Maven: org.springframework.boot:spring-boot-starter-json:2.6.3" level="project" />
     <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-databind:2.13.1" level="project" />
@@ -47,21 +42,20 @@
     <orderEntry type="library" name="Maven: org.apache.tomcat.embed:tomcat-embed-websocket:9.0.56" level="project" />
     <orderEntry type="library" name="Maven: org.springframework:spring-web:5.3.15" level="project" />
     <orderEntry type="library" name="Maven: org.springframework:spring-webmvc:5.3.15" level="project" />
+    <orderEntry type="library" name="Maven: org.springframework:spring-aop:5.3.15" level="project" />
+    <orderEntry type="library" name="Maven: org.springframework:spring-context:5.3.15" level="project" />
+    <orderEntry type="library" name="Maven: org.springframework:spring-expression:5.3.15" level="project" />
     <orderEntry type="library" name="Maven: org.mybatis.spring.boot:mybatis-spring-boot-starter:2.2.2" level="project" />
     <orderEntry type="library" name="Maven: org.mybatis.spring.boot:mybatis-spring-boot-autoconfigure:2.2.2" level="project" />
     <orderEntry type="library" name="Maven: org.mybatis:mybatis:3.5.9" level="project" />
     <orderEntry type="library" name="Maven: org.mybatis:mybatis-spring:2.0.7" level="project" />
-    <orderEntry type="library" name="Maven: org.springframework.session:spring-session-jdbc:2.6.1" level="project" />
-    <orderEntry type="library" name="Maven: org.springframework.session:spring-session-core:2.6.1" level="project" />
-    <orderEntry type="library" name="Maven: org.springframework:spring-jcl:5.3.15" level="project" />
-    <orderEntry type="library" name="Maven: org.springframework:spring-context:5.3.15" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.springframework.boot:spring-boot-starter-test:2.6.3" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.springframework.boot:spring-boot-test:2.6.3" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.springframework.boot:spring-boot-test-autoconfigure:2.6.3" level="project" />
-    <orderEntry type="library" scope="TEST" name="Maven: com.jayway.jsonpath:json-path:2.6.0" level="project" />
-    <orderEntry type="library" scope="TEST" name="Maven: net.minidev:json-smart:2.4.7" level="project" />
-    <orderEntry type="library" scope="TEST" name="Maven: net.minidev:accessors-smart:2.4.7" level="project" />
-    <orderEntry type="library" scope="TEST" name="Maven: org.ow2.asm:asm:9.1" level="project" />
+    <orderEntry type="library" name="Maven: com.jayway.jsonpath:json-path:2.6.0" level="project" />
+    <orderEntry type="library" name="Maven: net.minidev:json-smart:2.4.7" level="project" />
+    <orderEntry type="library" name="Maven: net.minidev:accessors-smart:2.4.7" level="project" />
+    <orderEntry type="library" name="Maven: org.ow2.asm:asm:9.1" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: jakarta.xml.bind:jakarta.xml.bind-api:2.3.3" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: jakarta.activation:jakarta.activation-api:1.2.2" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.assertj:assertj-core:3.21.0" level="project" />
@@ -82,10 +76,16 @@
     <orderEntry type="library" scope="TEST" name="Maven: org.skyscreamer:jsonassert:1.5.0" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: com.vaadin.external.google:android-json:0.0.20131108.vaadin1" level="project" />
     <orderEntry type="library" name="Maven: org.springframework:spring-core:5.3.15" level="project" />
+    <orderEntry type="library" name="Maven: org.springframework:spring-jcl:5.3.15" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.springframework:spring-test:5.3.15" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.xmlunit:xmlunit-core:2.8.4" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.springframework.security:spring-security-test:5.6.1" level="project" />
-    <orderEntry type="library" name="Maven: org.springframework.security:spring-security-core:5.6.1" level="project" />
-    <orderEntry type="library" name="Maven: org.springframework.security:spring-security-crypto:5.6.1" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: org.springframework.security:spring-security-core:5.6.1" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: org.springframework.security:spring-security-crypto:5.6.1" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: org.springframework.security:spring-security-web:5.6.1" level="project" />
+    <orderEntry type="library" name="Maven: org.springframework.boot:spring-boot-starter-hateoas:2.6.3" level="project" />
+    <orderEntry type="library" name="Maven: org.springframework.hateoas:spring-hateoas:1.4.1" level="project" />
+    <orderEntry type="library" name="Maven: org.springframework.plugin:spring-plugin-core:2.0.0.RELEASE" level="project" />
+    <orderEntry type="library" scope="RUNTIME" name="Maven: com.microsoft.sqlserver:mssql-jdbc:9.4.1.jre8" level="project" />
   </component>
 </module>
