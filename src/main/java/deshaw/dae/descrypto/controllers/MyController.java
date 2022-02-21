@@ -1,12 +1,10 @@
 package deshaw.dae.descrypto.controllers;
 
 import deshaw.dae.descrypto.domain.User;
-import deshaw.dae.descrypto.mappers.MyMapper;
+import deshaw.dae.descrypto.domain.Order;
 import deshaw.dae.descrypto.services.MyService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -21,5 +19,12 @@ public class MyController {
     List<User> all() {
         return service.findAllUsers();
     }
-
+    @PostMapping("/place/limit")
+    Order placeLimitOrder(@RequestBody Order newLimitOrder){
+        return service.placeLimitOrder(newLimitOrder);
+    }
+    @PostMapping("/place/market")
+    double placeMarketOrder(@RequestBody Order newMarketOrder){
+        return service.placeMarketOrder(newMarketOrder);
+    }
 }
