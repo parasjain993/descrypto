@@ -1,6 +1,11 @@
 package deshaw.dae.descrypto.domain;
 
 public class Summary24h {
+    private double Volume;
+    private double highPrice;
+    private double lowPrice;
+    private double absoluteChange;
+    private double percentageChange;
 
     public Summary24h(double volume, double highPrice, double lowPrice, double absoluteChange, double percentageChange) {
         Volume = volume;
@@ -52,11 +57,7 @@ public class Summary24h {
         this.percentageChange = percentageChange;
     }
 
-    private double Volume;
-    private double highPrice;
-    private double lowPrice;
-    private double absoluteChange;
-    private double percentageChange;
+
 
 
 
