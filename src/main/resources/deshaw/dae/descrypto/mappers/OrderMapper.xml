@@ -1,0 +1,18 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="deshaw.dae.descrypto.mappers.OrderMapper">
+    <insert id="placeLimitOrder" parameterType="deshaw.dae.descrypto.domain.Order" keyProperty="orderId"
+    keyColumn="orderId">
+        insert into orders(orderId,userId,orderPair,amount,limitPrice,orderType,orderStatus)
+        values(#{orderId},#{userId},#{orderPair},#{amount},
+        #{limitPrice},#{orderType},#{orderStatus})
+    </insert>
+
+    <insert id="placeMarketOrder" parameterType="deshaw.dae.descrypto.domain.Order" keyProperty="orderId">
+        insert into orders(orderId,userId,orderPair,amount,limitPrice,orderType,orderStatus)
+        values(#{orderId},#{userId},#{orderPair},#{amount},
+        #{limitPrice},#{orderType},#{orderStatus})
+    </insert>
+</mapper>

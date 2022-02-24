@@ -33,17 +33,6 @@ public class MyController {
         return service.findAllUsers();
     }
 
-    @PostMapping("/place/limit")
-    Order placeLimitOrder(@RequestBody Order newLimitOrder){
-        return service.placeLimitOrder(newLimitOrder);
-    }
-    @PostMapping("/place/market")
-    double placeMarketOrder(@RequestBody Order newMarketOrder){
-        return service.placeMarketOrder(newMarketOrder);
-    }
-
-
-
     @GetMapping("/get/dashboard/assets")
     // update after every 2minutes
     @Scheduled(fixedRate = 120000)

@@ -33,27 +33,6 @@ public class MyServiceImpl implements MyService {
         return mapper.findAllUsers();
     }
 
-
-    public Order placeLimitOrder(Order newLimitOrder){
-        //add validation to amount of its buy order
-        Order newOrder=new Order();
-        newOrder.setOrderId(newLimitOrder.getOrderId());
-        newOrder.setAmount(newLimitOrder.getAmount());
-        newOrder.setOrderType(newLimitOrder.getOrderType());
-        return newOrder;//return order that is saved...
-        //return mapper.placeLimitOrder();
-    }
-    public double placeMarketOrder(Order newMarketOrder){
-        //execute immediately if the orderbook is not empty
-
-        return executeMarketOrder(newMarketOrder);
-    }
-    public double executeMarketOrder(Order placed) {
-        //check the internal cache and match the best
-        //return amount incurred/spent
-        return 00.0;
-    }
-
     public TokenDetails getCoinDetailsByID(String CoinId) {
         String PriceApiUrl= "https://api.cryptowat.ch/markets/kraken/" + CoinId + "/price";
         String PriceResponse = restTemplate.getForObject(PriceApiUrl, String.class);
