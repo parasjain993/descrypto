@@ -1,11 +1,8 @@
 package deshaw.dae.descrypto.controllers;
 
-import deshaw.dae.descrypto.domain.User;
-
-import deshaw.dae.descrypto.domain.Order;
+import deshaw.dae.descrypto.services.DashboardService;
 import deshaw.dae.descrypto.services.MyService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -14,34 +11,22 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-
-
 import java.util.List;
 
 @RestController
 @EnableScheduling
-@RequestMapping("/api")
-public class MyController {
+@RequestMapping("/dashboard")
+public class DashboardController {
     @Autowired
-    private MyService service;
+    private DashboardService dashboardService;
 
-    @GetMapping("/get/users")
-    List<User> all() {
-        return service.findAllUsers();
+    // update after every 2minutes
+    @GetMapping("/assets/get")
+    @Scheduled(fixedRate = 120000)
+    public ResponseEntity<?> getCoinDetails(){
+        // This is temporary code util data is fetched from the database //
+        List<String> TemporaryCoins = List.of("btceur", "ethcad", "usdtusd", "btccad");
+        return new ResponseEntity<>(dashboardService.getCoinDetails(TemporaryCoins), HttpStatus.OK);
     }
-
-    @PostMapping("/place/limit")
-    Order placeLimitOrder(@RequestBody Order newLimitOrder){
-        return service.placeLimitOrder(newLimitOrder);
-    }
-    @PostMapping("/place/market")
-    double placeMarketOrder(@RequestBody Order newMarketOrder){
-        return service.placeMarketOrder(newMarketOrder);
-    }
-
-
-
-
-
 
 }
