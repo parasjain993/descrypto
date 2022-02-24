@@ -5,10 +5,28 @@ public class Order {
     private int  orderId;//primary key
     private int userId;//which user has placed
     private String orderPair;//btcusdt
-    private double amount;//what amount of your usdt wallet eg:10% 25%...
+    private double amount;
     private double limitPrice;//trade will start at this price for limit and current for market
     private String orderType;//buy or sell
     private String orderStatus;//open, partially-filled, filled, cancelled
+    private double filled;//how much of the order is completed
+    private double total;//total spent upon buying/ total gained upon sell
+
+    public double getTotal() {
+        return total;
+    }
+
+    public void setTotal(double total) {
+        this.total = total;
+    }
+
+    public double getFilled() {
+        return filled;
+    }
+
+    public void setFilled(double filled) {
+        this.filled = filled;
+    }
 
     public int getOrderId() {
         return orderId;

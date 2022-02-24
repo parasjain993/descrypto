@@ -12,3 +12,4 @@ buildNumber.properties
 .idea/
 .metadata/
 src/main/resources/application.properties
+descrypto.iml

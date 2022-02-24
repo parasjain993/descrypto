@@ -12,16 +12,22 @@ public class OrderServiceImpl implements OrderService{
     @Autowired
     private OrderMapper mapper;
     public int placeLimitOrder(Order newLimitOrder){
+
+        newLimitOrder.setFilled(0.0);
+        double total = newLimitOrder.getLimitPrice()*newLimitOrder.getAmount();
+        newLimitOrder.setTotal(total);
+       // if(newLimitOrder.getOrderType().equals("buy")) {
+           //check for validity through wallet api
+        //}
         return mapper.placeLimitOrder(newLimitOrder);
     }
     public int placeMarketOrder(Order newMarketOrder){
-
-        int status=mapper.placeMarketOrder(newMarketOrder);
-        executeMarketOrder(newMarketOrder);
+        newMarketOrder.setFilled(0.0);
+       // double total = currentPrice*newMarketOrder.getAmount();//get currentPrice from api
+        //newMarketOrder.setTotal(total);
+        int status=mapper.placeMarketOrder(newMarketOrder);// save to db
+        //call api for immediate execution of market order
         return status;
     }
-    public int executeMarketOrder(Order placed) {
-        //return status
-        return 1;
-    }
+
 }

@@ -4,15 +4,16 @@
 
 <mapper namespace="deshaw.dae.descrypto.mappers.OrderMapper">
     <insert id="placeLimitOrder" parameterType="deshaw.dae.descrypto.domain.Order" keyProperty="orderId"
-    keyColumn="orderId">
-        insert into orders(orderId,userId,orderPair,amount,limitPrice,orderType,orderStatus)
-        values(#{orderId},#{userId},#{orderPair},#{amount},
-        #{limitPrice},#{orderType},#{orderStatus})
+    keyColumn="orderId" useGeneratedKeys="true">
+        insert into orders(userId,orderPair,amount,limitPrice,orderType,orderStatus,filled,total)
+        values(#{userId},#{orderPair},#{amount},
+        #{limitPrice},#{orderType},#{orderStatus},#{filled},#{total})
     </insert>
 
-    <insert id="placeMarketOrder" parameterType="deshaw.dae.descrypto.domain.Order" keyProperty="orderId">
-        insert into orders(orderId,userId,orderPair,amount,limitPrice,orderType,orderStatus)
-        values(#{orderId},#{userId},#{orderPair},#{amount},
-        #{limitPrice},#{orderType},#{orderStatus})
+    <insert id="placeMarketOrder" parameterType="deshaw.dae.descrypto.domain.Order" keyProperty="orderId"
+            keyColumn="orderId" useGeneratedKeys="true">
+        insert into orders(userId,orderPair,amount,limitPrice,orderType,orderStatus,filled,total)
+        values(#{userId},#{orderPair},#{amount},
+        #{limitPrice},#{orderType},#{orderStatus},#{filled},#{total})
     </insert>
 </mapper>
