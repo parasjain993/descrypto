@@ -10,9 +10,6 @@ public interface MyService {
 
     List<User> findAllUsers();
 
-    Order placeLimitOrder(Order newLimitOrder);
-    double placeMarketOrder(Order newMarketOrder);
-
     List<TokenDetails> getCoinDetails(List<String> CoinIds);
     TokenDetails getCoinDetailsByID(String CoinId);
 
