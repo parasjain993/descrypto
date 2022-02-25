@@ -9,9 +9,4 @@ public interface MyService {
 
     List<User> findAllUsers();
 
-    Order placeLimitOrder(Order newLimitOrder);
-    double placeMarketOrder(Order newMarketOrder);
-
-
-
 }

@@ -14,10 +14,4 @@
         select id, name, email from users
     </select>
 
-    <insert id="placeLimitOrder" parameterType="deshaw.dae.descrypto.domain.Order" keyProperty="userId" useGeneratedKeys="true">
-        insert into OpenOrders(userId,orderId,amount,orderType) values(#(userId),#(orderId),#(amount),#(orderType))
-    </insert>
-
-
-
 </mapper>

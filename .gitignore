@@ -11,3 +11,6 @@ buildNumber.properties
 .mvn/wrapper/maven-wrapper.jar
 descrypto.iml
 .idea/
+.metadata/
+src/main/resources/application.properties
+descrypto.iml

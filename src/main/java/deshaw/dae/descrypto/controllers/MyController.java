@@ -30,18 +30,4 @@ public class MyController {
         return service.findAllUsers();
     }
 
-    @PostMapping("/place/limit")
-    Order placeLimitOrder(@RequestBody Order newLimitOrder){
-        return service.placeLimitOrder(newLimitOrder);
-    }
-    @PostMapping("/place/market")
-    double placeMarketOrder(@RequestBody Order newMarketOrder){
-        return service.placeMarketOrder(newMarketOrder);
-    }
-
-
-
-
-
-
 }
