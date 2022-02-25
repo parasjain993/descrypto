@@ -32,7 +32,7 @@ public class DashboardController {
     @GetMapping("/assets/{id}")
     public ResponseEntity<?> getAssets(){
 
-        return new ResponseEntity<>("tmp", HttpStatus.OK);
+        return new ResponseEntity<>(dashboardService.getAllAssetsAvail(), HttpStatus.OK);
     }
 
 }

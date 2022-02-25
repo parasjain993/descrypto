@@ -10,10 +10,6 @@ import java.util.List;
 @Service
 public class MyServiceImpl implements MyService {
 
-    int a = 1;
-
-    // Cache to store coin details
-
     @Autowired
     private MyMapper mapper;
 
