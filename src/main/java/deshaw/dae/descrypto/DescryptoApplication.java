@@ -10,6 +10,7 @@ public class DescryptoApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(DescryptoApplication.class, args);
+
 	}
 
 }
