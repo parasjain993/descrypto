@@ -1,14 +1,19 @@
 package deshaw.dae.descrypto.domain;
 
-public class TokenDetails {
+import deshaw.dae.descrypto.domain.PriceResponse.PriceResponse;
+import deshaw.dae.descrypto.domain.Summary24hResponse.Summary24h;
+
+public class AssetDetails {
     private String tokenID;
     private double price;
     //private double marketCap;
-    private double volume;
     private Summary24h summary24h;
 
-    public TokenDetails(String tokenID) {
+    public AssetDetails(String tokenID) {
         this.tokenID = tokenID;
+    }
+
+    public AssetDetails(String coinId, Class<? extends PriceResponse> aClass, Summary24h summary24h) {
     }
 
     public Summary24h getSummary24h() {
@@ -19,7 +24,7 @@ public class TokenDetails {
         this.summary24h = summary24h;
     }
 
-    public TokenDetails(String tokenID, double price, Summary24h summary24h) {
+    public AssetDetails(String tokenID, double price, Summary24h summary24h) {
         this.tokenID = tokenID;
         this.price = price;
         this.summary24h = summary24h;
