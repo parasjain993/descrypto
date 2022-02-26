@@ -20,8 +20,8 @@ public class RegisterController {
 
     @PostMapping("/register")
     public ResponseEntity<Void> register(@RequestBody User userObject) {
-        System.out.print("inside register controller");
-        User foundUser = userService.findByUsername(userObject.getUsername());
+        //System.out.print("inside register controller");
+        User foundUser = userService.findByFullUsername(userObject.getFullName());
         if(foundUser != null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
@@ -30,7 +30,6 @@ public class RegisterController {
             userService.addUser(userObject);
             return new ResponseEntity<>(HttpStatus.CREATED);
         }
-
     }
 
 }

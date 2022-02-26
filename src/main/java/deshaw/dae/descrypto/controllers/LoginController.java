@@ -21,8 +21,8 @@ public class LoginController {
 
     @PostMapping("/login")
     public ResponseEntity<Void> login(@RequestBody User user) {
-        System.out.print("inside login");
-        User foundUser = userService.findByUsername(user.getUsername());
+        //System.out.print("inside login");
+        User foundUser = userService.findByFullUsername(user.getFullName());
         if (foundUser != null) {
             if (passwordEncoder.matches(user.getPassword(), foundUser.getPassword())) {
                 return new ResponseEntity<>(HttpStatus.OK);

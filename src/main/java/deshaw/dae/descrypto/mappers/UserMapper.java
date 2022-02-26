@@ -7,7 +7,7 @@ import org.apache.ibatis.annotations.Mapper;
 @Mapper
 public interface UserMapper {
     void addUser(User user);
-    User findByUsername(String username);
+    User findByFullUsername(String username);
 }
 
 

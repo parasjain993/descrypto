@@ -3,6 +3,6 @@ import deshaw.dae.descrypto.domain.User;
 
 public interface UserService {
     void addUser(User user);
-    User findByUsername(String username);
+    User findByFullUsername(String username);
 }
 
