@@ -25,9 +25,6 @@ public class MyController {
     @Autowired
     private MyService service;
 
-    @GetMapping("/get/users")
-    List<User> all() {
-        return service.findAllUsers();
-    }
+
 
 }

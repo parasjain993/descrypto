@@ -7,6 +7,6 @@ import java.util.List;
 
 public interface MyService {
 
-    List<User> findAllUsers();
+
 
 }
