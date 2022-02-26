@@ -28,10 +28,7 @@ public class MyController {
     @Autowired
     private MyService service;
 
-    @GetMapping("/get/users")
-    List<User> all() {
-        return service.findAllUsers();
-    }
+
 
     @GetMapping("/get/dashboard/assets")
     // update after every 2minutes

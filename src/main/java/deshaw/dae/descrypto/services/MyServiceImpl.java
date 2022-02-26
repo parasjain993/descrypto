@@ -6,8 +6,8 @@ import deshaw.dae.descrypto.domain.Summary24h;
 import deshaw.dae.descrypto.domain.TokenDetails;
 import deshaw.dae.descrypto.domain.User;
 import deshaw.dae.descrypto.domain.Order;
-import deshaw.dae.descrypto.mappers.MyMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import deshaw.dae.descrypto.services.MyService;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -25,13 +25,9 @@ public class MyServiceImpl implements MyService {
     // Cache to store coin details
     public Map<String, TokenDetails> TokenCache = new HashMap<String, TokenDetails>();
 
-    @Autowired
-    private MyMapper mapper;
 
-    @Override
-    public List<User> findAllUsers() {
-        return mapper.findAllUsers();
-    }
+
+
 
     public TokenDetails getCoinDetailsByID(String CoinId) {
         String PriceApiUrl= "https://api.cryptowat.ch/markets/kraken/" + CoinId + "/price";

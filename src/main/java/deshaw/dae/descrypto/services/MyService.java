@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface MyService {
 
-    List<User> findAllUsers();
+
 
     List<TokenDetails> getCoinDetails(List<String> CoinIds);
     TokenDetails getCoinDetailsByID(String CoinId);
