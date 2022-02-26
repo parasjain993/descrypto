@@ -1,0 +1,31 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="deshaw.dae.descrypto.mappers.DashboardMapper">
+
+    <resultMap id="AssetAvail" type="deshaw.dae.descrypto.domain.AssetsAvail">
+        <id column="asset_id" property="asset_id" />
+        <result column="name" property="name" />
+        <result column="symbol" property="symbol" />
+        <result column="fiat" property="fiat"/>
+        <collection property="assetMarkets"
+                    ofType="deshaw.dae.descrypto.domain.AssetMarket"
+                    resultMap="MarketResult"
+                    columnPrefix="market_"/>
+    </resultMap>
+
+    <resultMap id="MarketResult" type="deshaw.dae.descrypto.domain.AssetMarket">
+        <id column="id" property="id"/>
+        <result column="asset_id" property="asset_id"/>
+        <result property="exchange" column="exchange"/>
+        <result column="pair" property="pair"/>
+        <result column="type" property="type"/>
+    </resultMap>
+
+
+    <select id="getAllAssetsAvail" resultMap="AssetAvail">
+        SELECT A.asset_id, A.symbol, A.name, A.fiat, M.exchange, M.pair, M.type from
+        assets A left outer join asset_market M on A.asset_id = M.asset_id
+    </select>
+
+</mapper>

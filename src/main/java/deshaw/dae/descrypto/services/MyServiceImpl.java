@@ -1,29 +1,15 @@
 package deshaw.dae.descrypto.services;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import deshaw.dae.descrypto.domain.Summary24h;
-import deshaw.dae.descrypto.domain.TokenDetails;
 import deshaw.dae.descrypto.domain.User;
 import deshaw.dae.descrypto.domain.Order;
 import org.springframework.beans.factory.annotation.Autowired;
 import deshaw.dae.descrypto.services.MyService;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Service
 public class MyServiceImpl implements MyService {
-    RestTemplate restTemplate = new RestTemplate();
-    ObjectMapper objectMapper = new ObjectMapper();
-    int a = 1;
 
-    // Cache to store coin details
-    public Map<String, TokenDetails> TokenCache = new HashMap<String, TokenDetails>();
 
 
 
@@ -70,6 +56,7 @@ public class MyServiceImpl implements MyService {
             Dash.add(coin);
         }
         return Dash;
+
 
     }
 }

@@ -6,9 +6,6 @@ import deshaw.dae.descrypto.domain.Order;
 import deshaw.dae.descrypto.services.MyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
-import deshaw.dae.descrypto.services.MyService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -28,16 +25,6 @@ public class MyController {
     @Autowired
     private MyService service;
 
-
-
-    @GetMapping("/get/dashboard/assets")
-    // update after every 2minutes
-    @Scheduled(fixedRate = 120000)
-    public ResponseEntity<?> getCoinDetails(){
-        // This is temporary code util data is fetched from the database //
-        List<String> TemporaryCoins = List.of("btceur", "ethcad", "usdtusd", "btccad");
-        return new ResponseEntity<>(service.getCoinDetails(TemporaryCoins), HttpStatus.OK);
-    }
 
 
 }
