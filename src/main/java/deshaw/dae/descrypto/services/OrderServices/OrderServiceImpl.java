@@ -5,6 +5,7 @@ import deshaw.dae.descrypto.mappers.OrderMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 
 
 @Service
@@ -28,6 +29,20 @@ public class OrderServiceImpl implements OrderService{
         int status=mapper.placeMarketOrder(newMarketOrder);// save to db
         //call api for immediate execution of market order
         return status;
+    }
+
+    @Override
+    public List<Order> orderHistory(int userId) {
+        return mapper.orderHistory(userId);
+    }
+
+    @Override
+    public List<Order> openOrders(int userId) {
+        return mapper.openOrders(userId);
+    }
+
+    public void cancelOrder(int orderId) {
+        mapper.cancelOrder(orderId);
     }
 
 }
