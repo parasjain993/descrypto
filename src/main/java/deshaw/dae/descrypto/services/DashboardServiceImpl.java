@@ -3,6 +3,7 @@ package deshaw.dae.descrypto.services;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import deshaw.dae.descrypto.cache.DashboardCache;
 import deshaw.dae.descrypto.domain.AssetsAvail;
 import deshaw.dae.descrypto.domain.PriceResponse.PriceResponse;
 import deshaw.dae.descrypto.domain.Summary24hResponse.Summary24h;
@@ -21,7 +22,7 @@ import java.util.Map;
 public class DashboardServiceImpl implements DashboardService{
     @Autowired
     private DashboardMapper dashboardMapper;
-    public Map<String, AssetDetails> TokenCache = new HashMap<String, AssetDetails>();
+    private DashboardCache TokenCache = DashboardCache.getDashboardCache();
 
     RestTemplate restTemplate = new RestTemplate();
     ObjectMapper objectMapper = new ObjectMapper();
@@ -44,7 +45,7 @@ public class DashboardServiceImpl implements DashboardService{
         List <AssetDetails> Dash = new ArrayList<>();
         for (String CoinId: CoinIds){
             AssetDetails coin = getCoinDetailsByID(CoinId);
-            TokenCache.put(CoinId, coin);
+            TokenCache.addTokenDetails(CoinId, coin);
             Dash.add(coin);
         }
         return Dash;

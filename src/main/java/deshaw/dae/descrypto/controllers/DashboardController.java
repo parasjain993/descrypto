@@ -31,7 +31,6 @@ public class DashboardController {
 
     @GetMapping("/assets/{id}")
     public ResponseEntity<?> getAssets(){
-
         return new ResponseEntity<>(dashboardService.getAllAssetsAvail(), HttpStatus.OK);
     }
 
