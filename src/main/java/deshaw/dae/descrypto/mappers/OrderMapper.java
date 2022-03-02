@@ -7,4 +7,6 @@ import org.apache.ibatis.annotations.Mapper;
 public interface OrderMapper {
     int placeLimitOrder(Order newLimitOrder);
     int placeMarketOrder(Order newMarketOrder);
+    int placeStopLossMarketOrder(Order newSTMarketOrder);
+    int placeStopLossLimitOrder(Order newSTLimitOrder);
 }
