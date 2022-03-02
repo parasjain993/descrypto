@@ -8,6 +8,7 @@ import deshaw.dae.descrypto.domain.AssetsAvail;
 import deshaw.dae.descrypto.domain.PriceResponse.PriceResponse;
 import deshaw.dae.descrypto.domain.Summary24hResponse.Summary24h;
 import deshaw.dae.descrypto.domain.AssetDetails;
+import deshaw.dae.descrypto.domain.TradingPairs;
 import deshaw.dae.descrypto.mappers.DashboardMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -55,7 +56,11 @@ public class DashboardServiceImpl implements DashboardService{
     @Override
     public List<AssetsAvail> getAllAssetsAvail(){
         return dashboardMapper.getAllAssetsAvail();
-
     }
 
+    @Override
+    public  List<TradingPairs> getAllTradingPairs(){
+        return  dashboardMapper.getAllTradingPairsAvail();
+
+    }
 }
