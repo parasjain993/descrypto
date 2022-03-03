@@ -5,6 +5,7 @@ import deshaw.dae.descrypto.mappers.OrderMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 
 
 @Service
@@ -16,7 +17,7 @@ public class OrderServiceImpl implements OrderService{
         newLimitOrder.setFilled(0.0);
         double total = newLimitOrder.getLimitPrice()*newLimitOrder.getAmount();
         newLimitOrder.setTotal(total);
-       // if(newLimitOrder.getOrderType().equals("buy")) {
+       // if(newLimitOrder.getSide().equals("buy")) {
            //check for validity through wallet api
         //}
         return mapper.placeLimitOrder(newLimitOrder);
@@ -24,12 +25,12 @@ public class OrderServiceImpl implements OrderService{
     }
     public int placeMarketOrder(Order newMarketOrder){
         newMarketOrder.setFilled(0.0);
-       // double total = currentPrice*newMarketOrder.getAmount();//get currentPrice from api
-        //newMarketOrder.setTotal(total);
-        int status=mapper.placeMarketOrder(newMarketOrder);// save to db
-        //call api for immediate execution of market order
+        double total = newMarketOrder.getAverage()*newMarketOrder.getAmount();//get currentPrice from api
+        newMarketOrder.setTotal(total);
+        int status=mapper.placeMarketOrder(newMarketOrder);// save
         return status;
     }
+
     public int placeStopLossMarketOrder(Order newSTMarketOrder){
         newSTMarketOrder.setFilled(0.0);
         newSTMarketOrder.setTotal(newSTMarketOrder.getAmount()*newSTMarketOrder.getTriggerPrice());
@@ -43,4 +44,20 @@ public class OrderServiceImpl implements OrderService{
         int status=mapper.placeStopLossLimitOrder(newSTLimitOrder);
         return status;
     }
+
+
+    @Override
+    public List<Order> orderHistory(int userId) {
+        return mapper.orderHistory(userId);
+    }
+
+    @Override
+    public List<Order> openOrders(int userId) {
+        return mapper.openOrders(userId);
+    }
+
+    public void cancelOrder(int orderId) {
+        mapper.cancelOrder(orderId);
+    }
+
 }
