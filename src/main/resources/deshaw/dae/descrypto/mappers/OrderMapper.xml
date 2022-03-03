@@ -5,29 +5,30 @@
 <mapper namespace="deshaw.dae.descrypto.mappers.OrderMapper">
     <insert id="placeLimitOrder" parameterType="deshaw.dae.descrypto.domain.Order" keyProperty="orderId"
     keyColumn="orderId" useGeneratedKeys="true">
-        insert into orders(userId,orderPair,amount,limitPrice,orderType,orderStatus,filled,total)
+        insert into orders(userId,orderPair,amount,limitPrice,orderType,orderStatus,filled,total,average,side)
         values(#{userId},#{orderPair},#{amount},
-        #{limitPrice},#{orderType},#{orderStatus},#{filled},#{total})
+        #{limitPrice},#{orderType},#{orderStatus},#{filled},#{total},#{average},#{side})
+
     </insert>
 
     <insert id="placeMarketOrder" parameterType="deshaw.dae.descrypto.domain.Order" keyProperty="orderId"
             keyColumn="orderId" useGeneratedKeys="true">
-        insert into orders(userId,orderPair,amount,limitPrice,orderType,orderStatus,filled,total)
+        insert into orders(userId,orderPair,amount,limitPrice,orderType,orderStatus,filled,total,average,side)
         values(#{userId},#{orderPair},#{amount},
-        #{limitPrice},#{orderType},#{orderStatus},#{filled},#{total})
+        #{limitPrice},#{orderType},#{orderStatus},#{filled},#{total},#{average},#{side})
     </insert>
 
     <insert id="placeStopLossMarketOrder" parameterType="deshaw.dae.descrypto.domain.Order" keyProperty="orderId"
             keyColumn="orderId" useGeneratedKeys="true">
-        insert into orders(userId,orderPair,amount,limitPrice,orderType,orderStatus,filled,total,triggerPrice)
+        insert into orders(userId,orderPair,amount,limitPrice,orderType,orderStatus,filled,total,side,triggerPrice,average)
         values(#{userId},#{orderPair},#{amount},
-        #{limitPrice},#{orderType},#{orderStatus},#{filled},#{total},#{triggerPrice})
+        #{limitPrice},#{orderType},#{orderStatus},#{filled},#{total},#{side},#{triggerPrice},#{average})
     </insert>
     <insert id="placeStopLossLimitOrder" parameterType="deshaw.dae.descrypto.domain.Order" keyProperty="orderId"
             keyColumn="orderId" useGeneratedKeys="true">
-        insert into orders(userId,orderPair,amount,limitPrice,orderType,orderStatus,filled,total,triggerPrice)
+        insert into orders(userId,orderPair,amount,limitPrice,orderType,orderStatus,filled,total,side,triggerPrice,average)
         values(#{userId},#{orderPair},#{amount},
-        #{limitPrice},#{orderType},#{orderStatus},#{filled},#{total},#{triggerPrice})
+        #{limitPrice},#{orderType},#{orderStatus},#{filled},#{total},#{side},#{triggerPrice},#{average})
     </insert>
 
     <resultMap id="OrderResultMap" type="deshaw.dae.descrypto.domain.Order">
