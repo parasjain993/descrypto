@@ -10,7 +10,11 @@ import java.util.List;
 public interface OrderMapper {
     int placeLimitOrder(Order newLimitOrder);
     int placeMarketOrder(Order newMarketOrder);
+
+    int placeStopLossMarketOrder(Order newSTMarketOrder);
+    int placeStopLossLimitOrder(Order newSTLimitOrder);
     List<Order> orderHistory(int userId);
     List<Order> openOrders(int userId);
     void cancelOrder(int orderId);
+
 }

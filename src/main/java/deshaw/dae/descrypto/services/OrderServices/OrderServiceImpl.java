@@ -17,19 +17,34 @@ public class OrderServiceImpl implements OrderService{
         newLimitOrder.setFilled(0.0);
         double total = newLimitOrder.getLimitPrice()*newLimitOrder.getAmount();
         newLimitOrder.setTotal(total);
-       // if(newLimitOrder.getOrderType().equals("buy")) {
+       // if(newLimitOrder.getSide().equals("buy")) {
            //check for validity through wallet api
         //}
         return mapper.placeLimitOrder(newLimitOrder);
+
     }
     public int placeMarketOrder(Order newMarketOrder){
         newMarketOrder.setFilled(0.0);
-       // double total = currentPrice*newMarketOrder.getAmount();//get currentPrice from api
-        //newMarketOrder.setTotal(total);
-        int status=mapper.placeMarketOrder(newMarketOrder);// save to db
-        //call api for immediate execution of market order
+        double total = newMarketOrder.getAverage()*newMarketOrder.getAmount();//get currentPrice from api
+        newMarketOrder.setTotal(total);
+        int status=mapper.placeMarketOrder(newMarketOrder);// save
         return status;
     }
+
+    public int placeStopLossMarketOrder(Order newSTMarketOrder){
+        newSTMarketOrder.setFilled(0.0);
+        newSTMarketOrder.setTotal(newSTMarketOrder.getAmount()*newSTMarketOrder.getTriggerPrice());
+        int status=mapper.placeStopLossMarketOrder(newSTMarketOrder);
+        return status;
+    }
+    public int placeStopLossLimitOrder(Order newSTLimitOrder){
+        newSTLimitOrder.setFilled(0.0);
+        double total = newSTLimitOrder.getLimitPrice()*newSTLimitOrder.getAmount();
+        newSTLimitOrder.setTotal(total);
+        int status=mapper.placeStopLossLimitOrder(newSTLimitOrder);
+        return status;
+    }
+
 
     @Override
     public List<Order> orderHistory(int userId) {

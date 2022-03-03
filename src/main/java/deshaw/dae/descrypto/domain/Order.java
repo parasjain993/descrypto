@@ -10,9 +10,18 @@ public class Order {
     private double average;// average price at which trade was executed till now
     private String orderType;//limit or market
     private String side;// buy or sell
-    private String orderStatus;//open, partially-filled, filled, cancelled
+    private String orderStatus;//open, partially_filled, filled, cancelled
     private double filled;//how much of the order is completed
     private double total;//total spent upon buying/ total gained upon sell
+    private double triggerPrice;//for stop-loss orders only
+
+    public double getTriggerPrice() {
+        return triggerPrice;
+    }
+
+    public void setTriggerPrice(double triggerPrice) {
+        this.triggerPrice = triggerPrice;
+    }
 
 
     public double getLimitPrice() {

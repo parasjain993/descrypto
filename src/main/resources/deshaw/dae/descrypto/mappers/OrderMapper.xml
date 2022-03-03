@@ -17,6 +17,19 @@
         #{limitPrice},#{orderType},#{orderStatus},#{filled},#{total})
     </insert>
 
+    <insert id="placeStopLossMarketOrder" parameterType="deshaw.dae.descrypto.domain.Order" keyProperty="orderId"
+            keyColumn="orderId" useGeneratedKeys="true">
+        insert into orders(userId,orderPair,amount,limitPrice,orderType,orderStatus,filled,total,triggerPrice)
+        values(#{userId},#{orderPair},#{amount},
+        #{limitPrice},#{orderType},#{orderStatus},#{filled},#{total},#{triggerPrice})
+    </insert>
+    <insert id="placeStopLossLimitOrder" parameterType="deshaw.dae.descrypto.domain.Order" keyProperty="orderId"
+            keyColumn="orderId" useGeneratedKeys="true">
+        insert into orders(userId,orderPair,amount,limitPrice,orderType,orderStatus,filled,total,triggerPrice)
+        values(#{userId},#{orderPair},#{amount},
+        #{limitPrice},#{orderType},#{orderStatus},#{filled},#{total},#{triggerPrice})
+    </insert>
+
     <resultMap id="OrderResultMap" type="deshaw.dae.descrypto.domain.Order">
         <id column="orderId" property="orderId" />
         <result column="userId" property="userId" />
@@ -62,3 +75,4 @@
         WHERE orders.orderId = #{orderId} AND orderStatus!='filled'
     </update>
 </mapper>
+
