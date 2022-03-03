@@ -28,7 +28,8 @@ public class fundsController {
         String fullName = objectnode.get("fullName").asText();
         int amountToBeAdded = objectnode.get("amountToBeAdded").asInt();
         User user = userservice.findByFullUsername(fullName);
-        userservice.addFund(user.getWalletId(), assetName, amountToBeAdded);
+        walletservice.addFund(user.getWalletId(), assetName, amountToBeAdded);
+        walletservice.totalWorthCalc(user.getWalletId());
         return new ResponseEntity<>(HttpStatus.OK);
     }
     @PutMapping("/withdrawFunds")
@@ -37,11 +38,11 @@ public class fundsController {
         String fullName = objectnode.get("fullName").asText();
         int amountToBeDeducted = objectnode.get("amountToBeDeducted").asInt();
         User user = userservice.findByFullUsername(fullName);
-        int assetAvailableCoins = userservice.getAssetCoins(user.getWalletId(), assetName);
+        int assetAvailableCoins = walletservice.getAssetCoins(user.getWalletId(), assetName);
         if (assetAvailableCoins < amountToBeDeducted) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         } else {
-            userservice.withdrawFund(user.getWalletId(), assetName, amountToBeDeducted);
+            walletservice.withdrawFund(user.getWalletId(), assetName, amountToBeDeducted);
             return new ResponseEntity<>(HttpStatus.OK);
         }
 

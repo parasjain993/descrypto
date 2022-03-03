@@ -1,0 +1,61 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="deshaw.dae.descrypto.mappers.TradeMapper">
+
+    <resultMap id="tradeResultMap" type="deshaw.dae.descrypto.domain.Trade">
+        <id column="tradeId" property="tradeId" />
+        <result column="price" property="price" />
+        <result column="filled" property="filled" />
+        <result column="total" property="total" />
+
+        <collection  property="buy_Id"  ofType="deshaw.dae.descrypto.domain.Order">
+            <id column="orderId" property="orderId" />
+            <result column="userId" property="userId" />
+            <result column="orderPair" property="orderPair" />
+            <result column="amount" property="amount" />
+            <result column="average" property="average" />
+            <result column="orderType" property="orderType" />
+            <result column="side" property="side" />
+        </collection>
+
+    </resultMap>
+
+    <select id="tradeHistory" resultMap="tradeResultMap">
+        select *
+        from trades
+        INNER JOIN orders
+        ON (trades.buy_orderId=orders.orderId AND orders.side='buy' ) or (trades.sell_orderId=orders.orderId AND orders.side='sell' )
+        where orders.userId=#{userId} AND orders.orderStatus='filled'
+
+    </select>
+
+    <resultMap id="partialTradeResultMap" type="deshaw.dae.descrypto.domain.Trade">
+        <id column="tradeId" property="tradeId" />
+        <result column="price" property="price" />
+        <result column="filled" property="filled" />
+        <result column="total" property="total" />
+
+        <collection  property="buy_Id"  ofType="deshaw.dae.descrypto.domain.Order">
+            <id column="orderId" property="orderId" />
+            <result column="userId" property="userId" />
+            <result column="orderPair" property="orderPair" />
+            <result column="amount" property="amount" />
+            <result column="average" property="average" />
+            <result column="orderType" property="orderType" />
+            <result column="side" property="side" />
+        </collection>
+
+    </resultMap>
+
+    <select id="partialTrade" resultMap="partialTradeResultMap">
+        select *
+        from trades
+        INNER JOIN orders
+        ON (trades.buy_orderId=orders.orderId AND orders.side='buy' ) or (trades.sell_orderId=orders.orderId AND orders.side='sell' )
+        where orders.orderId=#{orderId} AND orders.orderStatus='partially_filled'
+
+    </select>
+
+</mapper>

@@ -16,16 +16,7 @@ import java.util.Map;
 public interface UserMapper {
     void addUser(User user);
     User findByFullUsername(String username);
-
-    List<Wallet> findAssetsForUser(String walletId);
-
     void setTotalWorth(String walletId, float total_worth);
-    int getAssetCoins(String walletId, String assetName);
-    List<User> allUsers();
-
-    void addFund(String walletId, String assetName, int amountToBeAdded);
-
-    void withdrawFund(String walletId, String assetName, int withdrawalAmount);
     List<User> getAllUsers();
     void setPNL(float pnl, String walletId);
 }

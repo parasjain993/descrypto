@@ -5,17 +5,17 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect;
 
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
 public class AssetMarket {
-    private int id;
-    private int asset_id;
+    private String id;
+    private String asset_id;
     private String exchange;
     private String pair;
     private String type;
 
-    public int id() {
+    public String id() {
         return id;
     }
 
-    public int asset_id() {
+    public String asset_id() {
         return asset_id;
     }
 
@@ -31,11 +31,11 @@ public class AssetMarket {
         return type;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 
-    public void setAsset_id(int asset_id) {
+    public void setAsset_id(String asset_id) {
         this.asset_id = asset_id;
     }
 
@@ -51,7 +51,7 @@ public class AssetMarket {
         this.type = type;
     }
 
-    public AssetMarket(int id, int asset_id, String exchange, String pair, String type) {
+    public AssetMarket(String id, String asset_id, String exchange, String pair, String type) {
         this.id = id;
         this.asset_id = asset_id;
         this.exchange = exchange;

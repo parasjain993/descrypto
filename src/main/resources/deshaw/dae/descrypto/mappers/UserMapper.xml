@@ -14,14 +14,6 @@
         <result column="dob" property="dob"/>
         <result column="nationality" property="nationality"/>
     </resultMap>
-    <resultMap id="WalletResultMapper" type="deshaw.dae.descrypto.domain.Wallet">
-        <result column="assetName" property="assetName"/>
-        <result column="assetCoins" property="assetCoins"/>
-    </resultMap>
-    <resultMap id="AssetResultMap" type="java.util.Map">
-        <result property="key" column="assetName"/>
-        <result property="value" column="assetCoins"/>
-    </resultMap>
     <select id="findByFullUsername"  resultMap="BaseResultMap">
         select fullName,password,walletId, totalWorth from userdb where fullName=#{fullName}
     </select>
@@ -30,28 +22,12 @@
        insert into userdb( fullName, email, password, phoneNo, pancardNo, dob, nationality)
         values ( #{fullName}, #{email}, #{password}, #{phoneNo}, #{pancardNo}, #{dob}, #{nationality})
     </insert>
-    <select id="findAssetsForUser" resultMap="WalletResultMapper">
-        select assetName, assetCoins from walletdb where walletId = #{walletId}
-    </select>
     <update id = "setTotalWorth" >
         update userdb set totalWorth = #{total_worth} WHERE walletId = #{walletId}
     </update>
-    <select id="getAssetCoins" resultType="int">
-        SELECT assetCoins FROM walletdb WHERE walletId = #{walletId} AND assetName = #{assetName}
-    </select>
     <select id="getAllUsers" resultMap="BaseResultMap">
         SELECT * FROM userdb;
     </select>
-    <update id="addFund">
-        update walletdb
-        SET walletdb.assetCoins = walletdb.assetCoins + #{amountToBeAdded}
-        WHERE walletdb.walletId = #{walletId} AND walletdb.assetName = #{assetName}
-    </update>
-    <update id="withdrawFund">
-        update walletdb
-        SET walletdb.assetCoins =  walletdb.assetCoins - #{withdrawalAmount}
-        WHERE walletdb.walletId = #{walletId} AND walletdb.assetName = #{assetName}
-    </update>
     <update id="setPNL">
         UPDATE userdb
         SET userdb.pnl = #{pnl}

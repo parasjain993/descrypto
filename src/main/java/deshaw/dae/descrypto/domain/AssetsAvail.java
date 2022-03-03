@@ -8,10 +8,10 @@ import java.util.List;
 
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
 public class AssetsAvail {
-    private Integer asset_id;
+    private String asset_id;
     private String symbol;
     private String name;
-    private Integer fiat;
+    private String fiat;
     private List<AssetMarket> assetMarkets = new ArrayList<AssetMarket>();
 
     public List<AssetMarket> assetMarkets() {
@@ -22,11 +22,11 @@ public class AssetsAvail {
         this.assetMarkets = assetMarkets;
     }
 
-    public Integer asset_id() {
+    public String asset_id() {
         return asset_id;
     }
 
-    public void setAsset_id(Integer asset_id) {
+    public void setAsset_id(String asset_id) {
         this.asset_id = asset_id;
     }
 
@@ -46,11 +46,11 @@ public class AssetsAvail {
         this.name = name;
     }
 
-    public Integer fiat() {
+    public String fiat() {
         return fiat;
     }
 
-    public void setFiat(Integer fiat) {
+    public void setFiat(String fiat) {
         this.fiat = fiat;
     }
 

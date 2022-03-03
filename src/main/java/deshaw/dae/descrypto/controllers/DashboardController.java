@@ -29,7 +29,7 @@ public class DashboardController {
     public ResponseEntity<?> getCoinDetails(){
         // This is temporary code util data is fetched from the database //
         List<String> TemporaryCoins = List.of("btcusd", "ethcad", "usdtusd", "btccad");
-        return new ResponseEntity<>(userservice.getCoinDetails(TemporaryCoins), HttpStatus.OK);
+        return new ResponseEntity<>(dashboardService.getCoinDetails(TemporaryCoins), HttpStatus.OK);
     }
 
     @GetMapping("/assets/{id}")
