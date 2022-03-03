@@ -1,7 +1,5 @@
 package deshaw.dae.descrypto.services;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import deshaw.dae.descrypto.domain.AssetsAvail;
 import deshaw.dae.descrypto.domain.PriceResponse.PriceResponse;
@@ -12,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -21,6 +20,7 @@ import java.util.Map;
 public class DashboardServiceImpl implements DashboardService{
     @Autowired
     private DashboardMapper dashboardMapper;
+
     public Map<String, AssetDetails> TokenCache = new HashMap<String, AssetDetails>();
 
     RestTemplate restTemplate = new RestTemplate();
