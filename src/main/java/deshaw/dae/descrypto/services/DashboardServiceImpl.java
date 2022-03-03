@@ -3,10 +3,12 @@ package deshaw.dae.descrypto.services;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import deshaw.dae.descrypto.cache.DashboardCache;
 import deshaw.dae.descrypto.domain.AssetsAvail;
 import deshaw.dae.descrypto.domain.PriceResponse.PriceResponse;
 import deshaw.dae.descrypto.domain.Summary24hResponse.Summary24h;
 import deshaw.dae.descrypto.domain.AssetDetails;
+import deshaw.dae.descrypto.domain.TradingPairs;
 import deshaw.dae.descrypto.mappers.DashboardMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,7 +23,7 @@ import java.util.Map;
 public class DashboardServiceImpl implements DashboardService{
     @Autowired
     private DashboardMapper dashboardMapper;
-    public Map<String, AssetDetails> TokenCache = new HashMap<String, AssetDetails>();
+    private DashboardCache TokenCache = DashboardCache.getDashboardCache();
 
     RestTemplate restTemplate = new RestTemplate();
     ObjectMapper objectMapper = new ObjectMapper();
@@ -44,7 +46,7 @@ public class DashboardServiceImpl implements DashboardService{
         List <AssetDetails> Dash = new ArrayList<>();
         for (String CoinId: CoinIds){
             AssetDetails coin = getCoinDetailsByID(CoinId);
-            TokenCache.put(CoinId, coin);
+            TokenCache.addTokenDetails(CoinId, coin);
             Dash.add(coin);
         }
         return Dash;
@@ -54,7 +56,11 @@ public class DashboardServiceImpl implements DashboardService{
     @Override
     public List<AssetsAvail> getAllAssetsAvail(){
         return dashboardMapper.getAllAssetsAvail();
-
     }
 
+    @Override
+    public  List<TradingPairs> getAllTradingPairs(){
+        return  dashboardMapper.getAllTradingPairsAvail();
+
+    }
 }

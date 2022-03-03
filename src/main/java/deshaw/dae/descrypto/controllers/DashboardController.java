@@ -29,10 +29,14 @@ public class DashboardController {
         return new ResponseEntity<>(dashboardService.getCoinDetails(TemporaryCoins), HttpStatus.OK);
     }
 
-    @GetMapping("/assets/{id}")
+    @GetMapping("/assets/get")
     public ResponseEntity<?> getAssets(){
-
         return new ResponseEntity<>(dashboardService.getAllAssetsAvail(), HttpStatus.OK);
+    }
+
+    @GetMapping("/pairs/get")
+    public  ResponseEntity<?> getAllPairs(){
+        return new ResponseEntity<>(dashboardService.getAllTradingPairs(), HttpStatus.OK);
     }
 
 }

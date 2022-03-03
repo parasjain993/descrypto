@@ -9,23 +9,33 @@
         <result column="symbol" property="symbol" />
         <result column="fiat" property="fiat"/>
         <collection property="assetMarkets"
-                    ofType="deshaw.dae.descrypto.domain.AssetMarket"
-                    resultMap="MarketResult"
-                    columnPrefix="market_"/>
-    </resultMap>
+                    ofType="deshaw.dae.descrypto.domain.AssetMarket">
+            <result property="id" column="id" />
+            <result property="exchange" column="exchange"/>
+            <result column="pair" property="pair"/>
+            <result column="type" property="type"/>
+        </collection>
 
-    <resultMap id="MarketResult" type="deshaw.dae.descrypto.domain.AssetMarket">
-        <id column="id" property="id"/>
-        <result column="asset_id" property="asset_id"/>
-        <result property="exchange" column="exchange"/>
-        <result column="pair" property="pair"/>
-        <result column="type" property="type"/>
     </resultMap>
 
 
-    <select id="getAllAssetsAvail" resultMap="AssetAvail">
-        SELECT A.asset_id, A.symbol, A.name, A.fiat, M.exchange, M.pair, M.type from
-        assets A left outer join asset_market M on A.asset_id = M.asset_id
+    <select id="getAllAssetsAvail" resultMap="AssetAvail" resultType="deshaw.dae.descrypto.domain.AssetsAvail">
+        select *
+        from assets A
+        left join asset_market M
+        on M.asset_id = A.asset_id
+
+    </select>
+
+    <resultMap id="PairsAvail" type="deshaw.dae.descrypto.domain.TradingPairs">
+        <id column="pair_id" property="PairID" />
+        <result column="symbol" property="PairSymbol"/>
+        <result column="asset1" property="Asset1ID"/>
+        <result column="asset2" property="Asset2ID"/>
+    </resultMap>
+
+    <select id="getAllTradingPairsAvail" resultMap="PairsAvail">
+        select * from pairs
     </select>
 
 </mapper>
