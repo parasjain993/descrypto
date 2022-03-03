@@ -1,7 +1,5 @@
 package deshaw.dae.descrypto.services;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import deshaw.dae.descrypto.cache.DashboardCache;
 import deshaw.dae.descrypto.domain.AssetsAvail;
@@ -14,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -23,7 +22,9 @@ import java.util.Map;
 public class DashboardServiceImpl implements DashboardService{
     @Autowired
     private DashboardMapper dashboardMapper;
+
     private DashboardCache TokenCache = DashboardCache.getDashboardCache();
+
 
     RestTemplate restTemplate = new RestTemplate();
     ObjectMapper objectMapper = new ObjectMapper();
@@ -35,8 +36,6 @@ public class DashboardServiceImpl implements DashboardService{
 
         String summary24hApiUrl = "https://api.cryptowat.ch/markets/kraken/" + CoinId +"/summary";
         Summary24h summary24hResponse = restTemplate.getForObject(summary24hApiUrl, Summary24h.class);
-
-
         return new AssetDetails(CoinId, priceResponse.getPrice(), summary24hResponse);
 
     }

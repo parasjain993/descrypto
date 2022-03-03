@@ -5,10 +5,29 @@ public class User {
     private String fullName;
     private String email;
     private String password;
-    private int walletId;
+    private String walletId;
     private String pancardNo;
     private String dob;
     private String nationality;
+    private float totalWorth;
+    private float pnl;
+
+    public float getPnl() {
+        return pnl;
+    }
+
+    public void setPnl(float pnl) {
+        this.pnl = pnl;
+    }
+
+    public float getTotalWorth() {
+        return totalWorth;
+    }
+
+    public void setTotalWorth(float totalWorth) {
+        this.totalWorth = totalWorth;
+    }
+
 
     public String getNationality() {
         return nationality;
@@ -47,11 +66,11 @@ public class User {
         return password;
     }
 
-    public int  getWalletId() {
+    public String getWalletId() {
         return walletId;
     }
 
-    public void setWalletId(int walletId) {
+    public void setWalletId(String walletId) {
         this.walletId = walletId;
     }
 

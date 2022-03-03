@@ -11,4 +11,5 @@ public interface DashboardMapper {
     List<AssetsAvail> getAllAssetsAvail();
     List<TradingPairs> getAllTradingPairsAvail();
 
+
 }

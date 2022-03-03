@@ -1,0 +1,28 @@
+
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="deshaw.dae.descrypto.mappers.WalletMapper">
+
+    <resultMap id="WalletResultMapper" type="deshaw.dae.descrypto.domain.Wallet">
+        <result column="assetName" property="assetName"/>
+        <result column="assetCoins" property="assetCoins"/>
+    </resultMap>
+    <select id="findAssetsForUser" resultMap="WalletResultMapper">
+        select assetName, assetCoins from walletdb where walletId = #{walletId}
+    </select>
+    <select id="getAssetCoins" resultType="int">
+        SELECT assetCoins FROM walletdb WHERE walletId = #{walletId} AND assetName = #{assetName}
+    </select>
+    <update id="addFund">
+        update walletdb
+        SET walletdb.assetCoins = walletdb.assetCoins + #{amountToBeAdded}
+        WHERE walletdb.walletId = #{walletId} AND walletdb.assetName = #{assetName}
+    </update>
+    <update id="withdrawFund">
+        update walletdb
+        SET walletdb.assetCoins =  walletdb.assetCoins - #{withdrawalAmount}
+        WHERE walletdb.walletId = #{walletId} AND walletdb.assetName = #{assetName}
+    </update>
+</mapper>
+
