@@ -1,11 +1,14 @@
 package deshaw.dae.descrypto.controllers.OrderControllers;
 
 import java.io.*;
-import java.util.Random;
+import java.util.*;
+
+import deshaw.dae.descrypto.domain.AssetDetails;
+import deshaw.dae.descrypto.services.OrderServices.DummyServiceImpl;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import deshaw.dae.descrypto.domain.AssetDetails;
+import org.springframework.web.bind.annotation.RestController ;
+import deshaw.dae.descrypto.cache.DashboardCache;
 
 @RestController
 
@@ -13,54 +16,45 @@ import deshaw.dae.descrypto.domain.AssetDetails;
 public class DummyOrderController {
     int count=0;
     Random random=new Random();
-    //AssetDetails details=new AssetDetails();
-    @Scheduled(fixedRate = 30000 )
-    void generate() {
+    DashboardCache cache;
+    DummyServiceImpl dummyService=new DummyServiceImpl();
 
-          double currentPrice1=34.45;
-          double currentPrice2=45.11;
+    @Scheduled(fixedRate = 130000)//every 2.5 mins
+    void getCurrentPrice(){
+        cache=DashboardCache.getDashboardCache();
+        Map<String, AssetDetails> tokens=cache.TokenCache();
+        double currentPrice=tokens.get("btccad")!=null?tokens.get("btccad").getPrice():0;
+        generate(currentPrice);
+    }
+    void generate(double currentPrice1) {
 
-        try {
-            BufferedWriter out = new BufferedWriter(
-                    new FileWriter("dummy_order.txt", true));
+        if(currentPrice1!=0) {
 
-            if(out!=null){
-                if(count%2==0)
-                generateDummyBuy_btcusdt(currentPrice1,out);
-                else
-                generateDummySell_btcusdt(currentPrice1,out);
-                count=count+random.nextInt(4);
+            try {
+                BufferedWriter out = new BufferedWriter(
+                        new FileWriter("btccad_dummyOrder.txt", true));
+
+                if (out != null) {
+                    double amnt = random.nextDouble() + 0.12777;
+                    if (count % 2 == 0)
+                        generateDummyBuy_btccad(currentPrice1, out, amnt);
+                    else
+                        generateDummySell_btccad(currentPrice1, out, amnt);
+                    count = count + random.nextInt(4);
+                }
+            } catch (IOException e) {
+                System.out.println("exception occurred" + e);
             }
         }
-        catch (IOException e) {
-            System.out.println("exception occurred" + e);
-        }
-
 
     }
     //pair 1
-    void generateDummyBuy_btcusdt(double price,BufferedWriter out){
-        double variance=random.nextDouble()+4.0;
-        double newLimitPrice=price-variance;
-        String str="Buy : "+newLimitPrice+"\n";
-        try {
-            out.write(str);
-            out.close();
-        }catch (Exception e){
-            System.out.println("could not write");
-        }
+    void generateDummyBuy_btccad(double price,BufferedWriter out,double amnt){
+        dummyService.generateDummyBuy_btccad(price,out,amnt);
 
     }
-    void generateDummySell_btcusdt(double price,BufferedWriter out){
-        double variance=random.nextDouble()+4.0;
-        double newLimitPrice=price+variance;
-        String str="Sell : "+newLimitPrice+"\n";
-        try {
-            out.write(str);
-            out.close();
-        }catch (Exception e){
-            System.out.println("could not write");
-        }
+    void generateDummySell_btccad(double price,BufferedWriter out,double amnt){
+        dummyService.generateDummySell_btccad(price,out,amnt);
     }
 
 

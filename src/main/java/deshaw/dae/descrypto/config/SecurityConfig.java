@@ -29,9 +29,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                        .antMatchers(HttpMethod.POST,"/order/**/**").permitAll()
                        .antMatchers(HttpMethod.GET, "/user/**").permitAll()
                 .antMatchers(HttpMethod.POST, "/user/**").permitAll()
-<<<<<<< HEAD
-                 .and()
-=======
                 .antMatchers(HttpMethod.GET, "/trade/**").permitAll()
                 .antMatchers(HttpMethod.POST, "/trade/**").permitAll()
                 .antMatchers(HttpMethod.GET, "/order/**").permitAll()
@@ -39,7 +36,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .anyRequest()
                 .authenticated()
                 .and()
->>>>>>> 5708b8481ffe09ff8e56cbeabd22e8aebdf3beab
                 .httpBasic();
     }
 }
