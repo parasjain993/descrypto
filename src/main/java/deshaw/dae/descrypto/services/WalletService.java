@@ -1,17 +1,23 @@
 package deshaw.dae.descrypto.services;
 
+import deshaw.dae.descrypto.domain.Wallet;
+
 import java.util.HashMap;
 
 public interface WalletService {
 
 
-    HashMap<String, Integer> findAssetsForUser(String walletId);
+    HashMap<String, Integer> findAssetsForUser(int userId);
 
-    float totalWorthCalc(String walletId);
+    float totalWorthCalc(int userId);
 
-    int getAssetCoins(String walletId, String assetName);
+    int getAssetCoins(int userId, String assetName);
 
-    void withdrawFund(String walletId, String assetName, int withdrawalAmount);
+    void withdrawFund(int userId, String assetName, int withdrawalAmount);
 
-    void addFund(String walletId, String assetName, int amountToBeAdded);
+    void addFund(int userId, String assetName, int amountToBeAdded);
+
+    Wallet findWallet(int userId, String assetName);
+
+    void addNewWallet(int userId, String assetName, int amountToBeAdded);
 }

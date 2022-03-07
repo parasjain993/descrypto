@@ -19,9 +19,8 @@ public class RegisterController {
     PasswordEncoder passwordEncoder;
 
     @PostMapping("/register")
-    public ResponseEntity<Void> register(@RequestBody User userObject) {
-        //System.out.print("inside register controller");
-        User foundUser = userService.findByFullUsername(userObject.getFullName());
+    public ResponseEntity<?> register(@RequestBody User userObject) {
+        User foundUser = userService.findByUserName(userObject.getUserName());
         if(foundUser != null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
@@ -30,6 +29,7 @@ public class RegisterController {
             userService.addUser(userObject);
             return new ResponseEntity<>(HttpStatus.CREATED);
         }
+
     }
 
 }

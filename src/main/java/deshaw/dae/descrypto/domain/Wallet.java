@@ -4,16 +4,16 @@ package deshaw.dae.descrypto.domain;
 import java.util.Map;
 
 public class Wallet {
-     private String walletId;
+     private int userId;
      private String assetName;
      private int assetCoins;
 
-     public String getWalletId() {
-          return walletId;
+     public int getUserId() {
+          return userId;
      }
 
-     public void setWalletId(String walletId) {
-          this.walletId = walletId;
+     public void setUserId(int userId) {
+          this.userId = userId;
      }
 
      public int getAssetCoins() {

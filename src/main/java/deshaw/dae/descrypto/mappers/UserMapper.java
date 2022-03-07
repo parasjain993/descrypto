@@ -15,10 +15,8 @@ import java.util.Map;
 @Mapper
 public interface UserMapper {
     void addUser(User user);
-    User findByFullUsername(String username);
-    void setTotalWorth(String walletId, float total_worth);
     List<User> getAllUsers();
-    void setPNL(float pnl, String walletId);
+    User findByUserName(String userName);
 }
 
 

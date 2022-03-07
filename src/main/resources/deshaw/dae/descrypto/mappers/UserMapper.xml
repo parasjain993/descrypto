@@ -5,7 +5,10 @@
 <mapper namespace="deshaw.dae.descrypto.mappers.UserMapper">
     <resultMap id="BaseResultMap"  type="deshaw.dae.descrypto.domain.User" >
         <result column="userId" property="userId"   />
-        <result column="fullName" property="fullName"   />
+        <result column="firstName" property="firstName"   />
+        <result column="middleName" property="middleName"   />
+        <result column="lastName" property="lastName"   />
+        <result column="userName" property="userName"   />
         <result column="email" property="email" />
         <result column="password" property="password"/>
         <result column="walletId" property="walletId"/>
@@ -14,25 +17,25 @@
         <result column="dob" property="dob"/>
         <result column="nationality" property="nationality"/>
     </resultMap>
-    <select id="findByFullUsername"  resultMap="BaseResultMap">
-        select fullName,password,walletId, totalWorth from userdb where fullName=#{fullName}
+    <select id="findByUserName"  resultMap="BaseResultMap">
+        select userName,password, userId from userdb where userName=#{userName}
     </select>
     <insert id="addUser" parameterType="deshaw.dae.descrypto.domain.User" keyProperty="userId"
             keyColumn="userId" useGeneratedKeys="true">
-       insert into userdb( fullName, email, password, phoneNo, pancardNo, dob, nationality)
-        values ( #{fullName}, #{email}, #{password}, #{phoneNo}, #{pancardNo}, #{dob}, #{nationality})
+       insert into userdb( firstName, middleName, lastName, userName, email, password, phoneNo, pancardNo, dob, nationality)
+        values ( #{firstName},#{middleName}, #{lastName}, #{userName}, #{email}, #{password}, #{phoneNo}, #{pancardNo}, #{dob}, #{nationality})
     </insert>
-    <update id = "setTotalWorth" >
-        update userdb set totalWorth = #{total_worth} WHERE walletId = #{walletId}
-    </update>
+<!--    <update id = "setTotalWorth" >-->
+<!--        update userdb set totalWorth = #{total_worth} WHERE walletId = #{walletId}-->
+<!--    </update>-->
     <select id="getAllUsers" resultMap="BaseResultMap">
         SELECT * FROM userdb;
     </select>
-    <update id="setPNL">
-        UPDATE userdb
-        SET userdb.pnl = #{pnl}
-        WHERE userdb.walletId = #{walletId}
-    </update>
+<!--    <update id="setPNL">-->
+<!--        UPDATE userdb-->
+<!--        SET userdb.pnl = #{pnl}-->
+<!--        WHERE userdb.walletId = #{walletId}-->
+<!--    </update>-->
 
 </mapper>
 
