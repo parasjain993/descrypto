@@ -8,6 +8,7 @@ public class User {
     private String walletId;
     private String pancardNo;
     private String dob;
+    private String phoneNo;
     private String nationality;
     private float totalWorth;
     private float pnl;
@@ -37,7 +38,6 @@ public class User {
         this.nationality = nationality;
     }
 
-    private String phoneNo;
 
     public String getPhoneNo() {
         return phoneNo;
