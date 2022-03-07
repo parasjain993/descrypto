@@ -11,5 +11,6 @@ public interface UserService {
     User findByFullUsername(String username);
     List<User> getAllUsers();
     void setPNL(float v, String walletId);
+    String getWalletId(int userId);
 }
 

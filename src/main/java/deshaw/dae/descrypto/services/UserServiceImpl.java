@@ -34,7 +34,9 @@ public class UserServiceImpl implements UserService {
     public User findByFullUsername(String name){
         return usermapper.findByFullUsername(name);
     }
-
+    public String getWalletId(int userId){
+        return usermapper.findByUserId(userId).getWalletId();
+    }
     @Override
     public List<User> getAllUsers() {
         return usermapper.getAllUsers();
