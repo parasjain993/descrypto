@@ -8,9 +8,11 @@ import java.util.Map;
 public interface UserService {
 
     void addUser(User user);
-    User findByFullUsername(String username);
     List<User> getAllUsers();
-    void setPNL(float v, String walletId);
-    String getWalletId(int userId);
+
+   // void setPNL(float v, String walletId);
+
+    User findByUserName(String userName);
+
 }
 

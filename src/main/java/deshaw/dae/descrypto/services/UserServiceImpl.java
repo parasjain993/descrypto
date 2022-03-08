@@ -30,21 +30,20 @@ public class UserServiceImpl implements UserService {
     RestTemplate restTemplate = new RestTemplate();
     ObjectMapper objectMapper = new ObjectMapper();
 
-    @Override
-    public User findByFullUsername(String name){
-        return usermapper.findByFullUsername(name);
-    }
-    public String getWalletId(int userId){
-        return usermapper.findByUserId(userId).getWalletId();
-    }
+
     @Override
     public List<User> getAllUsers() {
         return usermapper.getAllUsers();
     }
 
+//    @Override
+//    public void setPNL(float v, String walletId) {
+//        usermapper.setPNL(v, walletId);
+//    }
+
     @Override
-    public void setPNL(float v, String walletId) {
-        usermapper.setPNL(v, walletId);
+    public User findByUserName(String userName) {
+        return usermapper.findByUserName(userName);
     }
 
     @Override

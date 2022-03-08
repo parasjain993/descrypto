@@ -2,6 +2,7 @@ package deshaw.dae.descrypto.controllers;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import deshaw.dae.descrypto.domain.User;
+import deshaw.dae.descrypto.domain.Wallet;
 import deshaw.dae.descrypto.domain.demo;
 import deshaw.dae.descrypto.services.DashboardService;
 import deshaw.dae.descrypto.services.UserService;
@@ -25,26 +26,39 @@ public class fundsController {
     @PutMapping ("/addFund")
     public ResponseEntity<Void> addFund(@RequestBody ObjectNode objectnode ) {
         String assetName = objectnode.get("assetName").asText();
-        String fullName = objectnode.get("fullName").asText();
+        String userName = objectnode.get("userName").asText();
         int amountToBeAdded = objectnode.get("amountToBeAdded").asInt();
-        User user = userservice.findByFullUsername(fullName);
-        walletservice.addFund(user.getWalletId(), assetName, amountToBeAdded);
-        walletservice.totalWorthCalc(user.getWalletId());
+        User user = userservice.findByUserName(userName);
+        Wallet wallet = walletservice.findWallet(user.getUserId(), assetName);
+        if(wallet == null) {
+            System.out.print("inside null wallet");
+            walletservice.addNewWallet(user.getUserId(), assetName, amountToBeAdded);
+        }
+        else {
+            walletservice.addFund(user.getUserId(), assetName, amountToBeAdded);
+        }
         return new ResponseEntity<>(HttpStatus.OK);
     }
     @PutMapping("/withdrawFunds")
     public ResponseEntity<Void> withDrawFunds(@RequestBody ObjectNode objectnode) {
         String assetName = objectnode.get("assetName").asText();
-        String fullName = objectnode.get("fullName").asText();
+        String userName = objectnode.get("userName").asText();
         int amountToBeDeducted = objectnode.get("amountToBeDeducted").asInt();
-        User user = userservice.findByFullUsername(fullName);
-        int assetAvailableCoins = walletservice.getAssetCoins(user.getWalletId(), assetName);
-        if (assetAvailableCoins < amountToBeDeducted) {
+        User user = userservice.findByUserName(userName);
+        Wallet wallet = walletservice.findWallet(user.getUserId(), assetName);
+        if(wallet == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        } else {
-            walletservice.withdrawFund(user.getWalletId(), assetName, amountToBeDeducted);
-            return new ResponseEntity<>(HttpStatus.OK);
         }
+        else {
+            int assetAvailableCoins = walletservice.getAssetCoins(user.getUserId(), assetName);
+            if (assetAvailableCoins < amountToBeDeducted) {
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            } else {
+                walletservice.withdrawFund(user.getUserId(), assetName, amountToBeDeducted);
+                return new ResponseEntity<>(HttpStatus.OK);
+            }
+        }
+
 
     }
 

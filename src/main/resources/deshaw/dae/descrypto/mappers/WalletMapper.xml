@@ -9,20 +9,26 @@
         <result column="assetCoins" property="assetCoins"/>
     </resultMap>
     <select id="findAssetsForUser" resultMap="WalletResultMapper">
-        select assetName, assetCoins from walletdb where walletId = #{walletId}
+        select assetName, assetCoins from spotwalletdb where userId = #{userId}
     </select>
     <select id="getAssetCoins" resultType="int">
-        SELECT assetCoins FROM walletdb WHERE walletId = #{walletId} AND assetName = #{assetName}
+        SELECT assetCoins FROM spotwalletdb WHERE userId = #{userId} AND assetName = #{assetName}
     </select>
     <update id="addFund">
-        update walletdb
-        SET walletdb.assetCoins = walletdb.assetCoins + #{amountToBeAdded}
-        WHERE walletdb.walletId = #{walletId} AND walletdb.assetName = #{assetName}
+        update spotwalletdb
+        SET spotwalletdb.assetCoins = spotwalletdb.assetCoins + #{amountToBeAdded}
+        WHERE spotwalletdb.userId = #{userId} AND spotwalletdb.assetName = #{assetName}
     </update>
     <update id="withdrawFund">
-        update walletdb
-        SET walletdb.assetCoins =  walletdb.assetCoins - #{withdrawalAmount}
-        WHERE walletdb.walletId = #{walletId} AND walletdb.assetName = #{assetName}
+        update spotwalletdb
+        SET spotwalletdb.assetCoins =  spotwalletdb.assetCoins - #{withdrawalAmount}
+        WHERE spotwalletdb.userId = #{userId} AND spotwalletdb.assetName = #{assetName}
     </update>
+    <select id ="findWallet" resultMap="WalletResultMapper">
+        SELECT assetName, assetCoins FROM spotwalletdb WHERE userId = #{userId} AND assetName = #{assetName}
+    </select>
+    <insert id = "addNewWallet">
+        INSERT INTO spotwalletdb(userId,assetName, assetCoins) VALUES(#{userId}, #{assetName}, #{amountToBeAdded})
+    </insert>
 </mapper>
 

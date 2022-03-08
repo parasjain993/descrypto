@@ -16,11 +16,13 @@ import java.util.Map;
 @Mapper
 public interface UserMapper {
     void addUser(User user);
-    User findByFullUsername(String username);
-    void setTotalWorth(String walletId, float total_worth);
     List<User> getAllUsers();
+
+    User findByUserName(String userName);
+
     void setPNL(float pnl, String walletId);
     User findByUserId(int userId);
+
 }
 
 

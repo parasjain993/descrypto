@@ -31,9 +31,10 @@ public class OrderServiceImpl implements OrderService{
         newLimitOrder.setTotal(total);
         newLimitOrder.setAverage(tokens.get(newLimitOrder.getOrderPair()).getPrice());
         newLimitOrder.setOrderType("limit");
-       // if(!ValidateWorth(newLimitOrder))
-         //  return -1;
-        return mapper.placeLimitOrder(newLimitOrder);
+        if(!ValidateWorth(newLimitOrder))
+           return -1;
+        return 0;
+       // return mapper.placeLimitOrder(newLimitOrder);
 
     }
     public int placeMarketOrder(Order newMarketOrder){
@@ -101,11 +102,12 @@ public class OrderServiceImpl implements OrderService{
     }
     public boolean ValidateWorth(Order order){
         String coins[]=order.getOrderPair().split("-");//btc-usdt
-        String walletId=userService.getWalletId(order.getUserId());
+        int userId=order.getUserId();
         //sell btc in exchange of usdt
-        int coin1=walletservice.getAssetCoins(walletId,coins[0]);
+        int coin1=walletservice.getAssetCoins(userId,"btc");
+        System.out.print(coin1);
         //buying btc with usdt
-        int coin2 = walletservice.getAssetCoins(walletId,coins[1]);
+        int coin2 = walletservice.getAssetCoins(userId,"cad");
         if(order.getSide().equals("buy")){
             if(order.getTotal()>coin2*tokens.get(order.getOrderPair()).getPrice());
                 return false;

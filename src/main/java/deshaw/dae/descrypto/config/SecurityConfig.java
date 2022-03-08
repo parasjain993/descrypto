@@ -1,8 +1,10 @@
 package deshaw.dae.descrypto.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -16,27 +18,23 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
-    PasswordEncoder passwordEncoder() {
+    public static PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-
+    @Autowired
+    public void configureGlobal(AuthenticationManagerBuilder auth)
+            throws Exception
+    {
+        auth.inMemoryAuthentication()
+                .withUser("admin")
+                .password(passwordEncoder().encode("password"))
+                .roles("USER");
+    }
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-               http
+        http
                 .csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/").permitAll()
-                       .antMatchers(HttpMethod.POST,"/order/**/**").permitAll()
-                       .antMatchers(HttpMethod.GET, "/user/**").permitAll()
-                .antMatchers(HttpMethod.POST, "/user/**").permitAll()
-                       .antMatchers(HttpMethod.PUT, "/user/**").permitAll()
-                .antMatchers(HttpMethod.GET, "/dashboard/**").permitAll()
-                .antMatchers(HttpMethod.POST, "/dashboard/**").permitAll()
-       .antMatchers(HttpMethod.GET, "/trade/**").permitAll()
-                .antMatchers(HttpMethod.POST, "/trade/**").permitAll()
-                .antMatchers(HttpMethod.GET, "/order/**").permitAll()
-                .antMatchers(HttpMethod.POST, "/order/**").permitAll()
-
                 .anyRequest()
                 .authenticated()
                 .and()
