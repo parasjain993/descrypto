@@ -9,8 +9,10 @@ public interface UserService {
 
     void addUser(User user);
     List<User> getAllUsers();
+
    // void setPNL(float v, String walletId);
 
     User findByUserName(String userName);
+
 }
 

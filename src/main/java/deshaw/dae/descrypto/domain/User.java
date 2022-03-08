@@ -10,7 +10,6 @@ public class User {
     private String userName;
     private String email;
     private String password;
-    private String walletId;
     private String phoneNo;
     private String pancardNo;
     private String dob;
@@ -23,6 +22,7 @@ public class User {
     public void setNationality(String nationality) {
         this.nationality = nationality;
     }
+
 
     public String getPhoneNo() {
         return phoneNo;
@@ -50,15 +50,6 @@ public class User {
     public String getPassword() {
         return password;
     }
-
-    public String getWalletId() {
-        return walletId;
-    }
-
-    public void setWalletId(String walletId) {
-        this.walletId = walletId;
-    }
-
     public void setPassword(String password) {
         this.password = password;
     }

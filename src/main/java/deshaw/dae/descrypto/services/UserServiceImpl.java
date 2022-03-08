@@ -30,6 +30,7 @@ public class UserServiceImpl implements UserService {
     RestTemplate restTemplate = new RestTemplate();
     ObjectMapper objectMapper = new ObjectMapper();
 
+
     @Override
     public List<User> getAllUsers() {
         return usermapper.getAllUsers();
