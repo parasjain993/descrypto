@@ -11,7 +11,6 @@
         <result column="userName" property="userName"   />
         <result column="email" property="email" />
         <result column="password" property="password"/>
-        <result column="walletId" property="walletId"/>
         <result column="phoneNo" property="phoneNo"/>
         <result column="pancardNo" property="pancardNo"/>
         <result column="dob" property="dob"/>
@@ -21,7 +20,7 @@
         select userName,password, userId from userdb where userName=#{userName}
     </select>
     <select id="findByUserId" resultMap="BaseResultMap">
-        select fullName,password,walletId, totalWorth userdb where userId=#{userId}
+        select fullName,password,totalWorth userdb where userId=#{userId}
     </select>
     <insert id="addUser" parameterType="deshaw.dae.descrypto.domain.User" keyProperty="userId"
             keyColumn="userId" useGeneratedKeys="true">
