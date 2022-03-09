@@ -2,6 +2,7 @@ package deshaw.dae.descrypto.controllers;
 
 
 import deshaw.dae.descrypto.domain.User;
+import deshaw.dae.descrypto.services.PortfolioWorthService;
 import deshaw.dae.descrypto.services.UserService;
 import deshaw.dae.descrypto.services.WalletService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,21 +27,19 @@ public class totalWorthController {
     private UserService userservice;
     @Autowired
     private WalletService walletservice;
+    @Autowired
+    private PortfolioWorthService portfolioWorthService;
 
-//    @GetMapping("/pnl")
-//    @Scheduled(fixedRate = 120000)
-//    public ResponseEntity<?> pnlCalc() {
-//        List<User> allUsers = userservice.getAllUsers();
-//        for(User user: allUsers) {
-//            float prevTotalWorth = user.getTotalWorth();
-//            float  currTotalWorth = walletservice.totalWorthCalc(user.getUserId());
-//            userservice.setPNL(currTotalWorth - prevTotalWorth, user.getWalletId());
-//        }
-//        return new ResponseEntity<>(HttpStatus.OK);
-//    }
+    @GetMapping("/updatePortfolioWorth")
+    @Scheduled(fixedRate = 120000)
+    public ResponseEntity<?> updatePortfolioWorthForAllUsers() {
+        portfolioWorthService.updatePortfolioWorth();
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
     @GetMapping("/{userName}/totalWorth")
-    public EntityModel<?> totalWorth(@PathVariable String userName) {
+    public ResponseEntity<?> totalWorth(@PathVariable String userName) {
         User user = userservice.findByUserName(userName);
-        return EntityModel.of(walletservice.totalWorthCalc(user.getUserId()));
+        return new ResponseEntity<>("Total worth of " + userName + " is (in usdt): " + Float.toString(walletservice.totalWorthCalc(user.getUserId())), HttpStatus.OK);
     }
 }

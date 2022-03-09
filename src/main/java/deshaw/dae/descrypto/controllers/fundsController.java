@@ -24,38 +24,41 @@ public class fundsController {
 
 
     @PutMapping ("/addFund")
-    public ResponseEntity<Void> addFund(@RequestBody ObjectNode objectnode ) {
+    public ResponseEntity<?> addFund(@RequestBody ObjectNode objectnode ) {
         String assetName = objectnode.get("assetName").asText();
         String userName = objectnode.get("userName").asText();
         int amountToBeAdded = objectnode.get("amountToBeAdded").asInt();
         User user = userservice.findByUserName(userName);
         Wallet wallet = walletservice.findWallet(user.getUserId(), assetName);
         if(wallet == null) {
-            System.out.print("inside null wallet");
+            //System.out.print("inside null wallet");
             walletservice.addNewWallet(user.getUserId(), assetName, amountToBeAdded);
         }
         else {
             walletservice.addFund(user.getUserId(), assetName, amountToBeAdded);
         }
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(Integer.toString(amountToBeAdded)+" coins for " + assetName + " has been added successfully in " + userName + "'s spot wallet!",HttpStatus.OK);
     }
+
+
+
     @PutMapping("/withdrawFunds")
-    public ResponseEntity<Void> withDrawFunds(@RequestBody ObjectNode objectnode) {
+    public ResponseEntity<?> withDrawFunds(@RequestBody ObjectNode objectnode) {
         String assetName = objectnode.get("assetName").asText();
         String userName = objectnode.get("userName").asText();
         int amountToBeDeducted = objectnode.get("amountToBeDeducted").asInt();
         User user = userservice.findByUserName(userName);
         Wallet wallet = walletservice.findWallet(user.getUserId(), assetName);
         if(wallet == null) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(Integer.toString(amountToBeDeducted) + " cannot be deducted as no such " + assetName + " exists in the spot wallet of " + userName, HttpStatus.BAD_REQUEST);
         }
         else {
             int assetAvailableCoins = walletservice.getAssetCoins(user.getUserId(), assetName);
             if (assetAvailableCoins < amountToBeDeducted) {
-                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+                return new ResponseEntity<>(Integer.toString(amountToBeDeducted) + " coins cannot be deducted as total number of coins for " + assetName + " is: " + Integer.toString(assetAvailableCoins) + " which is less than the coins to be deducted",HttpStatus.BAD_REQUEST);
             } else {
                 walletservice.withdrawFund(user.getUserId(), assetName, amountToBeDeducted);
-                return new ResponseEntity<>(HttpStatus.OK);
+                return new ResponseEntity<>(Integer.toString(amountToBeDeducted) + " has been deducted from the spot wallet of " + userName + " for asset : " + assetName,HttpStatus.OK);
             }
         }
 

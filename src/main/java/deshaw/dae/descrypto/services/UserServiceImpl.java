@@ -47,6 +47,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public void updateTotalWorth() {
+        usermapper.updateTotalWorth();
+    }
+
+    @Override
     public void addUser(User user) {
         usermapper.addUser(user);
     }

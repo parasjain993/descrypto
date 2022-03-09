@@ -1,12 +1,15 @@
 package deshaw.dae.descrypto.services;
 
 import deshaw.dae.descrypto.cache.DashboardCache;
+import deshaw.dae.descrypto.domain.User;
 import deshaw.dae.descrypto.domain.Wallet;
 import deshaw.dae.descrypto.mappers.UserMapper;
 import deshaw.dae.descrypto.mappers.WalletMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -58,5 +61,17 @@ public class WalletServiceImpl implements WalletService{
     @Override
     public void addNewWallet(int userId, String assetName, int amountToBeAdded) {
         walletmapper.addNewWallet(userId, assetName, amountToBeAdded);
+    }
+
+    @Override
+    public void updateTotalWorth() {
+        List<User> users = usermapper.getAllUsers();
+        Date date= new Date();
+        long time = date.getTime();
+        Timestamp ts = new Timestamp(time);
+        for(User user: users) {
+            float totalWorth  = totalWorthCalc(user.getUserId());
+
+        }
     }
 }

@@ -20,4 +20,6 @@ public interface WalletService {
     Wallet findWallet(int userId, String assetName);
 
     void addNewWallet(int userId, String assetName, int amountToBeAdded);
+
+    void updateTotalWorth();
 }
