@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class DashboardCache {
-    public Map<String, AssetDetails> TokenCache = new HashMap<String, AssetDetails>();
+    public  Map<String, AssetDetails> TokenCache = new HashMap<String, AssetDetails>();
 
     private static  DashboardCache single_instance = null;
     private DashboardCache(){

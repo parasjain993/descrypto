@@ -30,17 +30,6 @@ public class totalWorthController {
     @Autowired
     private PortfolioWorthService portfolioWorthService;
 
-//    @GetMapping("/pnl")
-//    @Scheduled(fixedRate = 120000)
-//    public ResponseEntity<?> pnlCalc() {
-//        List<User> allUsers = userservice.getAllUsers();
-//        for(User user: allUsers) {
-//            float prevTotalWorth = user.getTotalWorth();
-//            float  currTotalWorth = walletservice.totalWorthCalc(user.getUserId());
-//            userservice.setPNL(currTotalWorth - prevTotalWorth, user.getWalletId());
-//        }
-//        return new ResponseEntity<>(HttpStatus.OK);
-//    }
     @GetMapping("/updatePortfolioWorth")
     @Scheduled(fixedRate = 120000)
     public ResponseEntity<?> updatePortfolioWorthForAllUsers() {

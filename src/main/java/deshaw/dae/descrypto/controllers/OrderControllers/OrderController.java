@@ -2,11 +2,11 @@ package deshaw.dae.descrypto.controllers.OrderControllers;
 
 import deshaw.dae.descrypto.domain.Order;
 import deshaw.dae.descrypto.services.OrderServices.OrderService;
-import deshaw.dae.descrypto.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.hateoas.EntityModel;
 
+import java.util.HashMap;
 import java.util.List;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
@@ -82,5 +82,9 @@ public class OrderController {
     @PostMapping("/cancel/{orderId}")
     void cancelOrder(@PathVariable("orderId") int orderId){
         service.cancelOrder(orderId);
+    }
+    @GetMapping("/getDummy/{pair}")
+    List<HashMap<String,String>> getOrders(@PathVariable("pair") String pair){
+        return Market.getOrders(pair);
     }
 }
