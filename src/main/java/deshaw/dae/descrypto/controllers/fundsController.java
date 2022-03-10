@@ -8,9 +8,13 @@ import deshaw.dae.descrypto.services.DashboardService;
 import deshaw.dae.descrypto.services.UserService;
 import deshaw.dae.descrypto.services.WalletService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+import java.security.Principal;
 
 import java.util.List;
 
@@ -24,10 +28,11 @@ public class fundsController {
 
 
     @PutMapping ("/addFund")
-    public ResponseEntity<?> addFund(@RequestBody ObjectNode objectnode ) {
+    public ResponseEntity<?> addFund(@RequestBody ObjectNode objectnode) {
         String assetName = objectnode.get("assetName").asText();
-        String userName = objectnode.get("userName").asText();
-        int amountToBeAdded = objectnode.get("amountToBeAdded").asInt();
+       int amountToBeAdded = objectnode.get("amountToBeAdded").asInt();
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String userName = auth.getName();
         User user = userservice.findByUserName(userName);
         Wallet wallet = walletservice.findWallet(user.getUserId(), assetName);
         if(wallet == null) {
@@ -45,8 +50,9 @@ public class fundsController {
     @PutMapping("/withdrawFunds")
     public ResponseEntity<?> withDrawFunds(@RequestBody ObjectNode objectnode) {
         String assetName = objectnode.get("assetName").asText();
-        String userName = objectnode.get("userName").asText();
         int amountToBeDeducted = objectnode.get("amountToBeDeducted").asInt();
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String userName = auth.getName();
         User user = userservice.findByUserName(userName);
         Wallet wallet = walletservice.findWallet(user.getUserId(), assetName);
         if(wallet == null) {

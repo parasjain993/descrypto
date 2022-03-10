@@ -28,7 +28,7 @@ public class DashboardController {
     @Scheduled(fixedRate = 120000)
     public ResponseEntity<?> getCoinDetails(){
         // This is temporary code util data is fetched from the database //
-        List<String> TemporaryCoins = List.of("btcusdt", "ethcad", "usdtusd", "btccad");
+        List<String> TemporaryCoins = List.of("btcusdt", "ethusdt", "usdtusd", "btccad");
         return new ResponseEntity<>(dashboardService.getCoinDetails(TemporaryCoins), HttpStatus.OK);
     }
 
