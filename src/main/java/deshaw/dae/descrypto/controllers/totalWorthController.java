@@ -11,6 +11,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -37,8 +39,10 @@ public class totalWorthController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @GetMapping("/{userName}/totalWorth")
-    public ResponseEntity<?> totalWorth(@PathVariable String userName) {
+    @GetMapping("/totalWorth")
+    public ResponseEntity<?> totalWorth() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String userName = auth.getName();
         User user = userservice.findByUserName(userName);
         return new ResponseEntity<>("Total worth of " + userName + " is (in usdt): " + Float.toString(walletservice.totalWorthCalc(user.getUserId())), HttpStatus.OK);
     }
