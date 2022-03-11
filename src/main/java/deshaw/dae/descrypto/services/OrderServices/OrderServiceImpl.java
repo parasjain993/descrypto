@@ -128,10 +128,10 @@ public class OrderServiceImpl implements OrderService{
         String coins[]=order.getOrderPair().split("-");//btc-cad
         int userId=order.getUserId();
         String pair=coins[0]+coins[1];
-     //   System.out.println(tokens.get(pair).getPrice());
         try {
             int coin1 = walletservice.getAssetCoins(userId,coins[0]);
            int coin2 = walletservice.getAssetCoins(userId,coins[1]);
+
             if(order.getSide().equals("buy")){
                 if(order.getTotal()>coin2*tokens.get(pair).getPrice())
                 return false;

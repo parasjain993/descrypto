@@ -1,8 +1,12 @@
 package deshaw.dae.descrypto.controllers.OrderControllers;
 
 import deshaw.dae.descrypto.domain.Order;
+import deshaw.dae.descrypto.domain.User;
 import deshaw.dae.descrypto.services.OrderServices.OrderService;
+import deshaw.dae.descrypto.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.hateoas.EntityModel;
 
@@ -17,11 +21,14 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 public class OrderController {
     @Autowired
     private OrderService service;
-
-
+    @Autowired
+    private UserService userService;
     @PostMapping("/place/limit")
     EntityModel<Order> placeLimitOrder(@RequestBody Order newLimitOrder){
-
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String userName = auth.getName();
+        int userId=userService.findByUserName(userName).getUserId();
+        newLimitOrder.setUserId(userId);
         int status=service.placeLimitOrder(newLimitOrder);
         if(status==1) {
             return EntityModel.of(newLimitOrder,
@@ -35,7 +42,10 @@ public class OrderController {
     }
     @PostMapping("/place/market")
     EntityModel<Order> placeMarketOrder(@RequestBody Order newMarketOrder){
-
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String userName = auth.getName();
+        int userId=userService.findByUserName(userName).getUserId();
+        newMarketOrder.setUserId(userId);
         int status=service.placeMarketOrder(newMarketOrder);
         if(status==1)
             return EntityModel.of(newMarketOrder,linkTo(methodOn(OrderController.class).
@@ -47,6 +57,10 @@ public class OrderController {
     }
     @PostMapping("/place/stop-loss/market")
     EntityModel<Order> placeStopLossMarketOrder(@RequestBody Order newSLMarketOrder){
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String userName = auth.getName();
+        int userId=userService.findByUserName(userName).getUserId();
+        newSLMarketOrder.setUserId(userId);
         int status=service.placeStopLossMarketOrder(newSLMarketOrder);
         if(status==1){
             return EntityModel.of(newSLMarketOrder,linkTo(methodOn(OrderController.class).showOpenOrders(newSLMarketOrder.getUserId())).withRel("openOrders"),
@@ -59,6 +73,10 @@ public class OrderController {
     }
     @PostMapping("/place/stop-loss/limit")
     EntityModel<Order> placeStopLossLimitOrder(@RequestBody Order newSLLimitOrder){
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String userName = auth.getName();
+        int userId=userService.findByUserName(userName).getUserId();
+        newSLLimitOrder.setUserId(userId);
         int status=service.placeStopLossMarketOrder(newSLLimitOrder);
         if(status==1) {
             return EntityModel.of(newSLLimitOrder,linkTo(methodOn(OrderController.class).showOpenOrders(newSLLimitOrder.getUserId())).withRel("openOrders"),
@@ -84,7 +102,8 @@ public class OrderController {
         service.cancelOrder(orderId);
     }
     @GetMapping("/getDummy/{pair}")
-    List<HashMap<String,String>> getOrders(@PathVariable("pair") String pair){
+    List<HashMap<String,String>> getOrders(@PathVariable("pair") String pair) {
         return Market.getOrders(pair);
     }
+
 }
