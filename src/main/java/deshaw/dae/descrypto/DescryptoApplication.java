@@ -18,7 +18,7 @@ public class DescryptoApplication {
 
 			SpringApplication.run(DescryptoApplication.class, args);
 			 Market market1=new Market();
-			 market1.initiate("btceth");
+			 market1.initiate("usdtusd");
 			 Market market2=new Market();
 			 market2.initiate("btccad");
 
