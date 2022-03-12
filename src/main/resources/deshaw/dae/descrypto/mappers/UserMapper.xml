@@ -1,0 +1,45 @@
+
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="deshaw.dae.descrypto.mappers.UserMapper">
+    <resultMap id="BaseResultMap"  type="deshaw.dae.descrypto.domain.User" >
+        <result column="userId" property="userId"   />
+        <result column="firstName" property="firstName"   />
+        <result column="middleName" property="middleName"   />
+        <result column="lastName" property="lastName"   />
+        <result column="userName" property="userName"   />
+        <result column="email" property="email" />
+        <result column="password" property="password"/>
+        <result column="phoneNo" property="phoneNo"/>
+        <result column="pancardNo" property="pancardNo"/>
+        <result column="dob" property="dob"/>
+        <result column="nationality" property="nationality"/>
+    </resultMap>
+    <select id="findByUserName"  resultMap="BaseResultMap">
+        select userName,password, userId from userdb where userName=#{userName}
+    </select>
+    <select id="findByUserId" resultMap="BaseResultMap">
+        select fullName,password,totalWorth userdb where userId=#{userId}
+    </select>
+    <insert id="addUser" parameterType="deshaw.dae.descrypto.domain.User" keyProperty="userId"
+            keyColumn="userId" useGeneratedKeys="true">
+
+       insert into userdb( firstName, middleName, lastName, userName, email, password, phoneNo, pancardNo, dob, nationality)
+        values ( #{firstName},#{middleName}, #{lastName}, #{userName}, #{email}, #{password}, #{phoneNo}, #{pancardNo}, #{dob}, #{nationality})
+
+    </insert>
+<!--    <update id = "setTotalWorth" >-->
+<!--        update userdb set totalWorth = #{total_worth} WHERE walletId = #{walletId}-->
+<!--    </update>-->
+    <select id="getAllUsers" resultMap="BaseResultMap">
+        SELECT * FROM userdb;
+    </select>
+<!--    <update id="setPNL">-->
+<!--        UPDATE userdb-->
+<!--        SET userdb.pnl = #{pnl}-->
+<!--        WHERE userdb.walletId = #{walletId}-->
+<!--    </update>-->
+
+</mapper>
+

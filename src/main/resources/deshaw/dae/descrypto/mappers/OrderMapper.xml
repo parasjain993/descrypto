@@ -1,0 +1,79 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="deshaw.dae.descrypto.mappers.OrderMapper">
+    <insert id="placeLimitOrder" parameterType="deshaw.dae.descrypto.domain.Order" keyProperty="orderId"
+    keyColumn="orderId" useGeneratedKeys="true">
+        insert into orders(userId,orderPair,amount,limitPrice,orderType,orderStatus,filled,total,average,side)
+        values(#{userId},#{orderPair},#{amount},
+        #{limitPrice},#{orderType},#{orderStatus},#{filled},#{total},#{average},#{side})
+
+    </insert>
+
+    <insert id="placeMarketOrder" parameterType="deshaw.dae.descrypto.domain.Order" keyProperty="orderId"
+            keyColumn="orderId" useGeneratedKeys="true">
+        insert into orders(userId,orderPair,amount,limitPrice,orderType,orderStatus,filled,total,average,side)
+        values(#{userId},#{orderPair},#{amount},
+        #{limitPrice},#{orderType},#{orderStatus},#{filled},#{total},#{average},#{side})
+    </insert>
+
+    <insert id="placeStopLossMarketOrder" parameterType="deshaw.dae.descrypto.domain.Order" keyProperty="orderId"
+            keyColumn="orderId" useGeneratedKeys="true">
+        insert into orders(userId,orderPair,amount,limitPrice,orderType,orderStatus,filled,total,side,triggerPrice,average)
+        values(#{userId},#{orderPair},#{amount},
+        #{limitPrice},#{orderType},#{orderStatus},#{filled},#{total},#{side},#{triggerPrice},#{average})
+    </insert>
+    <insert id="placeStopLossLimitOrder" parameterType="deshaw.dae.descrypto.domain.Order" keyProperty="orderId"
+            keyColumn="orderId" useGeneratedKeys="true">
+        insert into orders(userId,orderPair,amount,limitPrice,orderType,orderStatus,filled,total,side,triggerPrice,average)
+        values(#{userId},#{orderPair},#{amount},
+        #{limitPrice},#{orderType},#{orderStatus},#{filled},#{total},#{side},#{triggerPrice},#{average})
+    </insert>
+
+    <resultMap id="OrderResultMap" type="deshaw.dae.descrypto.domain.Order">
+        <id column="orderId" property="orderId" />
+        <result column="userId" property="userId" />
+        <result column="orderPair" property="orderPair" />
+        <result column="amount" property="amount" />
+        <result column="limitPrice" property="limitPrice" />
+        <result column="average" property="average" />
+        <result column="orderStatus" property="orderStatus" />
+        <result column="orderType" property="orderType" />
+        <result column="side" property="side" />
+        <result column="filled" property="filled" />
+        <result column="total" property="total" />
+    </resultMap>
+
+    <select id="orderHistory" resultMap="OrderResultMap">
+        select * from orders
+        where userId=#{userId}
+    </select>
+
+
+    <resultMap id="openOrderResultMap" type="deshaw.dae.descrypto.domain.Order">
+        <id column="orderId" property="orderId" />
+        <result column="userId" property="userId" />
+        <result column="orderPair" property="orderPair" />
+        <result column="amount" property="amount" />
+        <result column="limitPrice" property="limitPrice" />
+        <result column="average" property="average" />
+        <result column="orderStatus" property="orderStatus" />
+        <result column="orderType" property="orderType" />
+        <result column="side" property="side" />
+        <result column="filled" property="filled" />
+        <result column="total" property="total" />
+    </resultMap>
+
+    <select id="openOrders" resultMap="openOrderResultMap">
+        select * from orders
+        where userId=#{userId} and (orderStatus='open' OR orderStatus='partially_filled' )
+    </select>
+
+    <update id="cancelOrder" >
+        UPDATE orders
+        SET orderStatus = 'cancelled'
+        WHERE orders.orderId = #{orderId} AND orderStatus!='filled'
+    </update>
+</mapper>
+
