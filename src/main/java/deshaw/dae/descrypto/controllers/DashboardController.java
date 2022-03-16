@@ -27,7 +27,6 @@ public class DashboardController {
     @GetMapping("/markets/summary/get")
     @Scheduled(fixedRate = 120000)
     public ResponseEntity<?> getCoinDetails(){
-
         return new ResponseEntity<>(dashboardService.getCoinDetails(), HttpStatus.OK);
     }
 
@@ -40,6 +39,18 @@ public class DashboardController {
     public ResponseEntity<?> getPairs(){
         return new ResponseEntity<>(dashboardService.getAllTradingPairs(), HttpStatus.OK);
     }
+
+    @GetMapping("/assets/{assetId}")
+    public ResponseEntity<?> getAssetById(){
+        return new ResponseEntity<>("hi", HttpStatus.OK);
+    }
+
+    @GetMapping("pairs/{paiId}")
+    public  ResponseEntity<?> getPairById(){
+        return new ResponseEntity<>("hi", HttpStatus.OK);
+    }
+
+
 
 
 }
