@@ -8,8 +8,9 @@ import java.util.List;
 
 
 public interface DashboardService {
-    List<AssetDetails> getCoinDetails(List<String> CoinIds);
+    List<AssetDetails> getCoinDetails();
     AssetDetails getCoinDetailsByID(String CoinId);
     List<AssetsAvail> getAllAssetsAvail();
     List<TradingPairs> getAllTradingPairs();
+    List<String> getAllTradingPairID();
 }
