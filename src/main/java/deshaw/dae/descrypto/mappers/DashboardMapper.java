@@ -10,6 +10,7 @@ import java.util.List;
 public interface DashboardMapper {
     List<AssetsAvail> getAllAssetsAvail();
     List<TradingPairs> getAllTradingPairsAvail();
-
+    TradingPairs getTradingPairbyId(String symb);
+    AssetsAvail getAssetByid(String assetID);
 
 }

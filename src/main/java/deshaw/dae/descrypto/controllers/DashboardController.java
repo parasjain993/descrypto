@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -41,13 +42,13 @@ public class DashboardController {
     }
 
     @GetMapping("/assets/{assetId}")
-    public ResponseEntity<?> getAssetById(){
-        return new ResponseEntity<>("hi", HttpStatus.OK);
+    public ResponseEntity<?> getAssetById(@PathVariable("assetId") String assetID){
+        return new ResponseEntity<>(dashboardService.getAssetById(assetID), HttpStatus.OK);
     }
 
-    @GetMapping("pairs/{paiId}")
-    public  ResponseEntity<?> getPairById(){
-        return new ResponseEntity<>("hi", HttpStatus.OK);
+    @GetMapping("pairs/{pairId}")
+    public  ResponseEntity<?> getPairById(@PathVariable("pairId") String pairId){
+        return new ResponseEntity<>(dashboardService.getTradingPairbyId(pairId), HttpStatus.OK);
     }
 
 

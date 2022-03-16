@@ -76,5 +76,15 @@ public class DashboardServiceImpl implements DashboardService{
         return dashboardMapper.getAllTradingPairsAvail();
     }
 
+    @Override
+    public TradingPairs getTradingPairbyId(String PairID){
+        return dashboardMapper.getTradingPairbyId(PairID);
+    }
+
+    @Override
+    public AssetsAvail getAssetById(String assetID){
+        return dashboardMapper.getAssetByid(assetID);
+    }
+
 
 }

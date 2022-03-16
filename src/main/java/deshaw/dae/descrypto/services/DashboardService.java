@@ -13,4 +13,6 @@ public interface DashboardService {
     List<AssetsAvail> getAllAssetsAvail();
     List<TradingPairs> getAllTradingPairs();
     List<String> getAllTradingPairID();
+    TradingPairs getTradingPairbyId(String PairID);
+    AssetsAvail getAssetById(String assetID);
 }
