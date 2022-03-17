@@ -30,7 +30,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public static PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-//   @Autowired
+    //   @Autowired
 //  public void configureGlobal(AuthenticationManagerBuilder auth)
 //           throws Exception
 //    {
@@ -55,6 +55,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .csrf().disable()
                 .authorizeRequests()
+                .antMatchers("/user").permitAll()
                 .anyRequest()
                 .authenticated()
                 .and()
