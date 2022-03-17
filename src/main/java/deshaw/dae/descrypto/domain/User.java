@@ -15,6 +15,7 @@ public class User {
     private String pancardNo;
     private String dob;
     private String nationality;
+    private float marginRatio;
 
     public String getNationality() {
         return nationality;
@@ -101,5 +102,13 @@ public class User {
 
     public void setFirstName(String firstName) {
         this.firstName = firstName;
+    }
+
+    public float getMarginRatio() {
+        return marginRatio;
+    }
+
+    public void setMarginRatio(float marginRatio) {
+        this.marginRatio = marginRatio;
     }
 }
