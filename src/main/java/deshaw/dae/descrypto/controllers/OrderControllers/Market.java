@@ -3,8 +3,6 @@ package deshaw.dae.descrypto.controllers.OrderControllers;
 import deshaw.dae.descrypto.DescryptoApplication;
 import deshaw.dae.descrypto.cache.DashboardCache;
 import deshaw.dae.descrypto.domain.AssetDetails;
-
-
 import java.util.*;
 
 
@@ -19,45 +17,45 @@ public class Market extends Thread{
         HashMap<String,String> map=new HashMap<>();
         map.put("Pair",pair);
         this.orders.add(map);
-        this.count=0;
         this.start();
     }
     public void run(){
         try {
-            int x=50;
+            int x=1000;
             HashMap<String,AssetDetails> tokens;
-            while (x-->0){
-                double amnt = random.nextDouble() + 0.12777;
-                String p=this.orders.get(0).get("Pair");
-                double price=5662.1;
-                double temp=-1;
-                HashMap<String,String> map=new HashMap<>();
-                tokens= (HashMap<String, AssetDetails>) cache.TokenCache();
+            while (x-->0) {
 
-                if(tokens!=null) {
-                    try {
-                        temp=tokens.get(p).getPrice();
-                    }catch (Exception e)
-                    {
-                    }
-                }
+                String p = this.orders.get(0).get("Pair");
+                double price = -1.0;
+                HashMap<String, String> map = new HashMap<>();
                 Thread.sleep(5000);
-                if(temp!=-1)
-                    price=temp;
-                double variance=random.nextDouble()+4.0;
-                double newLimitPrice=price-variance;
-                String side="Buy";
-                if(count%2==0)
-                    side="Sell";
-                count=count+random.nextInt(5);
-                map.put("Side",side);
-                map.put("Amount",amnt+"");
-                map.put("limitPrice",newLimitPrice+"");
-                map.put("Average",price+"");
-               this.orders.add(map);
-              //  System.out.println(this.orders.size()+" "+ currentThread().getId());
-               Thread.sleep(6000);
-            }
+                try{
+                     tokens = (HashMap<String, AssetDetails>) cache.TokenCache();
+                     price = tokens.get(p).getPrice();
+                 }catch (Exception e){}
+                    if(price!=-1.0) {
+                        double amnt = (10 + (10000 - 10) * random.nextDouble()) / price;
+                        double variance = random.nextDouble() + 10;
+                        double newLimitPrice;
+                        String side = "Buy";
+                        if (count % 2 == 0)
+                            side = "Sell";
+                        if (side.equals("Buy"))
+                            newLimitPrice = (price - (variance * price) / 100);
+                        else
+                            newLimitPrice = (price + (variance * price) / 100);
+                        count = count + random.nextInt(5);
+                        map.put("Side", side);
+                        map.put("Amount", amnt + "");
+                        map.put("limitPrice", newLimitPrice + "");
+                        map.put("Average", price + "");
+
+                        this.orders.add(map);
+                    }
+                  //   System.out.println(this.orders.size()+" "+ currentThread().getId());
+                    Thread.sleep(6000);
+                }
+
 
 
         }catch (Exception e){

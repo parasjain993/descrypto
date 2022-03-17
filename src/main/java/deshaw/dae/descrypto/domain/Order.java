@@ -1,5 +1,7 @@
 package deshaw.dae.descrypto.domain;
 
+import java.time.LocalDateTime;
+
 public class Order {
 
     private int  orderId;//primary key
@@ -14,7 +16,14 @@ public class Order {
     private double filled;//how much of the order is completed
     private double total;//total spent upon buying/ total gained upon sell
     private double triggerPrice;//for stop-loss orders only
+    private String dateTime;
 
+    public void setDateTime(String dateTime) {
+        this.dateTime = dateTime;
+    }
+    public String getDateTime(){
+        return this.dateTime;
+    }
     public double getTriggerPrice() {
         return triggerPrice;
     }

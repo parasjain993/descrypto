@@ -8,11 +8,8 @@ import java.util.List;
 public interface OrderService {
     int placeLimitOrder(Order newLimitOrder);
     int placeMarketOrder(Order newMarketOrder);
-
     int placeStopLossMarketOrder(Order newSTMarketOrder);
-    int placeStopLossLimitOrder(Order newSTLimitOrder);
-
-
+    int placeStopLossLimitOrder(Order newSLLimitOrder);
     List<Order> orderHistory(int userId);
     List <Order> openOrders(int userId);
 

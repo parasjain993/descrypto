@@ -24,7 +24,13 @@
         from assets A
         left join asset_market M
         on M.asset_id = A.asset_id
-
+    </select>
+    <select id="getAssetByid" parameterType="java.lang.String" resultMap="AssetAvail">
+        select *
+        from assets A
+        left join asset_market M
+        on M.asset_id = A.asset_id
+        where symbol = #{assetID}
     </select>
 
     <resultMap id="PairsAvail" type="deshaw.dae.descrypto.domain.TradingPairs">
@@ -36,6 +42,10 @@
 
     <select id="getAllTradingPairsAvail" resultMap="PairsAvail">
         select * from pairs
+    </select>
+
+    <select id="getTradingPairbyId" parameterType="java.lang.String" resultMap="PairsAvail">
+        select * from pairs where symbol = #{symb}
     </select>
 
 </mapper>

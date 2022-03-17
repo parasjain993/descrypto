@@ -35,7 +35,7 @@ public class OrderServiceImpl implements OrderService{
         if(tokens!=null&&tokens.get(pair)!=null)
         newLimitOrder.setAverage(tokens.get(pair).getPrice());
         else
-            newLimitOrder.setAverage(3212.2);
+            return -1;
         newLimitOrder.setOrderType("limit");
        if(!ValidateWorth(newLimitOrder))
            return -1;
@@ -50,7 +50,7 @@ public class OrderServiceImpl implements OrderService{
         if(tokens!=null&&tokens.get(pair)!=null)
             newMarketOrder.setAverage(tokens.get(pair).getPrice());
         else
-            newMarketOrder.setAverage(3212.2);
+            return -1;
 
         newMarketOrder.setFilled(0.0);
         newMarketOrder.setOrderStatus("open");
@@ -73,7 +73,7 @@ public class OrderServiceImpl implements OrderService{
         if(tokens!=null&&tokens.get(pair)!=null)
             newSLMarketOrder.setAverage(tokens.get(pair).getPrice());
         else
-            newSLMarketOrder.setAverage(3212.2);
+            return -1;
 
         newSLMarketOrder.setFilled(0.0);
         newSLMarketOrder.setOrderStatus("open");
@@ -96,7 +96,7 @@ public class OrderServiceImpl implements OrderService{
         if(tokens!=null&&tokens.get(pair)!=null)
             newSLLimitOrder.setAverage(tokens.get(pair).getPrice());
         else
-            newSLLimitOrder.setAverage(3212.2);
+            return -1;
         newSLLimitOrder.setFilled(0.0);
         newSLLimitOrder.setOrderStatus("open");
         double total = newSLLimitOrder.getLimitPrice()*newSLLimitOrder.getAmount();
@@ -128,17 +128,17 @@ public class OrderServiceImpl implements OrderService{
         String coins[]=order.getOrderPair().split("-");//btc-cad
         int userId=order.getUserId();
         String pair=coins[0]+coins[1];
-     //   System.out.println(tokens.get(pair).getPrice());
         try {
             int coin1 = walletservice.getAssetCoins(userId,coins[0]);
            int coin2 = walletservice.getAssetCoins(userId,coins[1]);
+
             if(order.getSide().equals("buy")){
                 if(order.getTotal()>coin2*tokens.get(pair).getPrice())
                 return false;
             }
             else{
 
-                if(order.getAmount()>coin1*tokens.get(pair).getPrice())
+                if(order.getAmount()>coin1)
                     return false;
             }
             return true;
