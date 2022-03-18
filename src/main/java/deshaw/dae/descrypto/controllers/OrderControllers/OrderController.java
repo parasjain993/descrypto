@@ -4,20 +4,17 @@ import deshaw.dae.descrypto.domain.Order;
 import deshaw.dae.descrypto.services.OrderServices.OrderService;
 import deshaw.dae.descrypto.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.hateoas.EntityModel;
-
+import org.springframework.hateoas.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
-
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+
 
 @RestController
 @RequestMapping("/order")
@@ -33,15 +30,15 @@ public class OrderController {
         String userName = auth.getName();
         int userId=userService.findByUserName(userName).getUserId();
         newLimitOrder.setUserId(userId);
-        int status=service.placeLimitOrder(newLimitOrder);
-        if(status==1) {
+        String status=service.placeLimitOrder(newLimitOrder);
+        if(status.equals("ok")) {
             LocalDateTime now = LocalDateTime.now();
             newLimitOrder.setDateTime(dtf.format(now)+"");
+
             return EntityModel.of(newLimitOrder,
                     linkTo(methodOn(OrderController.class).showOpenOrders(newLimitOrder.getUserId())).withRel("openOrders"),
                     linkTo(methodOn(OrderController.class).showOrderHistory(newLimitOrder.getUserId())).
-                            withRel("orderHistory")
-                    );
+                            withRel("orderHistory"));
         }
         else {
             return null;
@@ -53,8 +50,8 @@ public class OrderController {
         String userName = auth.getName();
         int userId=userService.findByUserName(userName).getUserId();
         newMarketOrder.setUserId(userId);
-        int status=service.placeMarketOrder(newMarketOrder);
-        if(status==1) {
+        String status=service.placeMarketOrder(newMarketOrder);
+        if(status.equals("ok")) {
             LocalDateTime now = LocalDateTime.now();
             newMarketOrder.setDateTime(dtf.format(now)+"");
             return EntityModel.of(newMarketOrder, linkTo(methodOn(OrderController.class).
@@ -71,8 +68,8 @@ public class OrderController {
         String userName = auth.getName();
         int userId=userService.findByUserName(userName).getUserId();
         newSLMarketOrder.setUserId(userId);
-        int status=service.placeStopLossMarketOrder(newSLMarketOrder);
-        if(status==1){
+        String status=service.placeStopLossMarketOrder(newSLMarketOrder);
+        if(status.equals("ok")){
             LocalDateTime now = LocalDateTime.now();
             newSLMarketOrder.setDateTime(dtf.format(now)+"");
             return EntityModel.of(newSLMarketOrder,linkTo(methodOn(OrderController.class).showOpenOrders(newSLMarketOrder.getUserId())).withRel("openOrders"),
@@ -89,8 +86,8 @@ public class OrderController {
         String userName = auth.getName();
         int userId=userService.findByUserName(userName).getUserId();
         newSLLimitOrder.setUserId(userId);
-        int status=service.placeStopLossMarketOrder(newSLLimitOrder);
-        if(status==1) {
+        String status=service.placeStopLossLimitOrder(newSLLimitOrder);
+        if(status.equals("ok")) {
             LocalDateTime now = LocalDateTime.now();
             newSLLimitOrder.setDateTime(dtf.format(now)+"");
             return EntityModel.of(newSLLimitOrder,linkTo(methodOn(OrderController.class).showOpenOrders(newSLLimitOrder.getUserId())).withRel("openOrders"),
@@ -121,3 +118,4 @@ public class OrderController {
     }
 
 }
+
