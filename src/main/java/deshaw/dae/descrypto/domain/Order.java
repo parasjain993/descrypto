@@ -1,13 +1,17 @@
 package deshaw.dae.descrypto.domain;
 
+import org.springframework.http.ResponseEntity;
+
 import java.time.LocalDateTime;
+
 
 public class Order {
 
     private int  orderId;//primary key
     private int userId;//which user has placed
+    private String tradingType;//spot or margin
     private String orderPair;//btcusdt
-    private double amount;//what amount of your usdt wallet eg:10% 25%...
+    private double amount;//amount of token to buy/sell
     private double limitPrice;//trade will start at this price for limit and current for market
     private double average;// average price at which trade was executed till now
     private String orderType;//limit or market
@@ -16,8 +20,15 @@ public class Order {
     private double filled;//how much of the order is completed
     private double total;//total spent upon buying/ total gained upon sell
     private double triggerPrice;//for stop-loss orders only
-    private String dateTime;
+    private String dateTime;//timestamps
 
+
+    public void setTradingType(String tradingType){
+        this.tradingType=tradingType;
+    }
+    public String getTradingType(){
+        return tradingType;
+    }
     public void setDateTime(String dateTime) {
         this.dateTime = dateTime;
     }
