@@ -5,6 +5,7 @@ import deshaw.dae.descrypto.controllers.OrderControllers.OrderController;
 import deshaw.dae.descrypto.domain.Order;
 import deshaw.dae.descrypto.domain.User;
 import deshaw.dae.descrypto.services.UserService;
+import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,16 +22,22 @@ public class RegisterController {
     @Autowired
     PasswordEncoder passwordEncoder;
 
-    @PostMapping("/register")
+    @RequestMapping(value = "/register", method= RequestMethod.POST)
    ResponseEntity<?> register(@RequestBody User userObject)  {
+        JSONObject obj = new JSONObject();
+        String message;
         User foundUser = userService.findByUserName(userObject.getUserName());
         if(foundUser != null) {
-            return new ResponseEntity<>("User with same userName already exists", HttpStatus.BAD_REQUEST);
+            message = "User with same userName already exists";
+            obj.put("failure-message", message);
+            return new ResponseEntity<>(obj, HttpStatus.BAD_REQUEST);
         }
         else {
             userObject.setPassword(passwordEncoder.encode(userObject.getPassword()));
             userService.addUser(userObject);
-            return new ResponseEntity<>("Registration done successfully", HttpStatus.OK);
+            message = "Registration done successfully";
+            obj.put("success-message", message);
+            return new ResponseEntity<>(obj, HttpStatus.OK);
         }
 
     }

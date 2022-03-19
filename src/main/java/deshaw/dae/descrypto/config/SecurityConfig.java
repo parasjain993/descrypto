@@ -12,40 +12,23 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-
-import javax.sql.DataSource;
+import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 @Configuration
 @EnableWebSecurity
+@EnableSwagger2
 @EnableGlobalMethodSecurity(securedEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
-//    @Override
-//    public UserDetailsService userDetailsService() {
-//        return userDetailsService;
+
 
     @Autowired
     private CustomAuthenticationProvider authProvider;
-    //    }
     @Bean
     public static PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-    //   @Autowired
-//  public void configureGlobal(AuthenticationManagerBuilder auth)
-//           throws Exception
-//    {
-//        System.out.print("inside");
-////        auth
-////                .jdbcAuthentication()
-////                .dataSource(dataSource)
-////                .usersByUsernameQuery("select userName, password from userdb where userName = ?");
-////        String userName =
-////        auth.inMemoryAuthentication()
-////                .withUser("admin")
-////                .password(passwordEncoder().encode("password"))
-////                .roles("USER");
-//       // auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
-//   }
+
+
     @Autowired
     public void configAuthentication(AuthenticationManagerBuilder auth) throws Exception {
         auth.authenticationProvider(authProvider);
@@ -55,7 +38,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/user").permitAll()
                 .anyRequest()
                 .authenticated()
                 .and()
