@@ -7,6 +7,7 @@ import deshaw.dae.descrypto.domain.demo;
 import deshaw.dae.descrypto.services.DashboardService;
 import deshaw.dae.descrypto.services.UserService;
 import deshaw.dae.descrypto.services.WalletService;
+import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
@@ -26,8 +27,7 @@ public class fundsController {
     @Autowired
     private UserService userservice;
 
-
-    @PutMapping ("/addFund")
+    @RequestMapping(value = "/addFund", method= RequestMethod.PUT)
     public ResponseEntity<?> addFund(@RequestBody ObjectNode objectnode) {
         String assetName = objectnode.get("assetName").asText();
        int amountToBeAdded = objectnode.get("amountToBeAdded").asInt();
@@ -42,13 +42,16 @@ public class fundsController {
         else {
             walletservice.addFund(user.getUserId(), assetName, amountToBeAdded);
         }
-        return new ResponseEntity<>(Integer.toString(amountToBeAdded)+" coins for " + assetName + " has been added successfully in " + userName + "'s spot wallet!",HttpStatus.OK);
+        JSONObject obj = new JSONObject();
+        String message = Integer.toString(amountToBeAdded)+" coins for " + assetName + " has been added successfully in " + userName + "'s spot wallet!";
+        obj.put("success_message", message);
+        return new ResponseEntity<>(obj,HttpStatus.OK);
     }
 
 
-
-    @PutMapping("/withdrawFunds")
+    @RequestMapping(value = "/withdrawFunds", method= RequestMethod.PUT)
     public ResponseEntity<?> withDrawFunds(@RequestBody ObjectNode objectnode) {
+        JSONObject obj = new JSONObject();
         String assetName = objectnode.get("assetName").asText();
         int amountToBeDeducted = objectnode.get("amountToBeDeducted").asInt();
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -56,15 +59,24 @@ public class fundsController {
         User user = userservice.findByUserName(userName);
         Wallet wallet = walletservice.findWallet(user.getUserId(), assetName);
         if(wallet == null) {
-            return new ResponseEntity<>(Integer.toString(amountToBeDeducted) + " cannot be deducted as no such " + assetName + " exists in the spot wallet of " + userName, HttpStatus.BAD_REQUEST);
+
+            String message = Integer.toString(amountToBeDeducted) + " cannot be deducted as no such " + assetName + "asset exists in the spot wallet of " + userName;
+            obj.put("failure_message", message);
+            return new ResponseEntity<>(obj, HttpStatus.BAD_REQUEST);
         }
         else {
             int assetAvailableCoins = walletservice.getAssetCoins(user.getUserId(), assetName);
             if (assetAvailableCoins < amountToBeDeducted) {
-                return new ResponseEntity<>(Integer.toString(amountToBeDeducted) + " coins cannot be deducted as total number of coins for " + assetName + " is: " + Integer.toString(assetAvailableCoins) + " which is less than the coins to be deducted",HttpStatus.BAD_REQUEST);
+
+                String message = Integer.toString(amountToBeDeducted) + " coins cannot be deducted as total number of coins for " + assetName + " is: " + Integer.toString(assetAvailableCoins) + " which is less than the coins to be deducted";
+                obj.put("failure_message", message);
+                return new ResponseEntity<>(obj,HttpStatus.BAD_REQUEST);
             } else {
                 walletservice.withdrawFund(user.getUserId(), assetName, amountToBeDeducted);
-                return new ResponseEntity<>(Integer.toString(amountToBeDeducted) + " has been deducted from the spot wallet of " + userName + " for asset : " + assetName,HttpStatus.OK);
+
+                String message = Integer.toString(amountToBeDeducted) + " has been deducted from the spot wallet of " + userName + " for asset : " + assetName;
+                obj.put("failure_message", message);
+                return new ResponseEntity<>(obj,HttpStatus.OK);
             }
         }
 
