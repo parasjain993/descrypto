@@ -26,33 +26,32 @@ public class Market extends Thread{
             while (x-->0) {
 
                 String p = this.orders.get(0).get("Pair");
-                double price = 2231.2;
+                double price = -1.0;
                 HashMap<String, String> map = new HashMap<>();
                 Thread.sleep(5000);
                 try{
                      tokens = (HashMap<String, AssetDetails>) cache.TokenCache();
                      price = tokens.get(p).getPrice();
-                 }catch (Exception e){
+                 }catch (Exception e){}
+                    if(price!=-1.0) {
+                        double amnt = (10 + (10000 - 10) * random.nextDouble()) / price;
+                        double variance = random.nextDouble() + 10;
+                        double newLimitPrice;
+                        String side = "Buy";
+                        if (count % 2 == 0)
+                            side = "Sell";
+                        if (side.equals("Buy"))
+                            newLimitPrice = (price - (variance * price) / 100);
+                        else
+                            newLimitPrice = (price + (variance * price) / 100);
+                        count = count + random.nextInt(5);
+                        map.put("Side", side);
+                        map.put("Amount", amnt + "");
+                        map.put("limitPrice", newLimitPrice + "");
+                        map.put("Average", price + "");
 
-                }
-
-                    double amnt = (10 + (10000 - 10) * random.nextDouble())/price;
-                    double variance = random.nextDouble() + 10;
-                    double newLimitPrice;
-                    String side = "Buy";
-                    if (count % 2 == 0)
-                        side = "Sell";
-                    if (side.equals("Buy"))
-                        newLimitPrice = (price - (variance * price) / 100);
-                    else
-                        newLimitPrice = (price + (variance * price) / 100);
-                    count = count + random.nextInt(5);
-                    map.put("Side", side);
-                    map.put("Amount", amnt + "");
-                    map.put("limitPrice", newLimitPrice + "");
-                    map.put("Average", price + "");
-                    if(x<998)
-                    this.orders.add(map);
+                        this.orders.add(map);
+                    }
                   //   System.out.println(this.orders.size()+" "+ currentThread().getId());
                     Thread.sleep(6000);
                 }

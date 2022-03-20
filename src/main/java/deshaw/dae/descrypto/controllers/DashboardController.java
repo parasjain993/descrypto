@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -27,14 +28,30 @@ public class DashboardController {
     @GetMapping("/markets/summary/get")
     @Scheduled(fixedRate = 120000)
     public ResponseEntity<?> getCoinDetails(){
-        // This is temporary code util data is fetched from the database //
-        List<String> TemporaryCoins = List.of("btcusdt", "ethusdt", "usdtusd", "btccad");
-        return new ResponseEntity<>(dashboardService.getCoinDetails(TemporaryCoins), HttpStatus.OK);
+        return new ResponseEntity<>(dashboardService.getCoinDetails(), HttpStatus.OK);
     }
 
-    @GetMapping("/assets/{id}")
+    @GetMapping("/assets/get")
     public ResponseEntity<?> getAssets(){
         return new ResponseEntity<>(dashboardService.getAllAssetsAvail(), HttpStatus.OK);
     }
+
+    @GetMapping("/pairs/get")
+    public ResponseEntity<?> getPairs(){
+        return new ResponseEntity<>(dashboardService.getAllTradingPairs(), HttpStatus.OK);
+    }
+
+    @GetMapping("/assets/{assetId}")
+    public ResponseEntity<?> getAssetById(@PathVariable("assetId") String assetID){
+        return new ResponseEntity<>(dashboardService.getAssetById(assetID), HttpStatus.OK);
+    }
+
+    @GetMapping("pairs/{pairId}")
+    public  ResponseEntity<?> getPairById(@PathVariable("pairId") String pairId){
+        return new ResponseEntity<>(dashboardService.getTradingPairbyId(pairId), HttpStatus.OK);
+    }
+
+
+
 
 }

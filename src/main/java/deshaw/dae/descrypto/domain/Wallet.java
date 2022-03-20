@@ -1,13 +1,14 @@
 package deshaw.dae.descrypto.domain;
 
 
-import java.util.Map;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
+import java.util.Map;
 public class Wallet {
      private int userId;
      private String assetName;
      private int assetCoins;
-
      public int getUserId() {
           return userId;
      }
