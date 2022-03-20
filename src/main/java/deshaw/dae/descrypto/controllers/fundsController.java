@@ -7,6 +7,10 @@ import deshaw.dae.descrypto.domain.demo;
 import deshaw.dae.descrypto.services.DashboardService;
 import deshaw.dae.descrypto.services.UserService;
 import deshaw.dae.descrypto.services.WalletService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
@@ -18,7 +22,7 @@ import org.springframework.web.bind.annotation.*;
 import java.security.Principal;
 
 import java.util.List;
-
+@Api(description = "Endpoints for adding and withdrawing funds from spot wallet of user",tags = {"Funds of Spot Wallet"})
 @RestController
 @RequestMapping("/user")
 public class fundsController {
@@ -27,6 +31,8 @@ public class fundsController {
     @Autowired
     private UserService userservice;
 
+
+    @ApiOperation(value = "Add funds in the spot wallet", tags = { "Add funds" })
     @RequestMapping(value = "/addFund", method= RequestMethod.PUT)
     public ResponseEntity<?> addFund(@RequestBody ObjectNode objectnode) {
         String assetName = objectnode.get("assetName").asText();
@@ -48,7 +54,7 @@ public class fundsController {
         return new ResponseEntity<>(obj,HttpStatus.OK);
     }
 
-
+    @ApiOperation(value = "Withdrawal funds from the spot wallet", tags = { "Withdrawal funds" })
     @RequestMapping(value = "/withdrawFunds", method= RequestMethod.PUT)
     public ResponseEntity<?> withDrawFunds(@RequestBody ObjectNode objectnode) {
         JSONObject obj = new JSONObject();
@@ -75,7 +81,7 @@ public class fundsController {
                 walletservice.withdrawFund(user.getUserId(), assetName, amountToBeDeducted);
 
                 String message = Integer.toString(amountToBeDeducted) + " has been deducted from the spot wallet of " + userName + " for asset : " + assetName;
-                obj.put("failure_message", message);
+                obj.put("success_message", message);
                 return new ResponseEntity<>(obj,HttpStatus.OK);
             }
         }
