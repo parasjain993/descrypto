@@ -3,32 +3,12 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="deshaw.dae.descrypto.mappers.OrderMapper">
-    <insert id="placeLimitOrder" parameterType="deshaw.dae.descrypto.domain.Order" keyProperty="orderId"
+    <insert id="placeOrder" parameterType="deshaw.dae.descrypto.domain.Order" keyProperty="orderId"
     keyColumn="orderId" useGeneratedKeys="true">
-        insert into orders(userId,orderPair,amount,limitPrice,orderType,orderStatus,filled,total,average,side)
-        values(#{userId},#{orderPair},#{amount},
+        insert into orders(userId,tradingType,orderPair,amount,limitPrice,orderType,orderStatus,filled,total,average,side)
+        values(#{userId},#{tradingType},#{orderPair},#{amount},
         #{limitPrice},#{orderType},#{orderStatus},#{filled},#{total},#{average},#{side})
 
-    </insert>
-
-    <insert id="placeMarketOrder" parameterType="deshaw.dae.descrypto.domain.Order" keyProperty="orderId"
-            keyColumn="orderId" useGeneratedKeys="true">
-        insert into orders(userId,orderPair,amount,limitPrice,orderType,orderStatus,filled,total,average,side)
-        values(#{userId},#{orderPair},#{amount},
-        #{limitPrice},#{orderType},#{orderStatus},#{filled},#{total},#{average},#{side})
-    </insert>
-
-    <insert id="placeStopLossMarketOrder" parameterType="deshaw.dae.descrypto.domain.Order" keyProperty="orderId"
-            keyColumn="orderId" useGeneratedKeys="true">
-        insert into orders(userId,orderPair,amount,limitPrice,orderType,orderStatus,filled,total,side,triggerPrice,average)
-        values(#{userId},#{orderPair},#{amount},
-        #{limitPrice},#{orderType},#{orderStatus},#{filled},#{total},#{side},#{triggerPrice},#{average})
-    </insert>
-    <insert id="placeStopLossLimitOrder" parameterType="deshaw.dae.descrypto.domain.Order" keyProperty="orderId"
-            keyColumn="orderId" useGeneratedKeys="true">
-        insert into orders(userId,orderPair,amount,limitPrice,orderType,orderStatus,filled,total,side,triggerPrice,average)
-        values(#{userId},#{orderPair},#{amount},
-        #{limitPrice},#{orderType},#{orderStatus},#{filled},#{total},#{side},#{triggerPrice},#{average})
     </insert>
 
     <resultMap id="OrderResultMap" type="deshaw.dae.descrypto.domain.Order">
