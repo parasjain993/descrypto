@@ -3,6 +3,8 @@ package deshaw.dae.descrypto.controllers.OrderControllers;
 import deshaw.dae.descrypto.domain.Order;
 import deshaw.dae.descrypto.services.OrderServices.OrderService;
 import deshaw.dae.descrypto.services.UserService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -15,7 +17,7 @@ import java.util.List;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
-
+@Api(description = "Endpoints for placing different types of orders",tags = {"Order Placing"})
 @RestController
 @RequestMapping("/order")
 public class OrderController {
@@ -24,6 +26,7 @@ public class OrderController {
     @Autowired
     private UserService userService;
     DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    @ApiOperation(value = "Endpoint for placing limit orders for spot and margin trading", tags = { "Limit Order" })
     @PostMapping("/place/limit")
     EntityModel<Order> placeLimitOrder(@RequestBody Order newLimitOrder){
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -44,6 +47,7 @@ public class OrderController {
             return null;
         }
     }
+    @ApiOperation(value = "Endpoint for placing market orders for spot and margin trading", tags = { "Market Order" })
     @PostMapping("/place/market")
     EntityModel<Order> placeMarketOrder(@RequestBody Order newMarketOrder){
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -62,6 +66,7 @@ public class OrderController {
         else
             return null;
     }
+    @ApiOperation(value = "Endpoint for placing stop-loss market orders", tags = { "Stop-loss Market Order" })
     @PostMapping("/place/stop-loss/market")
     EntityModel<Order> placeStopLossMarketOrder(@RequestBody Order newSLMarketOrder){
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -80,6 +85,7 @@ public class OrderController {
 
             return null;
     }
+    @ApiOperation(value = "Endpoint for placing stop-loss limit orders", tags = { "Stop-loss Limit Order" })
     @PostMapping("/place/stop-loss/limit")
     EntityModel<Order> placeStopLossLimitOrder(@RequestBody Order newSLLimitOrder){
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -112,6 +118,7 @@ public class OrderController {
     void cancelOrder(@PathVariable("orderId") int orderId){
         service.cancelOrder(orderId);
     }
+    @ApiOperation(value = "Endpoint for getting orders from order creation engine", tags = { "Orders from Markets" })
     @GetMapping("/getDummy/{pair}")
     List<HashMap<String,String>> getOrders(@PathVariable("pair") String pair) {
         return Market.getOrders(pair);
