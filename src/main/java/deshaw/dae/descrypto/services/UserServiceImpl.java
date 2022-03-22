@@ -55,4 +55,7 @@ public class UserServiceImpl implements UserService {
     public void addUser(User user) {
         usermapper.addUser(user);
     }
+
+    @Override
+    public float getMarginRatio(User user){ return usermapper.getMarginRatio(user.getUserId());}
 }

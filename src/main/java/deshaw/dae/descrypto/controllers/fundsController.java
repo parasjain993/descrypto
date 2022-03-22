@@ -36,7 +36,7 @@ public class fundsController {
     @RequestMapping(value = "/addFund", method= RequestMethod.PUT)
     public ResponseEntity<?> addFund(@RequestBody ObjectNode objectnode) {
         String assetName = objectnode.get("assetName").asText();
-       int amountToBeAdded = objectnode.get("amountToBeAdded").asInt();
+        float amountToBeAdded = objectnode.get("amountToBeAdded").floatValue();
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String userName = auth.getName();
         User user = userservice.findByUserName(userName);
@@ -59,21 +59,19 @@ public class fundsController {
     public ResponseEntity<?> withDrawFunds(@RequestBody ObjectNode objectnode) {
         JSONObject obj = new JSONObject();
         String assetName = objectnode.get("assetName").asText();
-        int amountToBeDeducted = objectnode.get("amountToBeDeducted").asInt();
+        float amountToBeDeducted = objectnode.get("amountToBeDeducted").floatValue();
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String userName = auth.getName();
         User user = userservice.findByUserName(userName);
         Wallet wallet = walletservice.findWallet(user.getUserId(), assetName);
         if(wallet == null) {
-
             String message = Integer.toString(amountToBeDeducted) + " cannot be deducted as no such " + assetName + "asset exists in the spot wallet of " + userName;
             obj.put("failure_message", message);
             return new ResponseEntity<>(obj, HttpStatus.BAD_REQUEST);
         }
         else {
-            int assetAvailableCoins = walletservice.getAssetCoins(user.getUserId(), assetName);
+            float assetAvailableCoins = walletservice.getAssetCoins(user.getUserId(), assetName);
             if (assetAvailableCoins < amountToBeDeducted) {
-
                 String message = Integer.toString(amountToBeDeducted) + " coins cannot be deducted as total number of coins for " + assetName + " is: " + Integer.toString(assetAvailableCoins) + " which is less than the coins to be deducted";
                 obj.put("failure_message", message);
                 return new ResponseEntity<>(obj,HttpStatus.BAD_REQUEST);

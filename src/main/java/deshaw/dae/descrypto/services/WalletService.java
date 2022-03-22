@@ -7,19 +7,19 @@ import java.util.HashMap;
 public interface WalletService {
 
 
-    HashMap<String, Integer> findAssetsForUser(int userId);
+    HashMap<String, Float> findAssetsForUser(int userId);
 
     float totalWorthCalc(int userId);
 
-    int getAssetCoins(int userId, String assetName);
+    float getAssetCoins(int userId, String assetName);
 
-    void withdrawFund(int userId, String assetName, int withdrawalAmount);
+    void withdrawFund(int userId, String assetName, float withdrawalAmount);
 
-    void addFund(int userId, String assetName, int amountToBeAdded);
+    void addFund(int userId, String assetName, float amountToBeAdded);
 
     Wallet findWallet(int userId, String assetName);
 
-    void addNewWallet(int userId, String assetName, int amountToBeAdded);
+    void addNewWallet(int userId, String assetName, float amountToBeAdded);
 
     void updateTotalWorth();
 }

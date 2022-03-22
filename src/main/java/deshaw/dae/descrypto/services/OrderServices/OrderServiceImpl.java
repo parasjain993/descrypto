@@ -145,7 +145,7 @@ public class OrderServiceImpl implements OrderService{
         String pair=coins[0]+coins[1];
         try {
             double coin1 = walletservice.getAssetCoins(userId,coins[0]);
-           double coin2 = walletservice.getAssetCoins(userId,coins[1]);
+            double coin2 = walletservice.getAssetCoins(userId,coins[1]);
 
             if(order.getSide().equals("buy")){
                 if(order.getTotal()>coin2*tokens.get(pair).getPrice())
