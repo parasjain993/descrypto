@@ -18,14 +18,14 @@
         INNER JOIN orders
         ON (trades.buy_orderId=orders.orderId AND orders.side='buy' ) or (trades.sell_orderId=orders.orderId AND orders.side='sell' )
         where orders.userId=#{userId}
-        <if test="orderId != null">
-            AND orders.orderId=#{orderId}
+        <if test="data.orderId != null">
+            AND orders.orderId=#{data.orderId}
         </if>
-        <if test="orderPair != null">
-            AND orders.orderPair=#{orderPair}
+        <if test="data.orderPair != null">
+            AND orders.orderPair=#{data.orderPair}
         </if>
-        <if test="timestamp1 !=null and timestamp2 !=null ">
-            AND trades.timestamp BETWEEN #{timestamp1} and #{timestamp2}
+        <if test="data.timestamp1 !=null and data.timestamp2 !=null ">
+            AND trades.timestamp BETWEEN #{data.timestamp1} and #{data.timestamp2}
         </if>
     </select>
 
