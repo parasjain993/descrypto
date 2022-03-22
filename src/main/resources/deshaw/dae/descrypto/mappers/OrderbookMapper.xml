@@ -1,0 +1,27 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="deshaw.dae.descrypto.mappers.OrderbookMapper">
+    <resultMap id="OrderBookEntry" type="deshaw.dae.descrypto.domain.OrderbookEntry">
+        <result column="amount" property="amount" />
+        <result column="limitPrice" property="limitPrice" />
+    </resultMap>
+
+    <select id="allUserOrdersbyPair" resultMap="OrderBookEntry">
+        select amount, limitPrice from orders
+        where orderPair=#{orderPair} and (orderStatus='open' OR orderStatus='partially_filled')
+    </select>
+    <select id="allUserBuyOrdersbyPair" resultMap="OrderBookEntry">
+        select amount, limitPrice from orders
+        where orderPair=#{orderPair} and (orderStatus='open' OR orderStatus='partially_filled') and
+        side = 'buy'
+    </select>
+    <select id="allUserSellOrdersbyPair" resultMap="OrderBookEntry">
+        select amount, limitPrice from orders
+        where orderPair=#{orderPair} and (orderStatus='open' OR orderStatus='partially_filled') and
+        side = 'sell'
+    </select>
+
+
+</mapper>
+
