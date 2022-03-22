@@ -49,7 +49,7 @@ public class fundsController {
             walletservice.addFund(user.getUserId(), assetName, amountToBeAdded);
         }
         JSONObject obj = new JSONObject();
-        String message = amountToBeAdded+" coins for " + assetName + " has been added successfully in " + userName + "'s spot wallet!";
+        String message = Float.toString(amountToBeAdded)+" coins for " + assetName + " has been added successfully in " + userName + "'s spot wallet!";
         obj.put("success_message", message);
         return new ResponseEntity<>(obj,HttpStatus.OK);
     }
@@ -65,20 +65,21 @@ public class fundsController {
         User user = userservice.findByUserName(userName);
         Wallet wallet = walletservice.findWallet(user.getUserId(), assetName);
         if(wallet == null) {
-            String message = amountToBeDeducted + " cannot be deducted as no such " + assetName + "asset exists in the spot wallet of " + userName;
+            String message = Float.toString(amountToBeDeducted) + " cannot be deducted as no such " + assetName + "asset exists in the spot wallet of " + userName;
             obj.put("failure_message", message);
             return new ResponseEntity<>(obj, HttpStatus.BAD_REQUEST);
         }
         else {
             float assetAvailableCoins = walletservice.getAssetCoins(user.getUserId(), assetName);
             if (assetAvailableCoins < amountToBeDeducted) {
-                String message = amountToBeDeducted + " coins cannot be deducted as total number of coins for " + assetName + " is: " + assetAvailableCoins + " which is less than the coins to be deducted";
+
+                String message = Float.toString(amountToBeDeducted) + " coins cannot be deducted as total number of coins for " + assetName + " is: " +Float.toString(assetAvailableCoins) + " which is less than the coins to be deducted";
+
                 obj.put("failure_message", message);
                 return new ResponseEntity<>(obj,HttpStatus.BAD_REQUEST);
             } else {
                 walletservice.withdrawFund(user.getUserId(), assetName, amountToBeDeducted);
-
-                String message = amountToBeDeducted + " has been deducted from the spot wallet of " + userName + " for asset : " + assetName;
+                String message = Float.toString(amountToBeDeducted) + " has been deducted from the spot wallet of " + userName + " for asset : " + assetName;
                 obj.put("success_message", message);
                 return new ResponseEntity<>(obj,HttpStatus.OK);
             }

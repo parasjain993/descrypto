@@ -10,16 +10,6 @@
         <result column="filled" property="filled" />
         <result column="total" property="total" />
 
-        <collection  property="buy_Id"  ofType="deshaw.dae.descrypto.domain.Order">
-            <id column="orderId" property="orderId" />
-            <result column="userId" property="userId" />
-            <result column="orderPair" property="orderPair" />
-            <result column="amount" property="amount" />
-            <result column="average" property="average" />
-            <result column="orderType" property="orderType" />
-            <result column="side" property="side" />
-        </collection>
-
     </resultMap>
 
     <select id="tradeHistory" resultMap="tradeResultMap">
@@ -27,35 +17,23 @@
         from trades
         INNER JOIN orders
         ON (trades.buy_orderId=orders.orderId AND orders.side='buy' ) or (trades.sell_orderId=orders.orderId AND orders.side='sell' )
-        where orders.userId=#{userId} AND orders.orderStatus='filled'
-
+        where orders.userId=#{userId}
+        <if test="data.orderId != null">
+            AND orders.orderId=#{data.orderId}
+        </if>
+        <if test="data.orderPair != null">
+            AND orders.orderPair=#{data.orderPair}
+        </if>
+        <if test="data.timestamp1 !=null and data.timestamp2 !=null ">
+            AND trades.timestamp BETWEEN #{data.timestamp1} and #{data.timestamp2}
+        </if>
     </select>
 
-    <resultMap id="partialTradeResultMap" type="deshaw.dae.descrypto.domain.Trade">
-        <id column="tradeId" property="tradeId" />
-        <result column="price" property="price" />
-        <result column="filled" property="filled" />
-        <result column="total" property="total" />
-
-        <collection  property="buy_Id"  ofType="deshaw.dae.descrypto.domain.Order">
-            <id column="orderId" property="orderId" />
-            <result column="userId" property="userId" />
-            <result column="orderPair" property="orderPair" />
-            <result column="amount" property="amount" />
-            <result column="average" property="average" />
-            <result column="orderType" property="orderType" />
-            <result column="side" property="side" />
-        </collection>
-
-    </resultMap>
-
-    <select id="partialTrade" resultMap="partialTradeResultMap">
-        select *
-        from trades
-        INNER JOIN orders
-        ON (trades.buy_orderId=orders.orderId AND orders.side='buy' ) or (trades.sell_orderId=orders.orderId AND orders.side='sell' )
-        where orders.orderId=#{orderId} AND orders.orderStatus='partially_filled'
-
-    </select>
+    <insert id="createTrade" parameterType="deshaw.dae.descrypto.domain.Trade" keyProperty="tradeId"
+            keyColumn="tradeId" useGeneratedKeys="true" >
+        insert into trades(filled,total,price,buy_orderId,sell_orderId,timestamp)
+        values(#{filled},#{total},
+        #{price},#{buy_Id},#{sell_Id},#{timestamp})
+    </insert>
 
 </mapper>
