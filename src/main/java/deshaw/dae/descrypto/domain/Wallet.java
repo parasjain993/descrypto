@@ -8,7 +8,7 @@ import java.util.Map;
 public class Wallet {
      private int userId;
      private String assetName;
-     private int assetCoins;
+     private float assetCoins;
      public int getUserId() {
           return userId;
      }
@@ -17,11 +17,11 @@ public class Wallet {
           this.userId = userId;
      }
 
-     public int getAssetCoins() {
+     public float getAssetCoins() {
           return assetCoins;
      }
 
-     public void setAssetCoins(int assetCoins) {
+     public void setAssetCoins(float assetCoins) {
           this.assetCoins = assetCoins;
      }
 

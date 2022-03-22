@@ -6,11 +6,11 @@ import java.util.List;
 
 public interface WalletMapper {
     List<Wallet> findAssetsForUser(int userId);
-    void addFund(int userId, String assetName, int amountToBeAdded);
-    int getAssetCoins(int userId, String assetName);
-    void withdrawFund(int userId, String assetName, int withdrawalAmount);
+    void addFund(int userId, String assetName, float amountToBeAdded);
+    float getAssetCoins(int userId, String assetName);
+    void withdrawFund(int userId, String assetName, float withdrawalAmount);
 
     Wallet findWallet(int userId, String assetName);
 
-    void addNewWallet(int userId, String assetName, int amountToBeAdded);
+    void addNewWallet(int userId, String assetName, float amountToBeAdded);
 }
