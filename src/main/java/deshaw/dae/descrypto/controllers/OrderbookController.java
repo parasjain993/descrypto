@@ -15,7 +15,7 @@ public class OrderbookController {
     @Autowired
     private OrderbookService orderbookService;
 
-    @ApiOperation(value = "get orderbook for the given pair symbol at given instant", tags = {"orderbook"})
+    @ApiOperation(value = "get orderbook for the given pair symbol at given instant", tags = {"Orderbook"})
     @GetMapping("/{pairSym}/orderbook")
     public ResponseEntity<?> GetOrderBook(@PathVariable("pairSym") String pairSym){
         return new ResponseEntity<>(orderbookService.allOpenOrdersbyPair(pairSym), HttpStatus.OK);
