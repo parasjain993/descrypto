@@ -103,21 +103,18 @@
      <select id="findBorrowedAssetsForUser" resultMap="CrossMarginWalletResultMapper">
         select assetName, assetCoins from borrowedwalletdb where userId = #{userId}
     </select>
-    <update id="liquidateMarginAssets">
-
+    <update id="liquidateMarginWallet">
         update marginwalletdb
         SET marginwalletdb.assetCoins = 0
         WHERE marginwalletdb.userId = #{userId}
 
         update marginwalletdb
         SET marginwalletdb.assetCoins = #{newMarginWalletValue}
-        WHERE marginwalletdb.userId = #{userId} AND marginwalletdb.assetName ="usdt"
+        WHERE marginwalletdb.userId = #{userId} AND marginwalletdb.assetName = #{assetName}
 
         update borrowedwalletdb
-        SET borrowedwalletdb.assetCoins = 0
+        SET borrowedwalletdb.assetCoins = 0 , borrowedwalletdb.interest=0
         WHERE borrowedwalletdb.userId = #{userId}
-
-     
     </update>
 
 </mapper>

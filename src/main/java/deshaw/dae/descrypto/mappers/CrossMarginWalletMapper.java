@@ -15,7 +15,7 @@ public interface CrossMarginWalletMapper {
     CrossMarginWallet findMarginWallet(int userId, String assetName);
     BorrowWallet findBorrowWallet(int userId, String assetName);
 
-    void liquidateMarginwallet(int userId, float newMarginWalletValue);
+    void liquidateMarginWallet(int userId, float newMarginWalletValue, String assetName);
     void addNewMarginWallet(int userId, String assetName, float amountToBeAdded);
     void addNewBorrowedWallet(int userId, String assetName, float amountToBeAdded, float interest);
 
