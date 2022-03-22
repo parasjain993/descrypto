@@ -21,7 +21,7 @@
         select userName,password, userId from userdb where userName=#{userName}
     </select>
     <select id="findByUserId" resultMap="BaseResultMap">
-        select fullName,password,totalWorth userdb where userId=#{userId}
+        select fullName,password,totalWorth from userdb where userId=#{userId}
     </select>
     <insert id="addUser" parameterType="deshaw.dae.descrypto.domain.User" keyProperty="userId"
             keyColumn="userId" useGeneratedKeys="true">
@@ -44,11 +44,11 @@
     <update id="updateMarginRatio">
         update userdb
         SET userdb.marginRatio = #{newMarginRatio}
-        WHERE userdb.userId = #{userId}
+        WHERE userId = #{userId}
     </update>
 
-    <select id="getMarginRatio">
-        SELECT marginRatio from userdb WHERE userid=#{userId}
+    <select id="getMarginRatio" resultType="float">
+        SELECT marginRatio from userdb WHERE userId=#{userId}
     </select>
 
 </mapper>

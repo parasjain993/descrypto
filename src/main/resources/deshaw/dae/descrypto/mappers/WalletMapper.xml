@@ -11,7 +11,7 @@
     <select id="findAssetsForUser" resultMap="WalletResultMapper">
         select assetName, assetCoins from spotwalletdb where userId = #{userId}
     </select>
-    <select id="getAssetCoins" resultType="int">
+    <select id="getAssetCoins" resultType="float">
         SELECT assetCoins FROM spotwalletdb WHERE userId = #{userId} AND assetName = #{assetName}
     </select>
     <update id="addFund">

@@ -22,8 +22,8 @@ public class WalletServiceImpl implements WalletService{
 
     private DashboardCache TokenCache = DashboardCache.getDashboardCache();
     @Override
-    public HashMap<String, Integer> findAssetsForUser(int userId) {
-        HashMap<String,Integer> userAssetsMap = new HashMap<>();
+    public HashMap<String, Float> findAssetsForUser(int userId) {
+        HashMap<String,Float> userAssetsMap = new HashMap<>();
         List<Wallet> userAssetsList =  walletmapper.findAssetsForUser(userId);
         for(Wallet w: userAssetsList) {
             userAssetsMap.put(w.getAssetName(), w.getAssetCoins());
@@ -32,7 +32,7 @@ public class WalletServiceImpl implements WalletService{
     }
     @Override
     public float totalWorthCalc(int userId) {
-        HashMap<String, Integer> assetsOfUser =  findAssetsForUser(userId);
+        HashMap<String, Float> assetsOfUser =  findAssetsForUser(userId);
         float total_worth = 0;
         for (String assets : assetsOfUser.keySet()) {
             total_worth = (float) (total_worth + TokenCache.TokenCache.get(assets + "usdt").getPrice() * assetsOfUser.get(assets));
@@ -41,15 +41,15 @@ public class WalletServiceImpl implements WalletService{
     }
 
     @Override
-    public int getAssetCoins(int userId, String assetName) {
+    public float getAssetCoins(int userId, String assetName) {
         return walletmapper.getAssetCoins(userId, assetName);
     }
     @Override
-    public void withdrawFund(int userId, String assetName, int withdrawalAmount) {
+    public void withdrawFund(int userId, String assetName, float withdrawalAmount) {
         walletmapper.withdrawFund(userId, assetName,withdrawalAmount);
     }
     @Override
-    public void addFund(int userId, String assetName, int amountToBeAdded) {
+    public void addFund(int userId, String assetName, float amountToBeAdded) {
         walletmapper.addFund(userId, assetName, amountToBeAdded);
     }
 
@@ -59,7 +59,7 @@ public class WalletServiceImpl implements WalletService{
     }
 
     @Override
-    public void addNewWallet(int userId, String assetName, int amountToBeAdded) {
+    public void addNewWallet(int userId, String assetName, float amountToBeAdded) {
         walletmapper.addNewWallet(userId, assetName, amountToBeAdded);
     }
 

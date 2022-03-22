@@ -15,7 +15,7 @@ public class User {
     private String pancardNo;
     private String dob;
     private String nationality;
-    private float marginRatio;
+    private float marginRatio=999;
 
     public String getNationality() {
         return nationality;

@@ -22,7 +22,7 @@ public interface UserMapper {
 
     void setPNL(float pnl, String walletId);
     User findByUserId(int userId);
-    void updateMarginRatio(int userid, float newMarginRatio);
+    void updateMarginRatio(int userId, float newMarginRatio);
     float getMarginRatio(int userId);
     void updateTotalWorth();
 }

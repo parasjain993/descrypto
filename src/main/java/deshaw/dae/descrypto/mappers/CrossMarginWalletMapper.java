@@ -7,8 +7,8 @@ import java.util.List;
 
 public interface CrossMarginWalletMapper {
 
-    void transferFundtoMargin(int userId, String assetName, int amountToBeTransferred);
-    void transferFundtoSpot(int userId, String assetName, int amountToBeTransferred);
+    void transferFundtoMargin(int userId, String assetName, float amountToBeTransferred);
+    void transferFundtoSpot(int userId, String assetName, float amountToBeTransferred);
     float getMarginAssetCoins(int userId, String assetName);
     float getBorrowedAssetCoins(int userId, String assetName);
 
@@ -16,13 +16,13 @@ public interface CrossMarginWalletMapper {
     BorrowWallet findBorrowWallet(int userId, String assetName);
 
     void liquidateMarginwallet(int userId, float newMarginWalletValue);
-    void addNewMarginWallet(int userId, String assetName, int amountToBeAdded);
-    void addNewBorrowedWallet(int userId, String assetName, int amountToBeAdded, float interest);
+    void addNewMarginWallet(int userId, String assetName, float amountToBeAdded);
+    void addNewBorrowedWallet(int userId, String assetName, float amountToBeAdded, float interest);
 
     List<CrossMarginWallet> findMarginAssetsForUser(int userId);
-    List<BorrowWallet> findBorrowedAssetsForUser(int userId);
+    List<CrossMarginWallet> findBorrowedAssetsForUser(int userId);
     void updateInterest(int userId, float interest, String assetName);
 
     void borrowFund(int userId, String assetName, float amountToBeBorrowed);
-    void repayFund(int userId, String assetName, float interestRepaid, float amountToBeBorrowed);
+    void repayFund(int userId, String assetName, float interestRepaid, float amountToBeRepaid);
 }

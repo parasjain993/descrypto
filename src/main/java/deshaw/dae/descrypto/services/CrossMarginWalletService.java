@@ -8,24 +8,24 @@ import java.util.HashMap;
 public interface CrossMarginWalletService {
 
 
-    HashMap<String, Integer> findMarginAssetsForUser(int userId);
+    HashMap<String, Float> findMarginAssetsForUser(int userId);
 
-    HashMap<String, Integer> findBorrowedAssetsForUser(int userId);
+    HashMap<String, Float> findBorrowedAssetsForUser(int userId);
     CrossMarginWallet findMarginWallet(int userId, String assetName);
 
     BorrowWallet findBorrowWallet(int userId, String assetName);
 
-    void addNewMarginWallet(int userId, String assetName, int amountToBeAdded);
+    void addNewMarginWallet(int userId, String assetName, float amountToBeAdded);
 
-    void addNewBorrowedWallet(int userId, String assetName, int amountToBeAdded, int interest);
+    void addNewBorrowedWallet(int userId, String assetName, float amountToBeAdded, float interest);
 
     void liquidateAssets(int userId);
 
-    void transferFundtoMargin(int userId, String assetName, int amountToBeAdded);
+    void transferFundtoMargin(int userId, String assetName, float amountToBeAdded);
 
-    void transferFundtoSpot(int userId, String assetName, int amountToBeAdded);
+    void transferFundtoSpot(int userId, String assetName, float amountToBeAdded);
 
-    void borrowFund(int userId, String assetName, int amountToBeBorrowed);
+    void borrowFund(int userId, String assetName, float amountToBeBorrowed);
 
     void repayFund(int userId, String assetName, float interestRepaid, float amountToBeRepaid);
 
@@ -35,7 +35,6 @@ public interface CrossMarginWalletService {
 
     float totalCrossWalletValue(int userId);
 
-    float fetchMarginRatio(int userId);
 
 
 }

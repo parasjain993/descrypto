@@ -27,27 +27,27 @@ public class CrossMarginWalletServiceImpl implements CrossMarginWalletService{
     private DashboardCache TokenCache = DashboardCache.getDashboardCache();
 
     @Override
-    public HashMap<String, Integer> findMarginAssetsForUser(int userId) {
-        HashMap<String,Integer> userAssetsMap = new HashMap<>();
+    public HashMap<String, Float> findMarginAssetsForUser(int userId) {
+        HashMap<String,Float> userAssetsMap = new HashMap<>();
         List<CrossMarginWallet> userAssetsList =  CrossMarginWalletMapper.findMarginAssetsForUser(userId);
         for(CrossMarginWallet w: userAssetsList) {
-            userAssetsMap.put(w.getAssetName(), (int) w.getAssetCoins());
+            userAssetsMap.put(w.getAssetName(), (float) w.getAssetCoins());
         }
         return userAssetsMap;
     }
     
     @Override
-    public HashMap<String, Integer> findBorrowedAssetsForUser(int userId) {
-        HashMap<String,Integer> userAssetsMap = new HashMap<>();
-        List<BorrowWallet> userAssetsList =  CrossMarginWalletMapper.findBorrowedAssetsForUser(userId);
-        for(BorrowWallet w: userAssetsList) {
-            userAssetsMap.put(w.getAssetName(), (int) w.getAssetCoins());
+    public HashMap<String, Float> findBorrowedAssetsForUser(int userId) {
+        HashMap<String,Float> userAssetsMap = new HashMap<>();
+        List<CrossMarginWallet> userAssetsList =  CrossMarginWalletMapper.findBorrowedAssetsForUser(userId);
+        for(CrossMarginWallet w: userAssetsList) {
+            userAssetsMap.put(w.getAssetName(), (float) w.getAssetCoins());
         }
         return userAssetsMap;
     }
 
     public float totalCrossWalletValue(int userId) {
-        HashMap<String, Integer> marginAssetsOfUser =  findMarginAssetsForUser(userId);
+        HashMap<String, Float> marginAssetsOfUser =  findMarginAssetsForUser(userId);
         float total_worth = 0;
         for (String assets : marginAssetsOfUser.keySet()) {
             total_worth = (float) (total_worth + TokenCache.TokenCache.get(assets + "usdt").getPrice() * marginAssetsOfUser.get(assets));
@@ -64,7 +64,7 @@ public class CrossMarginWalletServiceImpl implements CrossMarginWalletService{
     }
 
     public float interest(int userId){
-        HashMap<String, Integer> borrowedAssetsOfUser =  findBorrowedAssetsForUser(userId);
+        HashMap<String, Float> borrowedAssetsOfUser =  findBorrowedAssetsForUser(userId);
         float total_interest = 0;
         for (String assets : borrowedAssetsOfUser.keySet()) {
             total_interest = (float) (total_interest + TokenCache.TokenCache.get(assets + "usdt").getPrice() *findBorrowWallet(userId, assets).getInterest());
@@ -73,8 +73,9 @@ public class CrossMarginWalletServiceImpl implements CrossMarginWalletService{
     }
 
     public float borrowedWalletValue(int userId) {
-        HashMap<String, Integer> borrowedAssetsOfUser =  findBorrowedAssetsForUser(userId);
+        HashMap<String, Float> borrowedAssetsOfUser =  findBorrowedAssetsForUser(userId);
         float total_worth = 0;
+        if (borrowedAssetsOfUser.isEmpty()) return 0;
         for (String assets : borrowedAssetsOfUser.keySet()) {
             total_worth = (float) (total_worth + TokenCache.TokenCache.get(assets + "usdt").getPrice() * borrowedAssetsOfUser.get(assets));
         }
@@ -84,8 +85,7 @@ public class CrossMarginWalletServiceImpl implements CrossMarginWalletService{
     public float marginWalletValue(int userId) {
         float totalCrossWalletValue= totalCrossWalletValue(userId);
         float borrowedWalletValue= borrowedWalletValue(userId);
-        float marginWalletValue= totalCrossWalletValue-borrowedWalletValue;
-        return marginWalletValue;
+        return totalCrossWalletValue-borrowedWalletValue;
     }
 
     @Override
@@ -103,21 +103,17 @@ public class CrossMarginWalletServiceImpl implements CrossMarginWalletService{
         CrossMarginWalletMapper.repayFund(userId, assetName, interestRepaid, amountToBeRepaid);
     }
 
-    public float fetchMarginRatio(int userId) {
-        return usermapper.getMarginRatio(userId);
-    }
-
     @Override
-    public void transferFundtoMargin(int userId, String assetName, int amountToBeTransferred) {
+    public void transferFundtoMargin(int userId, String assetName, float amountToBeTransferred) {
         CrossMarginWalletMapper.transferFundtoMargin(userId, assetName, amountToBeTransferred);
     }
 
      @Override
-    public void transferFundtoSpot(int userId, String assetName, int amountToBeTransferred) {
+    public void transferFundtoSpot(int userId, String assetName, float amountToBeTransferred) {
          CrossMarginWalletMapper.transferFundtoSpot(userId, assetName, amountToBeTransferred);
     }
     @Override
-    public void borrowFund(int userId, String assetName, int amountToBeBorrowed) {
+    public void borrowFund(int userId, String assetName, float amountToBeBorrowed) {
         CrossMarginWalletMapper.borrowFund(userId, assetName, amountToBeBorrowed);
     }
 
@@ -131,11 +127,11 @@ public class CrossMarginWalletServiceImpl implements CrossMarginWalletService{
     }
 
     @Override
-    public void addNewMarginWallet(int userId, String assetName, int amountToBeAdded) {
+    public void addNewMarginWallet(int userId, String assetName, float amountToBeAdded) {
         CrossMarginWalletMapper.addNewMarginWallet(userId, assetName, amountToBeAdded);
     }
     @Override
-    public void addNewBorrowedWallet(int userId, String assetName, int amountToBeAdded, int interest) {
+    public void addNewBorrowedWallet(int userId, String assetName, float amountToBeAdded, float interest) {
         CrossMarginWalletMapper.addNewBorrowedWallet(userId, assetName, amountToBeAdded, 0);
     }
 
@@ -144,7 +140,7 @@ public class CrossMarginWalletServiceImpl implements CrossMarginWalletService{
         List<User> users = usermapper.getAllUsers();
         float rate = (float) 0.02;
         for(User user: users){
-            HashMap<String, Integer> borrowedAssets = findBorrowedAssetsForUser(user.getUserId());
+            HashMap<String, Float> borrowedAssets = findBorrowedAssetsForUser(user.getUserId());
             for(String asset: borrowedAssets.keySet()){
                 BorrowWallet borrowWallet= findBorrowWallet(user.getUserId(), asset);
                 float amount = borrowedAssets.get(asset);
@@ -170,6 +166,8 @@ public class CrossMarginWalletServiceImpl implements CrossMarginWalletService{
             usermapper.updateMarginRatio(user.getUserId(),marginRatio);
         }
     }
+
+
 
 }
 
