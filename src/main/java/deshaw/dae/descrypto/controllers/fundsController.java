@@ -72,12 +72,13 @@ public class fundsController {
         else {
             float assetAvailableCoins = walletservice.getAssetCoins(user.getUserId(), assetName);
             if (assetAvailableCoins < amountToBeDeducted) {
+
                 String message = Float.toString(amountToBeDeducted) + " coins cannot be deducted as total number of coins for " + assetName + " is: " +Float.toString(assetAvailableCoins) + " which is less than the coins to be deducted";
+
                 obj.put("failure_message", message);
                 return new ResponseEntity<>(obj,HttpStatus.BAD_REQUEST);
             } else {
                 walletservice.withdrawFund(user.getUserId(), assetName, amountToBeDeducted);
-
                 String message = Float.toString(amountToBeDeducted) + " has been deducted from the spot wallet of " + userName + " for asset : " + assetName;
                 obj.put("success_message", message);
                 return new ResponseEntity<>(obj,HttpStatus.OK);

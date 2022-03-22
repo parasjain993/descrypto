@@ -31,7 +31,7 @@ public class CrossMarginWalletServiceImpl implements CrossMarginWalletService{
         HashMap<String,Float> userAssetsMap = new HashMap<>();
         List<CrossMarginWallet> userAssetsList =  CrossMarginWalletMapper.findMarginAssetsForUser(userId);
         for(CrossMarginWallet w: userAssetsList) {
-            userAssetsMap.put(w.getAssetName(), (float) w.getAssetCoins());
+            userAssetsMap.put(w.getAssetName(), w.getAssetCoins());
         }
         return userAssetsMap;
     }
@@ -41,7 +41,7 @@ public class CrossMarginWalletServiceImpl implements CrossMarginWalletService{
         HashMap<String,Float> userAssetsMap = new HashMap<>();
         List<CrossMarginWallet> userAssetsList =  CrossMarginWalletMapper.findBorrowedAssetsForUser(userId);
         for(CrossMarginWallet w: userAssetsList) {
-            userAssetsMap.put(w.getAssetName(), (float) w.getAssetCoins());
+            userAssetsMap.put(w.getAssetName(), w.getAssetCoins());
         }
         return userAssetsMap;
     }
@@ -49,25 +49,32 @@ public class CrossMarginWalletServiceImpl implements CrossMarginWalletService{
     public float totalCrossWalletValue(int userId) {
         HashMap<String, Float> marginAssetsOfUser =  findMarginAssetsForUser(userId);
         float total_worth = 0;
+        if (marginAssetsOfUser.isEmpty()) return 0;
         for (String assets : marginAssetsOfUser.keySet()) {
-            total_worth = (float) (total_worth + TokenCache.TokenCache.get(assets + "usdt").getPrice() * marginAssetsOfUser.get(assets));
+            total_worth = ((float) (total_worth + TokenCache.TokenCache.get(assets + "usd").getPrice() * marginAssetsOfUser.get(assets)));
         }
         return total_worth;
     }
 
 
     public void liquidateAssets(int userId) {
-        float debt= borrowedWalletValue(userId)+ interest(userId);
-        float newMarginWalletValue= totalCrossWalletValue(userId)- debt;
-        CrossMarginWalletMapper.liquidateMarginwallet(userId, newMarginWalletValue);
-
+        float borrowedAssets =borrowedWalletValue(userId);
+        float totalAssets = totalCrossWalletValue(userId);
+        float interest= interest(userId);
+        float debt =borrowedAssets+ interest;
+        float newMarginWalletValue = totalAssets- debt;
+        if(findMarginWallet(userId, "usdt")==null){
+            addNewMarginWallet(userId, "usdt", 0);
+        }
+        String assetName="usdt";
+        CrossMarginWalletMapper.liquidateMarginWallet(userId, newMarginWalletValue, assetName);
     }
 
     public float interest(int userId){
         HashMap<String, Float> borrowedAssetsOfUser =  findBorrowedAssetsForUser(userId);
         float total_interest = 0;
         for (String assets : borrowedAssetsOfUser.keySet()) {
-            total_interest = (float) (total_interest + TokenCache.TokenCache.get(assets + "usdt").getPrice() *findBorrowWallet(userId, assets).getInterest());
+            total_interest = (float) (total_interest + TokenCache.TokenCache.get(assets + "usd").getPrice() *findBorrowWallet(userId, assets).getInterest());
         }
         return total_interest;
     }
@@ -76,8 +83,10 @@ public class CrossMarginWalletServiceImpl implements CrossMarginWalletService{
         HashMap<String, Float> borrowedAssetsOfUser =  findBorrowedAssetsForUser(userId);
         float total_worth = 0;
         if (borrowedAssetsOfUser.isEmpty()) return 0;
+
         for (String assets : borrowedAssetsOfUser.keySet()) {
-            total_worth = (float) (total_worth + TokenCache.TokenCache.get(assets + "usdt").getPrice() * borrowedAssetsOfUser.get(assets));
+            total_worth = (float) (total_worth + TokenCache.TokenCache.get(assets + "usd").getPrice() * borrowedAssetsOfUser.get(assets));
+
         }
         return total_worth;
     }
@@ -152,18 +161,27 @@ public class CrossMarginWalletServiceImpl implements CrossMarginWalletService{
 
     }
 
-    @Scheduled(fixedRate = 60000)
+    @Scheduled(fixedRate = 10000)
     private void updateMR() {
         List<User> users = usermapper.getAllUsers();
         for (User user: users) {
-            float totalAssets = totalCrossWalletValue(user.getUserId());
-            float borrowedAssets =borrowedWalletValue(user.getUserId());
-            float interest= interest(user.getUserId());
-            float marginRatio = 999;
-            if(borrowedAssets +interest!=0){
-                marginRatio = totalAssets/(borrowedAssets+interest);
+            try{
+                float borrowedAssets =borrowedWalletValue(user.getUserId());
+                float totalAssets = totalCrossWalletValue(user.getUserId());
+                float interest= interest(user.getUserId());
+                float marginRatio = 999;
+                if(borrowedAssets +interest!=0){
+                    marginRatio = totalAssets/(borrowedAssets+interest);
+                }
+                if(marginRatio<1.1){
+                    liquidateAssets(user.getUserId());
+                    System.out.println("Assets liquidated");
+                }
+                usermapper.updateMarginRatio(user.getUserId(),marginRatio);
             }
-            usermapper.updateMarginRatio(user.getUserId(),marginRatio);
+            catch(Exception nullpt){
+                System.out.println("Token not Initialised");
+            }
         }
     }
 
