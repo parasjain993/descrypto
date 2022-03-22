@@ -13,6 +13,7 @@
 
     <resultMap id="OrderResultMap" type="deshaw.dae.descrypto.domain.Order">
         <id column="orderId" property="orderId" />
+        <result column="timestamp" property="timestamp" />
         <result column="userId" property="userId" />
         <result column="orderPair" property="orderPair" />
         <result column="amount" property="amount" />
@@ -28,27 +29,32 @@
     <select id="orderHistory" resultMap="OrderResultMap">
         select * from orders
         where userId=#{userId}
+        <if test="orderId != null">
+            AND orderId = #{orderId}
+        </if>
+        <if test="orderPair != null">
+            AND orders.orderPair=#{orderPair}
+        </if>
+        <if test="orderStatus !=null ">
+            AND orders.orderStatus=#{orderStatus}
+        </if>
+        <if test="timestamp1 !=null and timestamp2 !=null ">
+            AND orders.timestamp BETWEEN #{timestamp1} and #{timestamp2}
+        </if>
+
     </select>
 
 
-    <resultMap id="openOrderResultMap" type="deshaw.dae.descrypto.domain.Order">
-        <id column="orderId" property="orderId" />
-        <result column="userId" property="userId" />
-        <result column="orderPair" property="orderPair" />
-        <result column="amount" property="amount" />
-        <result column="limitPrice" property="limitPrice" />
-        <result column="average" property="average" />
-        <result column="orderStatus" property="orderStatus" />
-        <result column="orderType" property="orderType" />
-        <result column="side" property="side" />
-        <result column="filled" property="filled" />
-        <result column="total" property="total" />
-    </resultMap>
-
-    <select id="openOrders" resultMap="openOrderResultMap">
+    <select id="openOrders" resultMap="OrderResultMap">
         select * from orders
-        where userId=#{userId} and (orderStatus='open' OR orderStatus='partially_filled' )
+        where (orderStatus='open' OR orderStatus='partially_filled' ) AND side=#{side}
     </select>
+
+    <update id="updateOrder" parameterType="deshaw.dae.descrypto.domain.Order">
+        UPDATE orders
+        SET orderStatus = #{orderStatus}, filled = #{filled}, average = #{average}, total = #{total}
+        WHERE orders.orderId = #{orderId}
+    </update>
 
     <update id="cancelOrder" >
         UPDATE orders

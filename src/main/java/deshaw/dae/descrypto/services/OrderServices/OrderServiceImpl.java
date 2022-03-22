@@ -6,6 +6,7 @@ import deshaw.dae.descrypto.domain.Order;
 import deshaw.dae.descrypto.mappers.OrderMapper;
 import deshaw.dae.descrypto.services.UserService;
 import deshaw.dae.descrypto.services.WalletService;
+import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -124,21 +125,28 @@ public class OrderServiceImpl implements OrderService{
         else
             return "failed to save";
     }
-
-
     @Override
-    public List<Order> orderHistory(int userId) {
-        return mapper.orderHistory(userId);
+    public List<Order> orderHistory(JSONObject data,int userId) {
+        return mapper.orderHistory(data,userId);
     }
 
     @Override
-    public List<Order> openOrders(int userId) {
-        return mapper.openOrders(userId);
+    public List<Order> openOrders(String side,String pair) {
+        return mapper.openOrders(side,pair);
     }
+
+    @Override
+    public void updateOrder(Order order) { mapper.updateOrder(order); }
 
     public void cancelOrder(int orderId) {
         mapper.cancelOrder(orderId);
     }
+
+//    @Override
+//    public List<Order> openOrders(int userId) {
+//        return mapper.openOrders(userId);
+//    }
+
     public boolean ValidateWorth(Order order){
         String coins[]=order.getOrderPair().split("-");//btc-cad
         int userId=order.getUserId();

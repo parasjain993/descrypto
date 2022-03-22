@@ -5,6 +5,7 @@ import deshaw.dae.descrypto.domain.CustomAuthenticationProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -39,6 +40,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .csrf().disable()
                 .authorizeRequests()
                 .antMatchers("/register").permitAll()
+                .antMatchers(HttpMethod.GET, "/user/**").permitAll()
+                .antMatchers(HttpMethod.POST, "/user/**").permitAll()
+                .antMatchers(HttpMethod.GET, "/trade/**").permitAll()
+                .antMatchers(HttpMethod.POST, "/trade/**").permitAll()
+                .antMatchers(HttpMethod.GET, "/order/**").permitAll()
+                .antMatchers(HttpMethod.POST, "/order/**").permitAll()
+                .antMatchers(HttpMethod.POST, "/**").permitAll()
                 .anyRequest()
                 .authenticated()
                 .and()
