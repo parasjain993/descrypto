@@ -5,6 +5,7 @@ import deshaw.dae.descrypto.services.OrderServices.OrderService;
 import deshaw.dae.descrypto.services.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -28,7 +29,7 @@ public class OrderController {
     DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
     @ApiOperation(value = "Endpoint for placing limit orders for spot and margin trading", tags = { "Limit Order" })
     @PostMapping("/place/limit")
-    EntityModel<Order> placeLimitOrder(@RequestBody Order newLimitOrder){
+    EntityModel<?> placeLimitOrder(@RequestBody Order newLimitOrder){
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String userName = auth.getName();
         int userId=userService.findByUserName(userName).getUserId();
@@ -44,12 +45,14 @@ public class OrderController {
                             withRel("orderHistory"));
         }
         else {
-            return null;
+            JSONObject obj=new JSONObject();
+            obj.put("Error",status);
+            return EntityModel.of(obj);
         }
     }
     @ApiOperation(value = "Endpoint for placing market orders for spot and margin trading", tags = { "Market Order" })
     @PostMapping("/place/market")
-    EntityModel<Order> placeMarketOrder(@RequestBody Order newMarketOrder){
+    EntityModel<?> placeMarketOrder(@RequestBody Order newMarketOrder){
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String userName = auth.getName();
         int userId=userService.findByUserName(userName).getUserId();
@@ -63,12 +66,15 @@ public class OrderController {
                     linkTo(methodOn(OrderController.class).showOrderHistory(newMarketOrder.getUserId())).
                             withRel("orderHistory"));
         }
-        else
-            return null;
+        else {
+            JSONObject obj=new JSONObject();
+            obj.put("Error",status);
+            return EntityModel.of(obj);
+        }
     }
     @ApiOperation(value = "Endpoint for placing stop-loss market orders", tags = { "Stop-loss Market Order" })
     @PostMapping("/place/stop-loss/market")
-    EntityModel<Order> placeStopLossMarketOrder(@RequestBody Order newSLMarketOrder){
+    EntityModel<?> placeStopLossMarketOrder(@RequestBody Order newSLMarketOrder){
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String userName = auth.getName();
         int userId=userService.findByUserName(userName).getUserId();
@@ -81,13 +87,15 @@ public class OrderController {
                     linkTo(methodOn(OrderController.class).showOrderHistory(newSLMarketOrder.getUserId())).
                             withRel("orderHistory"));
         }
-           else
-
-            return null;
+           else{
+            JSONObject obj=new JSONObject();
+            obj.put("Error",status);
+            return EntityModel.of(obj);
+        }
     }
     @ApiOperation(value = "Endpoint for placing stop-loss limit orders", tags = { "Stop-loss Limit Order" })
     @PostMapping("/place/stop-loss/limit")
-    EntityModel<Order> placeStopLossLimitOrder(@RequestBody Order newSLLimitOrder){
+    EntityModel<?> placeStopLossLimitOrder(@RequestBody Order newSLLimitOrder){
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String userName = auth.getName();
         int userId=userService.findByUserName(userName).getUserId();
@@ -100,8 +108,11 @@ public class OrderController {
             linkTo(methodOn(OrderController.class).showOrderHistory(newSLLimitOrder.getUserId())).
                     withRel("orderHistory"));
         }
-        else
-            return null;
+        else{
+            JSONObject obj=new JSONObject();
+            obj.put("Error",status);
+            return EntityModel.of(obj);
+        }
     }
     @GetMapping("/orderHistory/{userId}")
     List<Order> showOrderHistory(@PathVariable("userId") int userId) {

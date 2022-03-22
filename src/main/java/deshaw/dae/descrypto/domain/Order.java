@@ -11,14 +11,14 @@ public class Order {
     private int userId;//which user has placed
     private String tradingType;//spot or margin
     private String orderPair;//btcusdt
-    private double amount;//amount of token to buy/sell
+    private double amount;//number of coins specified by user
     private double limitPrice;//trade will start at this price for limit and current for market
-    private double average;// average price at which trade was executed till now
+    private double average;// average price at which trade was executed till now for this user
     private String orderType;//limit or market
     private String side;// buy or sell
     private String orderStatus;//open, partially_filled, filled, cancelled
     private double filled;//how much of the order is completed
-    private double total;//total spent upon buying/ total gained upon sell
+    private double total;//total spent/gained by the user so far
     private double triggerPrice;//for stop-loss orders only
     private String dateTime;//timestamps
 
