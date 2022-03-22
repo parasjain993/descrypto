@@ -6,10 +6,10 @@ import deshaw.dae.descrypto.domain.Trade;
 import java.util.List;
 
 public interface OrderService {
-    int placeLimitOrder(Order newLimitOrder);
-    int placeMarketOrder(Order newMarketOrder);
-    int placeStopLossMarketOrder(Order newSTMarketOrder);
-    int placeStopLossLimitOrder(Order newSLLimitOrder);
+    String placeLimitOrder(Order newLimitOrder);
+    String placeMarketOrder(Order newMarketOrder);
+    String placeStopLossMarketOrder(Order newSLMarketOrder);
+    String placeStopLossLimitOrder(Order newSLLimitOrder);
     List<Order> orderHistory(int userId);
     List <Order> openOrders(int userId);
 

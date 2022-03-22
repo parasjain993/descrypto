@@ -22,9 +22,9 @@ public class OrderServiceImpl implements OrderService{
 
     private DashboardCache cache=DashboardCache.getDashboardCache();
     Map<String, AssetDetails> tokens;
-    public int placeLimitOrder(Order newLimitOrder){
+    public String placeLimitOrder(Order newLimitOrder){
         if(newLimitOrder.getLimitPrice()==0.0)
-            return -1;
+            return "Specify limit price";
        String coins[]=newLimitOrder.getOrderPair().split("-");
         String pair=coins[0]+coins[1];
         tokens=cache.TokenCache();
@@ -35,22 +35,26 @@ public class OrderServiceImpl implements OrderService{
         if(tokens!=null&&tokens.get(pair)!=null)
         newLimitOrder.setAverage(tokens.get(pair).getPrice());
         else
-            newLimitOrder.setAverage(3212.2);
+            return "bad request";
         newLimitOrder.setOrderType("limit");
        if(!ValidateWorth(newLimitOrder))
-           return -1;
-
-       return mapper.placeLimitOrder(newLimitOrder);
+           return "Insufficient balance";
+       newLimitOrder.setOrderPair(pair);
+       int status=mapper.placeOrder(newLimitOrder);
+       if(status==1)
+           return "ok";
+       else
+           return "failed to save";
 
     }
-    public int placeMarketOrder(Order newMarketOrder){
+    public String placeMarketOrder(Order newMarketOrder){
         String coins[]=newMarketOrder.getOrderPair().split("-");
         String pair=coins[0]+coins[1];
         tokens=cache.TokenCache();
         if(tokens!=null&&tokens.get(pair)!=null)
             newMarketOrder.setAverage(tokens.get(pair).getPrice());
         else
-            newMarketOrder.setAverage(3212.2);
+            return "bad request";
 
         newMarketOrder.setFilled(0.0);
         newMarketOrder.setOrderStatus("open");
@@ -58,14 +62,19 @@ public class OrderServiceImpl implements OrderService{
         double total = newMarketOrder.getAverage()*newMarketOrder.getAmount();
         newMarketOrder.setTotal(total);
         if(!ValidateWorth(newMarketOrder))
-           return -1;
-        int status=mapper.placeMarketOrder(newMarketOrder);// save
-        return status;
-    }
+              return "Insufficient balance";
+        newMarketOrder.setOrderPair(pair);
+        int status=mapper.placeOrder(newMarketOrder);
+        if(status==1)
+            return "ok";
+        else
+            return "failed to save";
 
-    public int placeStopLossMarketOrder(Order newSLMarketOrder){
+     }
+
+    public String placeStopLossMarketOrder(Order newSLMarketOrder){
         if(newSLMarketOrder.getTriggerPrice()==0.0){
-            return -1;
+            return "Specify trigger price";
         }
         String coins[]=newSLMarketOrder.getOrderPair().split("-");
         String pair=coins[0]+coins[1];
@@ -73,21 +82,24 @@ public class OrderServiceImpl implements OrderService{
         if(tokens!=null&&tokens.get(pair)!=null)
             newSLMarketOrder.setAverage(tokens.get(pair).getPrice());
         else
-            newSLMarketOrder.setAverage(3212.2);
+            return "bad request";
 
         newSLMarketOrder.setFilled(0.0);
         newSLMarketOrder.setOrderStatus("open");
         newSLMarketOrder.setOrderType("SLmarket");
         newSLMarketOrder.setTotal(newSLMarketOrder.getAmount()*newSLMarketOrder.getTriggerPrice());
         if(!ValidateWorth(newSLMarketOrder))
-            return -1;
-        int status=mapper.placeStopLossMarketOrder(newSLMarketOrder);
-        System.out.println(status);
-        return status;
+            return "Insufficient balance";
+        newSLMarketOrder.setOrderPair(pair);
+        int status=mapper.placeOrder(newSLMarketOrder);
+        if(status==1)
+            return "ok";
+        else
+            return "failed to save";
     }
-    public int placeStopLossLimitOrder(Order newSLLimitOrder){
+    public String placeStopLossLimitOrder(Order newSLLimitOrder){
         if(newSLLimitOrder.getTriggerPrice()==0.0||newSLLimitOrder.getLimitPrice()==0.0){
-            return -1;
+            return "Specify trigger price and limit price";
         }
         String coins[]=newSLLimitOrder.getOrderPair().split("-");
         String pair=coins[0]+coins[1];
@@ -96,7 +108,7 @@ public class OrderServiceImpl implements OrderService{
         if(tokens!=null&&tokens.get(pair)!=null)
             newSLLimitOrder.setAverage(tokens.get(pair).getPrice());
         else
-            newSLLimitOrder.setAverage(3212.2);
+            return "bad request";
         newSLLimitOrder.setFilled(0.0);
         newSLLimitOrder.setOrderStatus("open");
         double total = newSLLimitOrder.getLimitPrice()*newSLLimitOrder.getAmount();
@@ -104,10 +116,13 @@ public class OrderServiceImpl implements OrderService{
 
         newSLLimitOrder.setOrderType("SLlimit");
         if(!ValidateWorth(newSLLimitOrder))
-            return -1;
-        int status=mapper.placeStopLossLimitOrder(newSLLimitOrder);
-
-        return status;
+            return "Insufficient balance";
+        newSLLimitOrder.setOrderPair(pair);
+        int status=mapper.placeOrder(newSLLimitOrder);
+        if(status==1)
+            return "ok";
+        else
+            return "failed to save";
     }
 
 
@@ -129,8 +144,8 @@ public class OrderServiceImpl implements OrderService{
         int userId=order.getUserId();
         String pair=coins[0]+coins[1];
         try {
-            int coin1 = (int)walletservice.getAssetCoins(userId,coins[0]);
-            int coin2 = (int) walletservice.getAssetCoins(userId,coins[1]);
+            double coin1 = walletservice.getAssetCoins(userId,coins[0]);
+            double coin2 = walletservice.getAssetCoins(userId,coins[1]);
 
             if(order.getSide().equals("buy")){
                 if(order.getTotal()>coin2*tokens.get(pair).getPrice())
@@ -138,7 +153,7 @@ public class OrderServiceImpl implements OrderService{
             }
             else{
 
-                if(order.getAmount()>coin1*tokens.get(pair).getPrice())
+                if(order.getAmount()>coin1)
                     return false;
             }
             return true;

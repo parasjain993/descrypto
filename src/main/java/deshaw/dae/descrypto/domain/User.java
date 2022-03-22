@@ -3,6 +3,7 @@ package deshaw.dae.descrypto.domain;
 import java.security.SecureRandom;
 
 
+
 public class User {
     private int userId;
     private String firstName;
