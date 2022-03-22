@@ -6,6 +6,7 @@ import deshaw.dae.descrypto.domain.Order;
 import deshaw.dae.descrypto.mappers.OrderMapper;
 import deshaw.dae.descrypto.services.UserService;
 import deshaw.dae.descrypto.services.WalletService;
+import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -106,29 +107,36 @@ public class OrderServiceImpl implements OrderService{
         else
             return "failed to save";
     }
-
-
     @Override
-    public List<Order> orderHistory(int userId) {
-        return mapper.orderHistory(userId);
+    public List<Order> orderHistory(JSONObject data,int userId) {
+        return mapper.orderHistory(data,userId);
     }
 
     @Override
-    public List<Order> openOrders(int userId) {
-        return mapper.openOrders(userId);
+    public List<Order> openOrders(String side,String pair) {
+        return mapper.openOrders(side,pair);
     }
+
+    @Override
+    public void updateOrder(Order order) { mapper.updateOrder(order); }
 
     public void cancelOrder(int orderId) {
         mapper.cancelOrder(orderId);
     }
+
+
+
     public boolean ValidateWorth(Order order,double total){
+
         String coins[]=order.getOrderPair().split("-");//btc-cad
         int userId=order.getUserId();
         String pair=coins[0]+coins[1];
         try {
+            tokens=cache.TokenCache();
+            if(tokens.get(pair)!=null){
             double coin1 = walletservice.getAssetCoins(userId,coins[0]);
-           double coin2 = walletservice.getAssetCoins(userId,coins[1]);
-
+            double coin2 = walletservice.getAssetCoins(userId,coins[1]);
+        //    System.out.println(coin1+" "+coin2);
             if(order.getSide().equals("buy")){
                 if(total>coin2*tokens.get(pair).getPrice())
                 return false;
@@ -137,7 +145,7 @@ public class OrderServiceImpl implements OrderService{
 
                 if(order.getAmount()>coin1)
                     return false;
-            }
+            }}
             return true;
         }catch (Exception e)
         {

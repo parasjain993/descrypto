@@ -1,5 +1,4 @@
 package deshaw.dae.descrypto.services;
-import deshaw.dae.descrypto.domain.AssetDetails;
 import deshaw.dae.descrypto.domain.User;
 
 import java.util.List;
@@ -13,7 +12,7 @@ public interface UserService {
    // void setPNL(float v, String walletId);
 
     User findByUserName(String userName);
-
+    float getMarginRatio(User user);
     void updateTotalWorth();
 }
 

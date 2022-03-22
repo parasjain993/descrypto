@@ -15,18 +15,19 @@
         <result column="pancardNo" property="pancardNo"/>
         <result column="dob" property="dob"/>
         <result column="nationality" property="nationality"/>
+        <result column="marginRatio" property="marginRatio"/>
     </resultMap>
     <select id="findByUserName"  resultMap="BaseResultMap">
         select userName,password, userId from userdb where userName=#{userName}
     </select>
     <select id="findByUserId" resultMap="BaseResultMap">
-        select fullName,password,totalWorth userdb where userId=#{userId}
+        select fullName,password,totalWorth from userdb where userId=#{userId}
     </select>
     <insert id="addUser" parameterType="deshaw.dae.descrypto.domain.User" keyProperty="userId"
             keyColumn="userId" useGeneratedKeys="true">
 
-       insert into userdb( firstName, middleName, lastName, userName, email, password, phoneNo, pancardNo, dob, nationality)
-        values ( #{firstName},#{middleName}, #{lastName}, #{userName}, #{email}, #{password}, #{phoneNo}, #{pancardNo}, #{dob}, #{nationality})
+       insert into userdb( firstName, middleName, lastName, userName, email, password, phoneNo, pancardNo, dob, nationality, marginRatio)
+        values ( #{firstName},#{middleName}, #{lastName}, #{userName}, #{email}, #{password}, #{phoneNo}, #{pancardNo}, #{dob}, #{nationality}, #{marginRatio})
 
     </insert>
 <!--    <update id = "setTotalWorth" >-->
@@ -40,6 +41,15 @@
 <!--        SET userdb.pnl = #{pnl}-->
 <!--        WHERE userdb.walletId = #{walletId}-->
 <!--    </update>-->
+    <update id="updateMarginRatio">
+        update userdb
+        SET userdb.marginRatio = #{newMarginRatio}
+        WHERE userId = #{userId}
+    </update>
+
+    <select id="getMarginRatio" resultType="float">
+        SELECT marginRatio from userdb WHERE userId=#{userId}
+    </select>
 
 </mapper>
 

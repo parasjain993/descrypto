@@ -2,12 +2,16 @@ package deshaw.dae.descrypto.domain;
 
 import org.springframework.http.ResponseEntity;
 
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
 
 public class Order {
 
     private int  orderId;//primary key
+
+
+
     private int userId;//which user has placed
     private String tradingType;//spot or margin
     private String orderPair;//btcusdt
@@ -20,21 +24,17 @@ public class Order {
     private double filled;//how much of the order is completed
     private double total;//total spent/gained by the user so far
     private double triggerPrice;//for stop-loss orders only
-    private String dateTime;//timestamps
+    private Timestamp timestamp;// when order was placed
 
-
-    public void setTradingType(String tradingType){
-        this.tradingType=tradingType;
-    }
-    public String getTradingType(){
+    public String getTradingType() {
         return tradingType;
     }
-    public void setDateTime(String dateTime) {
-        this.dateTime = dateTime;
+
+    public void setTradingType(String tradingType) {
+        this.tradingType = tradingType;
     }
-    public String getDateTime(){
-        return this.dateTime;
-    }
+
+
     public double getTriggerPrice() {
         return triggerPrice;
     }
@@ -113,5 +113,11 @@ public class Order {
     }
 
     public void setAverage(Double Average) { this.average = Average; }
+
+    public Timestamp getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(Timestamp time) { this.timestamp = time; }
 
 }
