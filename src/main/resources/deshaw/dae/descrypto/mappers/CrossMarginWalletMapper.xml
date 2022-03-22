@@ -1,0 +1,125 @@
+
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="deshaw.dae.descrypto.mappers.CrossMarginWalletMapper">
+
+    <resultMap id="CrossMarginWalletResultMapper" type="deshaw.dae.descrypto.domain.CrossMarginWallet">
+        <result column="userId" property="userId"   />
+        <result column="assetName" property="assetName"/>
+        <result column="assetCoins" property="assetCoins"/>
+    </resultMap>
+
+    <resultMap id="BorrowWalletResultMapper" type="deshaw.dae.descrypto.domain.BorrowWallet">
+        <result column="userId" property="userId"   />
+        <result column="assetName" property="assetName"/>
+        <result column="assetCoins" property="assetCoins"/>
+        <result column="interest" property="interest"/>
+    </resultMap>
+
+<!--Margin wallet-->
+   
+  
+    <select id="getMarginAssetCoins" resultType="float">
+        SELECT assetCoins FROM marginwalletdb WHERE userId = #{userId} AND assetName = #{assetName}
+    </select>
+    <update id="transferFundtoMargin">
+    update spotwalletdb
+        SET spotwalletdb.assetCoins =  spotwalletdb.assetCoins - #{amountToBeTransferred}
+        WHERE spotwalletdb.userId = #{userId} AND spotwalletdb.assetName = #{assetName}
+
+        update marginwalletdb
+        SET marginwalletdb.assetCoins = marginwalletdb.assetCoins + #{amountToBeTransferred}
+        WHERE marginwalletdb.userId = #{userId} AND marginwalletdb.assetName = #{assetName}
+    </update>
+
+    <update id="transferFundtoSpot">
+    update spotwalletdb
+        SET spotwalletdb.assetCoins =  spotwalletdb.assetCoins + #{amountToBeTransferred}
+        WHERE spotwalletdb.userId = #{userId} AND spotwalletdb.assetName = #{assetName}
+
+        update marginwalletdb
+        SET marginwalletdb.assetCoins = marginwalletdb.assetCoins - #{amountToBeTransferred}
+        WHERE marginwalletdb.userId = #{userId} AND marginwalletdb.assetName = #{assetName}
+    </update>
+   
+    <select id ="findMarginWallet" resultMap="CrossMarginWalletResultMapper">
+        SELECT assetName, assetCoins FROM marginwalletdb WHERE userId = #{userId} AND assetName = #{assetName} 
+    </select>
+    <insert id = "addNewMarginWallet">
+        INSERT INTO marginwalletdb(userId,assetName, assetCoins) VALUES(#{userId}, #{assetName}, #{amountToBeAdded})
+    </insert>
+
+     <select id="findMarginAssetsForUser" resultMap="CrossMarginWalletResultMapper">
+        select assetName, assetCoins from marginwalletdb where userId = #{userId}
+    </select>
+
+
+
+    <!--borrowed wallet-->
+   
+    <update id="updateInterest">
+        update borrowedwalletdb
+        SET borrowedwalletdb.interest = #{interest}
+        WHERE borrowedwalletdb.userId = #{userId} AND borrowedwalletdb.assetName = #{assetName}
+    </update>
+
+
+
+    <select id="getBorrowedAssetCoins" resultType="float">
+        SELECT assetCoins FROM borrowedwalletdb WHERE userId = #{userId} AND assetName = #{assetName}
+    </select>
+    
+    <select id ="findBorrowWallet" resultMap="BorrowWalletResultMapper">
+        SELECT assetName, assetCoins, interest FROM borrowedwalletdb WHERE userId = #{userId} AND assetName = #{assetName}
+    </select>
+    <insert id = "addNewBorrowedWallet">
+        INSERT INTO borrowedwalletdb(userId, assetName, assetCoins, interest) VALUES(#{userId}, #{assetName}, #{amountToBeAdded}, #{interest})
+    </insert>
+    <update id="borrowFund">
+        update marginwalletdb
+        SET marginwalletdb.assetCoins = marginwalletdb.assetCoins + #{amountToBeBorrowed}
+        WHERE marginwalletdb.userId = #{userId} AND marginwalletdb.assetName = #{assetName}
+
+        update borrowedwalletdb
+        SET borrowedwalletdb.assetCoins = borrowedwalletdb.assetCoins + #{amountToBeBorrowed}
+        WHERE borrowedwalletdb.userId = #{userId} AND borrowedwalletdb.assetName = #{assetName}
+
+
+    </update>
+    <update id="repayFund">
+        update borrowedwalletdb
+        SET borrowedwalletdb.interest = borrowedwalletdb.interest -#{interestRepaid}
+        WHERE borrowedwalletdb.userId = #{userId} AND borrowedwalletdb.assetName = #{assetName}
+
+        update borrowedwalletdb
+        SET borrowedwalletdb.assetCoins = borrowedwalletdb.assetCoins - #{amountToBeRepaid}
+        WHERE borrowedwalletdb.userId = #{userId} AND borrowedwalletdb.assetName = #{assetName}
+
+        update marginwalletdb
+        SET marginwalletdb.assetCoins = marginwalletdb.assetCoins - #{amountToBeRepaid}
+        WHERE marginwalletdb.userId = #{userId} AND marginwalletdb.assetName = #{assetName}
+    </update>
+     <select id="findBorrowedAssetsForUser" resultMap="CrossMarginWalletResultMapper">
+        select assetName, assetCoins from borrowedwalletdb where userId = #{userId}
+    </select>
+    <update id="liquidateMarginAssets">
+
+        update marginwalletdb
+        SET marginwalletdb.assetCoins = 0
+        WHERE marginwalletdb.userId = #{userId}
+
+        update marginwalletdb
+        SET marginwalletdb.assetCoins = #{newMarginWalletValue}
+        WHERE marginwalletdb.userId = #{userId} AND marginwalletdb.assetName ="usdt"
+
+        update borrowedwalletdb
+        SET borrowedwalletdb.assetCoins = 0
+        WHERE borrowedwalletdb.userId = #{userId}
+
+     
+    </update>
+
+</mapper>
+
+
