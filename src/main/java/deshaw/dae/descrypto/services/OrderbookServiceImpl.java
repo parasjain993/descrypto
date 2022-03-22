@@ -5,7 +5,6 @@ import deshaw.dae.descrypto.domain.OrderbookEntry;
 import deshaw.dae.descrypto.mappers.OrderbookMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.EnableScheduling;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -45,7 +44,6 @@ public class OrderbookServiceImpl implements OrderbookService{
 
 
         }
-        List<OrderbookEntry> DummyBuyOrders;
         Collections.sort(BuyOrders, new Comparator<OrderbookEntry>() {
             @Override
             public int compare(OrderbookEntry a1, OrderbookEntry a2) {
