@@ -34,8 +34,9 @@ public class OrderServiceImpl implements OrderService{
         newLimitOrder.setTotal(0.0);
         newLimitOrder.setAverage(0.0);
         newLimitOrder.setOrderType("limit");
+       if(newLimitOrder.getTradingType().equals("spot")){
        if(!ValidateWorth(newLimitOrder,total))
-           return "Insufficient balance";
+           return "Insufficient balance";}
        newLimitOrder.setOrderPair(pair);
        int status=mapper.placeOrder(newLimitOrder);
        if(status==1)
@@ -54,8 +55,9 @@ public class OrderServiceImpl implements OrderService{
         tokens=cache.TokenCache();
         double total = tokens.get(pair).getPrice()*newMarketOrder.getAmount();
         newMarketOrder.setTotal(0.0);
+        if(newMarketOrder.getTradingType().equals("spot")){
         if(!ValidateWorth(newMarketOrder,total))
-              return "Insufficient balance";
+              return "Insufficient balance";}
         newMarketOrder.setOrderPair(pair);
         int status=mapper.placeOrder(newMarketOrder);
         if(status==1)
@@ -77,8 +79,9 @@ public class OrderServiceImpl implements OrderService{
         newSLMarketOrder.setOrderType("SLmarket");
         newSLMarketOrder.setTotal(0.0);
         double total=newSLMarketOrder.getAmount()*newSLMarketOrder.getTriggerPrice();
+        if(newSLMarketOrder.getTradingType().equals("spot")){
         if(!ValidateWorth(newSLMarketOrder,total))
-            return "Insufficient balance";
+            return "Insufficient balance";}
         newSLMarketOrder.setOrderPair(pair);
         int status=mapper.placeOrder(newSLMarketOrder);
         if(status==1)
@@ -98,8 +101,9 @@ public class OrderServiceImpl implements OrderService{
         double total = newSLLimitOrder.getLimitPrice()*newSLLimitOrder.getAmount();
         newSLLimitOrder.setTotal(0.0);
         newSLLimitOrder.setOrderType("SLlimit");
+        if(newSLLimitOrder.getTradingType().equals("spot")){
         if(!ValidateWorth(newSLLimitOrder,total))
-            return "Insufficient balance";
+            return "Insufficient balance";}
         newSLLimitOrder.setOrderPair(pair);
         int status=mapper.placeOrder(newSLLimitOrder);
         if(status==1)
