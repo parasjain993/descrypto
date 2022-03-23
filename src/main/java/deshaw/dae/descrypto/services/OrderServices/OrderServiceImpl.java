@@ -4,6 +4,7 @@ import deshaw.dae.descrypto.cache.DashboardCache;
 import deshaw.dae.descrypto.domain.AssetDetails;
 import deshaw.dae.descrypto.domain.Order;
 import deshaw.dae.descrypto.mappers.OrderMapper;
+import deshaw.dae.descrypto.services.CrossMarginWalletService;
 import deshaw.dae.descrypto.services.UserService;
 import deshaw.dae.descrypto.services.WalletService;
 import org.json.simple.JSONObject;
@@ -20,6 +21,8 @@ public class OrderServiceImpl implements OrderService{
     private UserService userService;
     @Autowired
     private WalletService walletservice;
+    @Autowired
+    private CrossMarginWalletService crossMarginWalletService;
 
     private DashboardCache cache=DashboardCache.getDashboardCache();
     Map<String, AssetDetails> tokens;
@@ -37,6 +40,9 @@ public class OrderServiceImpl implements OrderService{
        if(newLimitOrder.getTradingType().equals("spot")){
        if(!ValidateWorth(newLimitOrder,total))
            return "Insufficient balance";}
+       else if(!ValidateMarginWorth(newLimitOrder,total)){
+           return "Insufficient balance";
+       }
        newLimitOrder.setOrderPair(pair);
        int status=mapper.placeOrder(newLimitOrder);
        if(status==1)
@@ -58,6 +64,9 @@ public class OrderServiceImpl implements OrderService{
         if(newMarketOrder.getTradingType().equals("spot")){
         if(!ValidateWorth(newMarketOrder,total))
               return "Insufficient balance";}
+        else if(!ValidateMarginWorth(newMarketOrder,total)){
+            return "Insufficient balance";
+        }
         newMarketOrder.setOrderPair(pair);
         int status=mapper.placeOrder(newMarketOrder);
         if(status==1)
@@ -82,6 +91,9 @@ public class OrderServiceImpl implements OrderService{
         if(newSLMarketOrder.getTradingType().equals("spot")){
         if(!ValidateWorth(newSLMarketOrder,total))
             return "Insufficient balance";}
+        else if(!ValidateMarginWorth(newSLMarketOrder,total)){
+            return "Insufficient balance";
+        }
         newSLMarketOrder.setOrderPair(pair);
         int status=mapper.placeOrder(newSLMarketOrder);
         if(status==1)
@@ -104,6 +116,9 @@ public class OrderServiceImpl implements OrderService{
         if(newSLLimitOrder.getTradingType().equals("spot")){
         if(!ValidateWorth(newSLLimitOrder,total))
             return "Insufficient balance";}
+        else if(!ValidateMarginWorth(newSLLimitOrder,total)){
+            return "Insufficient balance";
+        }
         newSLLimitOrder.setOrderPair(pair);
         int status=mapper.placeOrder(newSLLimitOrder);
         if(status==1)
@@ -156,5 +171,36 @@ public class OrderServiceImpl implements OrderService{
             System.out.println("no vali "+e.getMessage());
             return false;
         }
-    }}
+    }
+    public boolean ValidateMarginWorth(Order order,double total){
+        HashMap<String,Float> map=crossMarginWalletService.findMarginAssetsForUser(order.getUserId());
+        String coins[]=order.getOrderPair().split("-");
+        String pair=coins[0]+coins[1];
+        try{
+        if(order.getSide().equals("buy")){
+            if(!map.containsKey(coins[1]))
+                return false;
+             tokens=cache.TokenCache();
+             if(tokens.get(pair)!=null){
+                 if(total>map.get(coins[1])*tokens.get(pair).getPrice())
+                     return false;
+                 else
+                     return true;
+             }
+             return true;
+        }
+        else{
+            if(!map.containsKey(coins[0]))
+                return false;
+            if(order.getAmount()>map.get(coins[0]))
+                return false;
+            else
+                return true;
+        }
+        }catch (Exception e){
+            return false;
+        }
+    }
+}
+
 //[ethcad, usdtusd, btcusd, btccad]
