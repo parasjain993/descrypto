@@ -104,7 +104,8 @@ public class CrossMarginTradingController {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String userName = auth.getName();
         User user = userservice.findByUserName(userName);
-        float amountInUSDT= (float) TokenCache.TokenCache.get(assetName + "usdt").getPrice()*amountToBeBorrowed;
+        float amountInUSDT= amountToBeBorrowed;
+        if (!assetName.equals("usdt"))  amountInUSDT= (float) TokenCache.TokenCache.get(assetName + "usdt").getPrice()*amountToBeBorrowed;
         BorrowWallet borrowedWallet = CrossMarginWalletService.findBorrowWallet(user.getUserId(), assetName);
         if(borrowedWallet == null) {
             CrossMarginWalletService.addNewBorrowedWallet(user.getUserId(), assetName, 0, 0);
