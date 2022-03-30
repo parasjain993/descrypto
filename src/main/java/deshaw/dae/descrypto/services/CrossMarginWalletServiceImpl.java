@@ -51,7 +51,7 @@ public class CrossMarginWalletServiceImpl implements CrossMarginWalletService{
         float total_worth = 0;
         if (marginAssetsOfUser.isEmpty()) return 0;
         for (String assets : marginAssetsOfUser.keySet()) {
-            total_worth = ((float) (total_worth + TokenCache.TokenCache.get(assets + "usd").getPrice() * marginAssetsOfUser.get(assets)));
+            total_worth = ((float) (total_worth + TokenCache.TokenCache.get(assets + "usdt").getPrice() * marginAssetsOfUser.get(assets)));
         }
         return total_worth;
     }
@@ -74,7 +74,7 @@ public class CrossMarginWalletServiceImpl implements CrossMarginWalletService{
         HashMap<String, Float> borrowedAssetsOfUser =  findBorrowedAssetsForUser(userId);
         float total_interest = 0;
         for (String assets : borrowedAssetsOfUser.keySet()) {
-            total_interest = (float) (total_interest + TokenCache.TokenCache.get(assets + "usd").getPrice() *findBorrowWallet(userId, assets).getInterest());
+            total_interest = (float) (total_interest + TokenCache.TokenCache.get(assets + "usdt").getPrice() *findBorrowWallet(userId, assets).getInterest());
         }
         return total_interest;
     }
@@ -85,7 +85,7 @@ public class CrossMarginWalletServiceImpl implements CrossMarginWalletService{
         if (borrowedAssetsOfUser.isEmpty()) return 0;
 
         for (String assets : borrowedAssetsOfUser.keySet()) {
-            total_worth = (float) (total_worth + TokenCache.TokenCache.get(assets + "usd").getPrice() * borrowedAssetsOfUser.get(assets));
+            total_worth = (float) (total_worth + TokenCache.TokenCache.get(assets + "usdt").getPrice() * borrowedAssetsOfUser.get(assets));
 
         }
         return total_worth;
