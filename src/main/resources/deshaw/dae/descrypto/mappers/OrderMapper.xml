@@ -29,17 +29,17 @@
     <select id="orderHistory" resultMap="OrderResultMap">
         select * from orders
         where userId=#{userId}
-        <if test="orderId != null">
-            AND orderId = #{orderId}
+        <if test="data.orderId != null">
+            AND orderId = #{data.orderId}
         </if>
-        <if test="orderPair != null">
-            AND orders.orderPair=#{orderPair}
+        <if test="data.orderPair != null">
+            AND orders.orderPair=#{data.orderPair}
         </if>
-        <if test="orderStatus !=null ">
-            AND orders.orderStatus=#{orderStatus}
+        <if test="data.orderStatus !=null ">
+            AND orders.orderStatus=#{data.orderStatus}
         </if>
-        <if test="timestamp1 !=null and timestamp2 !=null ">
-            AND orders.timestamp BETWEEN #{timestamp1} and #{timestamp2}
+        <if test="data.timestamp1 !=null and data.timestamp2 !=null ">
+            AND orders.timestamp BETWEEN #{data.timestamp1} and #{data.timestamp2}
         </if>
 
     </select>
