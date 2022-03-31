@@ -71,7 +71,6 @@ public class WalletServiceImpl implements WalletService{
         Timestamp ts = new Timestamp(time);
         for(User user: users) {
             float totalWorth  = totalWorthCalc(user.getUserId());
-
         }
     }
 }
