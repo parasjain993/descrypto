@@ -72,14 +72,3 @@ public class SwaggerConfig implements WebMvcConfigurer{
 }
 
 
-
-
-
-//    private ApiInfo apiInfo() {
-//        return new ApiInfoBuilder().title("Descrypto API")
-//                .description("JavaInUse API reference for developers")
-//                .termsOfServiceUrl("http://javainuse.com")
-//                .licenseUrl("javainuse@gmail.com").version("1.0").build();
-//    }
-//}
-
