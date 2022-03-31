@@ -1,5 +1,6 @@
 package deshaw.dae.descrypto.controllers;
 
+import deshaw.dae.descrypto.cache.DashboardCache;
 import deshaw.dae.descrypto.domain.*;
 import deshaw.dae.descrypto.services.DashboardService;
 import deshaw.dae.descrypto.services.DashboardServiceImpl;
@@ -17,10 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 
 @EnableScheduling
 @RestController
@@ -38,6 +36,8 @@ public class MatchingAlgo  {
     @Autowired
     private WalletService walletService;
 
+    private DashboardCache TokenCache = DashboardCache.getDashboardCache();
+
     Comparator cmp=new Comparator() {
 
         @Override
@@ -45,9 +45,9 @@ public class MatchingAlgo  {
             Order o1 = (Order) a;
             Order o2 = (Order) b;
 
-//            if(o1.getLimitPrice()==o2.getLimitPrice()) return o1.getTimestamp().compareTo(o2.getTimestamp());
+            if(o1.getLimitPrice()==o2.getLimitPrice()) return o1.getTimestamp().compareTo(o2.getTimestamp());
 
-            return Double.compare(o2.getLimitPrice(),o1.getLimitPrice());
+            return Double.compare(o1.getLimitPrice(),o2.getLimitPrice());
         }
     };;
 
@@ -71,15 +71,12 @@ public class MatchingAlgo  {
         order.setAverage(average);
         order.setTotal(total);
 
-        //System.out.println(average+"\n"+data+"\n"+trades+"\n"+count+" "+total+"\ncalAverage:\n");
-
     }
 
     void createTrade(Order S, Order B) throws InterruptedException {
 
         Order s=S,b=B;
 
-        System.out.println(s+"\n"+b+"\nafter:\n");
 
         Trade trade=new Trade();
         trade.setBuy_Id(b.getOrderId()); trade.setSell_Id(s.getOrderId());
@@ -89,7 +86,6 @@ public class MatchingAlgo  {
             s=b;
             b=temp;
         }
-        System.out.println(s+"\n"+b+"\nafter:\n");
 
         double price=(s.getLimitPrice()+b.getLimitPrice())/2.00;
 
@@ -121,20 +117,24 @@ public class MatchingAlgo  {
         orderService.updateOrder(b);
 
 
-        // return s.getOrderId()+"\n"+b.getOrderId()+"\n"+"\n\n"+s.getAmount()+"\n"+b.getAmount()+"\n"+"\n\n"+s.getOrderStatus()+"\n"+b.getOrderStatus()+"\n"+"\n\n";
-
     }
 
     boolean if_valid(Order order){
 
-        return true;
-        // if side is sell, check if no. of coins of that crypto is valid or not
-        // if side is buy, check if coins of other crypto is valid or not
-//          if(order.getSide().compareTo("sell")==0 && walletService.totalWorthCalc(order.getUserId()) >= order.getLimitPrice() ){
-//              return true;
-//         }
-//          return false;
-
+        TradingPairs tradingPair=dashboardService.getTradingPairbyId(order.getOrderPair());
+        if(order.getSide().compareTo("sell")==0) {
+            if( walletService.getAssetCoins(order.getUserId(),tradingPair.Asset1ID())>=(order.getAmount()-order.getFilled())){
+                return true;
+            }
+            return false;
+        }
+        else {
+            HashMap<String, Float> assetsOfUser =  walletService.findAssetsForUser(order.getUserId());
+            if(TokenCache.TokenCache.get(tradingPair.Asset2ID() + "usdt").getPrice() * assetsOfUser.get(tradingPair.Asset1ID())>=order.getLimitPrice()) {
+                return true;
+            }
+            return false;
+        }
     }
 
     int matchMarket(Order order,List<Order> orders,int start,boolean if_buy) throws InterruptedException {
@@ -166,6 +166,9 @@ public class MatchingAlgo  {
 
     void marketAlgorithm(List<Order> sell,List<Order> buy) throws InterruptedException {
 
+        Collections.sort(buy, cmp);
+        Collections.sort(sell, cmp);
+
         int p=0;
         for(int l = 0; l < buy.size(); l++) {
             if(buy.get(l).getOrderType().compareTo("market")==0) {
@@ -185,8 +188,6 @@ public class MatchingAlgo  {
             if(p>=buy.size()) break;
         }
 
-        Collections.sort(buy, cmp);
-        Collections.sort(sell, cmp);
     }
 
     @Scheduled(fixedRate = 2000)
@@ -194,16 +195,16 @@ public class MatchingAlgo  {
         List<String> pairs = new ArrayList<String>();
         List<TradingPairs> tradingPairs = new ArrayList<TradingPairs>();
         tradingPairs=dashboardService.getAllTradingPairs();
-//             System.out.println(tradingPairs.size()+ " start\n");
+
         for (TradingPairs x : tradingPairs) {
             pairs.add(x.PairSymbol());
         }
-//
-//                 String ans = "";
+
         for (int k = 0; k < pairs.size(); k++) {
             List<Order> buy = new ArrayList<Order>();
             buy = orderService.openOrders("buy", pairs.get(k));
             List<Order> sell = new ArrayList<Order>();
+            sell = orderService.openOrders("sell", pairs.get(k));
 
             marketAlgorithm(sell,buy);
 
@@ -213,23 +214,21 @@ public class MatchingAlgo  {
             Collections.sort(buy, cmp);
             Collections.sort(sell, cmp);
 
+
             Integer j = sell.size() - 1;
             Integer i = buy.size() - 1;
 
             while (i >= 0 && j >= 0) {
-//                         System.out.println(i + " " + j + " check0\n");
 
                 while (i>=0 && ( buy.get(i).getUserId()==sell.get(j).getUserId() || !if_valid(buy.get(i) ))) {
                     i--;
                 }
-//                         System.out.println(i + " " + j + " check2\n");
                 while (i >= 0 && j >= 0 && (sell.get(j).getLimitPrice() > buy.get(i).getLimitPrice() || !if_valid(sell.get(j)))) {
                     j--;
                 }
 
                 if (i < 0 || j < 0) break;
-////
-////                         // System.out.println(i+" "+j+" check1\n");
+
                 try {
                     createTrade(sell.get(j), buy.get(i));
                 } catch (InterruptedException e) {
@@ -237,29 +236,11 @@ public class MatchingAlgo  {
                 }
                 if (sell.get(j).getOrderStatus().compareTo("filled") == 0) j--;
                 if (buy.get(i).getOrderStatus().compareTo("filled") == 0) i--;
-//
-//                         //System.out.println(i+" "+j+" check2\n");
-//
-            }
 
-//            for(int l = 0; l < buy.size(); l++){
-//                if(buy.get(l).getOrderType().compareTo("market")==0 && buy.get(l).getOrderStatus().compareTo("filled")!=0 ) {
-//                    if(buy.get(l).getFilled()!=0) buy.get(l).setOrderStatus("filled");
-//                    else buy.get(l).setOrderStatus("cancelled");
-//                }
-//            }
-//
-//            for(int l = 0; l < sell.size(); l++){
-//                if(sell.get(l).getOrderType().compareTo("market")==0 && sell.get(l).getOrderStatus().compareTo("filled")!=0 ) {
-//                    if(sell.get(l).getFilled()!=0) sell.get(l).setOrderStatus("filled");
-//                    else sell.get(l).setOrderStatus("cancelled");
-//                }
-//            }
+            }
 
 
         }
-//                 // return ans;
     }
 
 }
-
