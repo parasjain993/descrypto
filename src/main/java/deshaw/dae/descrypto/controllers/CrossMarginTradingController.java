@@ -104,7 +104,7 @@ public class CrossMarginTradingController {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String userName = auth.getName();
         User user = userservice.findByUserName(userName);
-        float amountInUSDT= (float) TokenCache.TokenCache.get(assetName + "usd").getPrice()*amountToBeBorrowed;
+        float amountInUSDT= (float) TokenCache.TokenCache.get(assetName + "usdt").getPrice()*amountToBeBorrowed;
         BorrowWallet borrowedWallet = CrossMarginWalletService.findBorrowWallet(user.getUserId(), assetName);
         if(borrowedWallet == null) {
             CrossMarginWalletService.addNewBorrowedWallet(user.getUserId(), assetName, 0, 0);
@@ -126,7 +126,7 @@ public class CrossMarginTradingController {
         }
         float borrowWalletValue= CrossMarginWalletService.borrowedWalletValue(user.getUserId());
         if(2*marginWalletValue< amountInUSDT + borrowWalletValue){
-            float valueInAsset= (2*marginWalletValue- borrowWalletValue)/((float) TokenCache.TokenCache.get(assetName + "usd").getPrice());
+            float valueInAsset= (2*marginWalletValue- borrowWalletValue)/((float) TokenCache.TokenCache.get(assetName + "usdt").getPrice());
             return new ResponseEntity<>("Margin wallet for " + userName + " values "+ marginWalletValue+ " usdt and "+ borrowWalletValue +" usdt already borrowed. Can't borrow the asked amount at 3x! Maximum "+ valueInAsset +assetName+" can be borrowed",HttpStatus.OK);
         }
         else {
