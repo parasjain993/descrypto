@@ -41,7 +41,7 @@ public class OrderController {
         String status=service.placeLimitOrder(newLimitOrder);
         if(status.equals("ok")) {
             Timestamp instant= Timestamp.from(Instant.now());
-            System.out.println(instant);
+            //System.out.println(instant);
             newLimitOrder.setTimestamp(instant);
             JSONObject obj1=new JSONObject();
             obj1.put("orderPair",null); obj1.put("timestamp1",null); obj1.put("timestamp2",null);
@@ -53,7 +53,8 @@ public class OrderController {
             return EntityModel.of(newLimitOrder,
                     linkTo(methodOn(OrderController.class).showOrderHistory(obj1)).withRel("Order History"),
                     linkTo(methodOn(OrderController.class).showOrderHistory(obj2)).
-                            withRel("Open Orders"));
+                            withRel("Open Orders"),
+                    linkTo(methodOn(OrderController.class).placeMarketOrder(null)).withRel("Market Order"));
         }
         else {
             JSONObject obj=new JSONObject();
@@ -67,6 +68,7 @@ public class OrderController {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String userName = auth.getName();
         int userId=userService.findByUserName(userName).getUserId();
+        //System.out.println(userId);
         newMarketOrder.setUserId(userId);
         String status=service.placeMarketOrder(newMarketOrder);
         if(status.equals("ok")) {
@@ -78,7 +80,7 @@ public class OrderController {
             return EntityModel.of(newMarketOrder,
                     linkTo(methodOn(OrderController.class).showOrderHistory(obj1)).withRel("Order History"),
                     linkTo(methodOn(OrderController.class).showOrderHistory(obj2)).
-                            withRel("Open Orders"));
+                            withRel("Open Orders"),linkTo(methodOn(OrderController.class).placeLimitOrder(null)).withRel("Limit Order"));
         }
         else {
             JSONObject obj=new JSONObject();
@@ -103,7 +105,8 @@ public class OrderController {
             return EntityModel.of(newSLMarketOrder,
                     linkTo(methodOn(OrderController.class).showOrderHistory(obj1)).withRel("Order History"),
                     linkTo(methodOn(OrderController.class).showOrderHistory(obj2)).
-                            withRel("Open Orders"));
+                            withRel("Open Orders"),linkTo(methodOn(OrderController.class).placeLimitOrder(null)).withRel("Limit Order"),
+                    linkTo(methodOn(OrderController.class).placeMarketOrder(null)).withRel("Market Order"));
 
         }
            else{
@@ -129,7 +132,9 @@ public class OrderController {
             return EntityModel.of(newSLLimitOrder,
                     linkTo(methodOn(OrderController.class).showOrderHistory(obj1)).withRel("Order History"),
                     linkTo(methodOn(OrderController.class).showOrderHistory(obj2)).
-                            withRel("Open Orders"));
+                            withRel("Open Orders"),linkTo(methodOn(OrderController.class).placeLimitOrder(null)).withRel("Limit Order"),
+                    linkTo(methodOn(OrderController.class).placeMarketOrder(null)).withRel("Market Order")
+            );
         }
         else{
             JSONObject obj=new JSONObject();
