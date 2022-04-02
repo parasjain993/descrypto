@@ -59,6 +59,7 @@ public class OrderServiceImpl implements OrderService{
         newMarketOrder.setOrderStatus("open");
         newMarketOrder.setOrderType("market");
         tokens=cache.TokenCache();
+
         double total = tokens.get(pair).getPrice()*newMarketOrder.getAmount();
         newMarketOrder.setTotal(0.0);
         if(newMarketOrder.getTradingType().equals("spot")){

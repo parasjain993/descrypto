@@ -43,7 +43,7 @@ create table orders(
  filled float not null,
  total float not null,
  triggerPrice float null,
- ts datetime null,
+ timestamp datetime null,
  tradingType varchar(10) not null,
  primary key(orderId)
 );
