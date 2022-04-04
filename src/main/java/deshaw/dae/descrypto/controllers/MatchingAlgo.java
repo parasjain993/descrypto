@@ -116,25 +116,25 @@ public class MatchingAlgo  {
         orderService.updateOrder(s);
         orderService.updateOrder(b);
 
-
     }
 
     boolean if_valid(Order order){
 
-        TradingPairs tradingPair=dashboardService.getTradingPairbyId(order.getOrderPair());
-        if(order.getSide().compareTo("sell")==0) {
-            if( walletService.getAssetCoins(order.getUserId(),tradingPair.Asset1ID())>=(order.getAmount()-order.getFilled())){
-                return true;
-            }
-            return false;
-        }
-        else {
-            HashMap<String, Float> assetsOfUser =  walletService.findAssetsForUser(order.getUserId());
-            if(TokenCache.TokenCache.get(tradingPair.Asset2ID() + "usdt").getPrice() * assetsOfUser.get(tradingPair.Asset1ID())>=order.getLimitPrice()) {
-                return true;
-            }
-            return false;
-        }
+       return true;
+//        TradingPairs tradingPair=dashboardService.getTradingPairbyId(order.getOrderPair());
+//        if(order.getSide().compareTo("sell")==0) {
+//            if( walletService.getAssetCoins(order.getUserId(),tradingPair.Asset1ID())>=(order.getAmount()-order.getFilled())){
+//                return true;
+//            }
+//            return false;
+//        }
+//        else {
+//            HashMap<String, Float> assetsOfUser =  walletService.findAssetsForUser(order.getUserId());
+//            if(TokenCache.TokenCache.get(tradingPair.Asset2ID() + "usdt").getPrice() * assetsOfUser.get(tradingPair.Asset1ID())>=order.getLimitPrice()) {
+//                return true;
+//            }
+//            return false;
+//        }
     }
 
     int matchMarket(Order order,List<Order> orders,int start,boolean if_buy) throws InterruptedException {
