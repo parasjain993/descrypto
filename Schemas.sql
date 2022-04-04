@@ -27,6 +27,7 @@ CREATE table userdb(
 	pancardNo varchar(20) not null,
 	dob varchar(10) not null,
 	nationality varchar(10) not null,
+        marginRatio float null default 999,
     primary key(userId)
 );
 
