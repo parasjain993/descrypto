@@ -13,17 +13,19 @@
 
     <resultMap id="OrderResultMap" type="deshaw.dae.descrypto.domain.Order">
         <id column="orderId" property="orderId" />
-        <result column="timestamp" property="timestamp" />
         <result column="userId" property="userId" />
+        <result column="tradingType" property="tradingType" />
         <result column="orderPair" property="orderPair" />
         <result column="amount" property="amount" />
         <result column="limitPrice" property="limitPrice" />
         <result column="average" property="average" />
-        <result column="orderStatus" property="orderStatus" />
         <result column="orderType" property="orderType" />
         <result column="side" property="side" />
+        <result column="orderStatus" property="orderStatus" />
         <result column="filled" property="filled" />
         <result column="total" property="total" />
+        <result column="triggerPrice" property="triggerPrice" />
+        <result column="timestamp" property="timestamp" />
     </resultMap>
 
     <select id="orderHistory" resultMap="OrderResultMap">
