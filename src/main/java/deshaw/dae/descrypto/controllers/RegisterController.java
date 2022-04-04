@@ -9,10 +9,14 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.EntityModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @Api(description = "Endpoint for registering the user",tags = {"Register"})
 @RestController
@@ -25,21 +29,29 @@ public class RegisterController {
 
     @ApiOperation(value = "Register", tags = { "Register" })
     @RequestMapping(value = "/register", method= RequestMethod.POST)
-   ResponseEntity<?> register(@RequestBody User userObject)  {
+    EntityModel<?> register(@RequestBody User userObject)  {
         JSONObject obj = new JSONObject();
         String message;
         User foundUser = userService.findByUserName(userObject.getUserName());
         if(foundUser != null) {
-            message = "User with same userName already exists";
+            message = "User with same username already exists";
             obj.put("failure-message", message);
-            return new ResponseEntity<>(obj, HttpStatus.BAD_REQUEST);
+            obj.put("Status", HttpStatus.BAD_REQUEST);
+           return
+            EntityModel.of(obj,
+                    linkTo(methodOn(RegisterController.class).register(userObject)).withRel("Try Registering with different username again")
+                    );
         }
         else {
             userObject.setPassword(passwordEncoder.encode(userObject.getPassword()));
             userService.addUser(userObject);
             message = "Registration done successfully";
             obj.put("success-message", message);
-            return new ResponseEntity<>(obj, HttpStatus.OK);
+            obj.put("Status", HttpStatus.OK);
+            return
+                    EntityModel.of(obj,
+                            linkTo(methodOn(LoginController.class).login(userObject)).withRel("Login")
+                    );
         }
 
     }
