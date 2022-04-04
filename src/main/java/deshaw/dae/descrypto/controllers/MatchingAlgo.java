@@ -115,13 +115,15 @@ public class MatchingAlgo  {
 
         orderService.updateOrder(s);
         orderService.updateOrder(b);
+        TradingPairs p=dashboardService.getTradingPairbyId(s.getOrderPair());
 
+        //walletService.withdrawFund(s.getUserId(),,amountFilled);
 
     }
 
     boolean if_valid(Order order){
 
-        TradingPairs tradingPair=dashboardService.getTradingPairbyId(order.getOrderPair());
+        /*TradingPairs tradingPair=dashboardService.getTradingPairbyId(order.getOrderPair());
         if(order.getSide().compareTo("sell")==0) {
             if( walletService.getAssetCoins(order.getUserId(),tradingPair.Asset1ID())>=(order.getAmount()-order.getFilled())){
                 return true;
@@ -134,7 +136,8 @@ public class MatchingAlgo  {
                 return true;
             }
             return false;
-        }
+        }*/
+        return true;
     }
 
     int matchMarket(Order order,List<Order> orders,int start,boolean if_buy) throws InterruptedException {
@@ -213,7 +216,7 @@ public class MatchingAlgo  {
 
             Collections.sort(buy, cmp);
             Collections.sort(sell, cmp);
-
+            //System.out.println(buy+" "+sell);
 
             Integer j = sell.size() - 1;
             Integer i = buy.size() - 1;

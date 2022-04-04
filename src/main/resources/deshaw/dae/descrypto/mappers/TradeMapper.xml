@@ -6,9 +6,11 @@
 
     <resultMap id="tradeResultMap" type="deshaw.dae.descrypto.domain.Trade">
         <id column="tradeId" property="tradeId" />
-        <result column="price" property="price" />
         <result column="filled" property="filled" />
         <result column="total" property="total" />
+        <result column="buy_orderId" property="buy_Id" />
+        <result column="sell_orderId" property="sell_Id" />
+        <result column="timestamp" property="timestamp" />
 
     </resultMap>
 

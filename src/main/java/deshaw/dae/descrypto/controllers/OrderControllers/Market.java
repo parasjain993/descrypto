@@ -35,7 +35,7 @@ public class Market extends Thread{
                  }catch (Exception e){}
                     if(price!=-1.0) {
                         double amnt = (10 + (10000 - 10) * random.nextDouble()) / price;
-                        double variance = random.nextDouble() + 10;
+                        double variance =  random.nextDouble()+10;
                         double newLimitPrice;
                         String side = "Buy";
                         if (count % 2 == 0)
