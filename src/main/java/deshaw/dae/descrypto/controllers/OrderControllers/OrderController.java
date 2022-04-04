@@ -33,7 +33,7 @@ public class OrderController {
 
     @ApiOperation(value = "Endpoint for placing limit orders for spot and margin trading", tags = { "Limit Order" })
     @PostMapping("/place/limit")
-    EntityModel<?> placeLimitOrder(@RequestBody Order newLimitOrder){
+    public EntityModel<?> placeLimitOrder(@RequestBody Order newLimitOrder){
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String userName = auth.getName();
         int userId=userService.findByUserName(userName).getUserId();
@@ -144,7 +144,7 @@ public class OrderController {
 
     @ApiOperation(value = "Endpoint for checking order history using different filters", tags = { "Order History" })
     @PostMapping("/orderHistory")
-    CollectionModel<EntityModel<Order>> showOrderHistory (@RequestBody JSONObject data){
+    public CollectionModel<EntityModel<Order>> showOrderHistory (@RequestBody JSONObject data){
 
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String userName = auth.getName();

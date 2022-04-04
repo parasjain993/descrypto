@@ -26,9 +26,4 @@ public class OrderbookController {
         return  EntityModel.of(orderbookService.allOpenOrdersbyPair(pairSym),
                 linkTo(methodOn(DashboardController.class).getCoinDetails()).withRel("get Market Summary"));
     }
-
-
-
-
-
 }
