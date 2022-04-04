@@ -31,7 +31,7 @@ public class OrderController {
     private UserService userService;
 
 
-    @ApiOperation(value = "Endpoint for placing limit orders for spot and margin trading", tags = { "Limit Order" })
+    @ApiOperation(value = "Endpoint for placing limit orders for spot and margin trading")
     @PostMapping("/place/limit")
     EntityModel<?> placeLimitOrder(@RequestBody Order newLimitOrder){
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -62,7 +62,7 @@ public class OrderController {
             return EntityModel.of(obj);
         }
     }
-    @ApiOperation(value = "Endpoint for placing market orders for spot and margin trading", tags = { "Market Order" })
+    @ApiOperation(value = "Endpoint for placing market orders for spot and margin trading")
     @PostMapping("/place/market")
     EntityModel<?> placeMarketOrder(@RequestBody Order newMarketOrder){
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -88,7 +88,7 @@ public class OrderController {
             return EntityModel.of(obj);
         }
     }
-    @ApiOperation(value = "Endpoint for placing stop-loss market orders", tags = { "Stop-loss Market Order" })
+    @ApiOperation(value = "Endpoint for placing stop-loss market orders")
     @PostMapping("/place/stop-loss/market")
     EntityModel<?> placeStopLossMarketOrder(@RequestBody Order newSLMarketOrder){
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -115,7 +115,7 @@ public class OrderController {
             return EntityModel.of(obj);
         }
     }
-    @ApiOperation(value = "Endpoint for placing stop-loss limit orders", tags = { "Stop-loss Limit Order" })
+    @ApiOperation(value = "Endpoint for placing stop-loss limit orders")
     @PostMapping("/place/stop-loss/limit")
     EntityModel<?> placeStopLossLimitOrder(@RequestBody Order newSLLimitOrder){
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -143,7 +143,7 @@ public class OrderController {
         }
     }
 
-    @ApiOperation(value = "Endpoint for getting orders from order creation engine", tags = { "Orders from Markets" })
+    @ApiOperation(value = "Endpoint for getting orders from order creation engine")
  @GetMapping("/getDummy/{pair}")
  List<HashMap<String,String>> getOrders(@PathVariable("pair") String pair) {return Market.getOrders(pair);}
 

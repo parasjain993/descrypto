@@ -115,7 +115,9 @@ public class MatchingAlgo  {
 
         orderService.updateOrder(s);
         orderService.updateOrder(b);
+        TradingPairs p=dashboardService.getTradingPairbyId(s.getOrderPair());
 
+        //walletService.withdrawFund(s.getUserId(),,amountFilled);
 
     }
 
