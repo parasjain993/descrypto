@@ -1,30 +1,20 @@
 package deshaw.dae.descrypto.controllers;
 
-import com.fasterxml.jackson.databind.node.ObjectNode;
+
 import deshaw.dae.descrypto.cache.DashboardCache;
 import deshaw.dae.descrypto.domain.*;
-import deshaw.dae.descrypto.services.DashboardService;
 import deshaw.dae.descrypto.services.UserService;
 import deshaw.dae.descrypto.services.WalletService;
 import deshaw.dae.descrypto.services.CrossMarginWalletService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.EnableScheduling;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
-import java.security.Principal;
-import org.springframework.hateoas.EntityModel;
 
 import java.util.HashMap;
-import java.util.List;
-
-
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @EnableScheduling
 @RestController
@@ -41,9 +31,9 @@ public class CrossMarginTradingController {
     private DashboardCache TokenCache = DashboardCache.getDashboardCache();
 
     @PutMapping ("user/transferFundstoMargin")
-    public ResponseEntity<?> transferFundtoMargin(@RequestBody ObjectNode objectnode) {
-        String assetName = objectnode.get("assetName").asText();
-        float amountToBeTransferred = objectnode.get("amountToBeTransferred").floatValue();
+    public ResponseEntity<?> transferFundtoMargin(@RequestBody TransferFunds transferSpotFund) {
+        String assetName = transferSpotFund.getAssetName();
+        float amountToBeTransferred = transferSpotFund.getAmountToBeTransferred();
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String userName = auth.getName();
         User user = userservice.findByUserName(userName);
@@ -63,15 +53,12 @@ public class CrossMarginTradingController {
             CrossMarginWalletService.transferFundtoMargin(user.getUserId(), assetName, amountToBeTransferred);
             return new ResponseEntity<>(amountToBeTransferred +" coins for " + assetName + " have been transferred successfully to " + userName + "'s margin wallet!",HttpStatus.OK);
         }
-        //return new ResponseEntity<>(amountToBeTransferred +" blahhhh coins for " + assetName + " have been transferred successfully to " + userName + "'s margin wallet!",HttpStatus.OK);
-
-
     }
 
     @PutMapping ("user/transferFundstoSpot")
-    public ResponseEntity<?> transferFundtoSpot(@RequestBody ObjectNode objectnode) {
-        String assetName = objectnode.get("assetName").asText();
-        float amountToBeTransferred = objectnode.get("amountToBeTransferred").floatValue();
+    public ResponseEntity<?> transferFundtoSpot(@RequestBody TransferFunds transferMarginFund) {
+        String assetName = transferMarginFund.getAssetName();
+        float amountToBeTransferred = transferMarginFund.getAmountToBeTransferred();
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String userName = auth.getName();
         User user = userservice.findByUserName(userName);
@@ -95,12 +82,10 @@ public class CrossMarginTradingController {
         return new ResponseEntity<>(amountToBeTransferred +" coins for " + assetName + " have been transferred successfully to " + userName + "'s spot wallet!",HttpStatus.OK);
     }
 
-
-
     @PutMapping("user/borrowAssets")
-    public ResponseEntity<?> borrowFunds(@RequestBody ObjectNode objectnode) {
-        String assetName = objectnode.get("assetName").asText();
-        float amountToBeBorrowed = objectnode.get("amountToBeBorrowed").floatValue();
+    public ResponseEntity<?> borrowFunds(@RequestBody BorrowAmount borrowAmount) {
+        String assetName = borrowAmount.getAssetName();
+        float amountToBeBorrowed = borrowAmount.getAmountToBeBorrowed();
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String userName = auth.getName();
         User user = userservice.findByUserName(userName);
@@ -138,9 +123,9 @@ public class CrossMarginTradingController {
     }
 
     @PutMapping("user/repayBorrowed")
-    public ResponseEntity<?> repayBorrowed(@RequestBody ObjectNode objectnode) {
-        String assetName = objectnode.get("assetName").asText();
-        float amountToBeRepaid = objectnode.get("amountToBeRepaid").floatValue();
+    public ResponseEntity<?> repayBorrowed(@RequestBody RepayAmount repayAmount) {
+        String assetName = repayAmount.getAssetName();
+        float amountToBeRepaid = repayAmount.getAmountToBeRepaid();
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String userName = auth.getName();
         User user = userservice.findByUserName(userName);
@@ -171,32 +156,5 @@ public class CrossMarginTradingController {
         }
         float marginRatio = userservice.getMarginRatio(user);
         return new ResponseEntity<>(user.getUserName() + "'s Margin Ratio is " + marginRatio,HttpStatus.OK);
-
     }
-    /*
-    @Scheduled(fixedRate = 60000)
-    @GetMapping("user/marginCall")
-    private ResponseEntity<?> marginCall() {
-        try {
-            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-            String userName = auth.getName();
-            User user = userservice.findByUserName(userName);
-            float marginRatio = userservice.getMarginRatio(user);
-            if (marginRatio < 1.1) {
-                CrossMarginWalletService.liquidateAssets(user.getUserId());
-                return new ResponseEntity<>(userName + "'s Margin Ratio is " + marginRatio + ". You are assets are now liquidated.", HttpStatus.OK);
-            }
-            if (marginRatio < 1.3) {
-                return new ResponseEntity<>(userName + "'s Margin Ratio is " + marginRatio + ". Add more funds from spot wallet to avoid liquidation of assets", HttpStatus.OK);
-            }
-            return new ResponseEntity<>(userName + "'s Margin Ratio is " + marginRatio, HttpStatus.OK);
-        }
-        catch (Exception e){
-            System.out.println("exception caught");
-            return new ResponseEntity<>(HttpStatus.OK);
-        }
-    }*/
-
-
-
 }
