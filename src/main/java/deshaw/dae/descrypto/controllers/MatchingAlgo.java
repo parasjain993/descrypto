@@ -8,6 +8,7 @@ import deshaw.dae.descrypto.services.OrderServices.OrderService;
 import deshaw.dae.descrypto.services.TradeServices.TradeService;
 import deshaw.dae.descrypto.services.UserService;
 import deshaw.dae.descrypto.services.WalletService;
+import deshaw.dae.descrypto.services.CrossMarginWalletService;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -35,6 +36,7 @@ public class MatchingAlgo  {
     private DashboardService dashboardService;
     @Autowired
     private WalletService walletService;
+    private CrossMarginWalletService marginWalletService;
 
     private DashboardCache TokenCache = DashboardCache.getDashboardCache();
 
@@ -98,7 +100,7 @@ public class MatchingAlgo  {
         trade.setTimestamp(new Timestamp(System.currentTimeMillis()));
         tradeService.createTrade(trade);
 
-        Double amountFilled=s.getAmount()-s.getFilled();
+        double amountFilled=s.getAmount()-s.getFilled();
         s.setFilled(s.getAmount());
         s.setOrderStatus("filled");
         calAverageAndTotal(s);
@@ -116,27 +118,22 @@ public class MatchingAlgo  {
         orderService.updateOrder(s);
         orderService.updateOrder(b);
         TradingPairs p=dashboardService.getTradingPairbyId(s.getOrderPair());
+        String coin1=p.Asset1ID();
+        String coin2=p.Asset2ID();
 
-        //walletService.withdrawFund(s.getUserId(),,amountFilled);
+        if(s.getSide().equals("sell")) {
+            walletService.withdrawFund(s.getUserId(), coin1, (float) amountFilled);
+            walletService.addFund(b.getUserId(), coin2, (float) amountFilled);
+        }
+        else{
+            walletService.withdrawFund(b.getUserId(), coin1, (float) amountFilled);
+            walletService.addFund(s.getUserId(), coin2, (float) amountFilled);
+        }
+
 
     }
 
     boolean if_valid(Order order){
-
-        /*TradingPairs tradingPair=dashboardService.getTradingPairbyId(order.getOrderPair());
-        if(order.getSide().compareTo("sell")==0) {
-            if( walletService.getAssetCoins(order.getUserId(),tradingPair.Asset1ID())>=(order.getAmount()-order.getFilled())){
-                return true;
-            }
-            return false;
-        }
-        else {
-            HashMap<String, Float> assetsOfUser =  walletService.findAssetsForUser(order.getUserId());
-            if(TokenCache.TokenCache.get(tradingPair.Asset2ID() + "usdt").getPrice() * assetsOfUser.get(tradingPair.Asset1ID())>=order.getLimitPrice()) {
-                return true;
-            }
-            return false;
-        }*/
         return true;
     }
 
