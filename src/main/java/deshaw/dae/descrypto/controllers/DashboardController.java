@@ -4,6 +4,7 @@ import deshaw.dae.descrypto.controllers.OrderControllers.OrderController;
 import deshaw.dae.descrypto.services.DashboardService;
 import deshaw.dae.descrypto.services.MyService;
 import deshaw.dae.descrypto.services.UserService;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
@@ -24,6 +25,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
 @EnableScheduling
+@Api(description = "Endpoints for dashboard related tasks",tags = {"Dashboard"})
 @RequestMapping("/dashboard")
 public class DashboardController {
     @Autowired
@@ -34,14 +36,14 @@ public class DashboardController {
     // update after every 2minutes
     @GetMapping("/markets/summary/get")
     @Scheduled(fixedRate = 120000)
-    @ApiOperation(value = "Endpoint for getting current market summary for all supported pairs using external api", tags = { "Market Summary" })
+    @ApiOperation(value = "Market Summary: Endpoint for getting current market summary for all supported pairs using external api")
     public CollectionModel<?> getCoinDetails(){
         return CollectionModel.of(dashboardService.getCoinDetails(),
                 linkTo(methodOn(DashboardController.class).getPairs()).withRel("Get all Pairs"),
                 linkTo(methodOn(DashboardController.class).getAssets()).withRel("returns all assets"));
     }
 
-    @ApiOperation(value = "getting all individual assets from database", tags = {"Assets"})
+    @ApiOperation(value = "Assets: getting all individual assets from database")
     @GetMapping("/assets/get")
     public CollectionModel<?> getAssets(){
         return  CollectionModel.of(dashboardService.getAllAssetsAvail(),
@@ -52,7 +54,7 @@ public class DashboardController {
         );
     }
 
-    @ApiOperation(value = "getting all supported pairs from database", tags = {"Pairs"})
+    @ApiOperation(value = "Pairs: getting all supported pairs from database")
     @GetMapping("/pairs/get")
     public CollectionModel<?> getPairs(){
         return  CollectionModel.of(dashboardService.getAllTradingPairs(),
@@ -63,7 +65,7 @@ public class DashboardController {
     }
 
 
-    @ApiOperation(value = "Get individual asset detail by id", tags = {"Assets"})
+    @ApiOperation(value = "Single Asset: Get individual asset detail by id")
     @GetMapping("/assets/{assetId}")
     public EntityModel<?> getAssetById(@PathVariable("assetId") String assetID){
         return  EntityModel.of(dashboardService.getAssetById(assetID),
@@ -73,7 +75,7 @@ public class DashboardController {
                 );
     }
 
-    @ApiOperation(value = "get details about given pair by its symbol if it exists in market", tags ={"Pairs"})
+    @ApiOperation(value = "Single Pair: get details about given pair by its symbol if it exists in market")
     @GetMapping("pairs/{pairId}")
     public EntityModel<?> getPairById(@PathVariable("pairId") String pairId){
         return EntityModel.of(dashboardService.getTradingPairbyId(pairId),
