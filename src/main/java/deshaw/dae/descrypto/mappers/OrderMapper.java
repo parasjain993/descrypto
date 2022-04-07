@@ -10,12 +10,10 @@ import java.util.List;
 @Mapper
 public interface OrderMapper {
     int placeOrder(Order Order);
-
-//    List<Order> openOrders(int userId);
-
     List<Order> orderHistory(JSONObject data,int userId);
     List<Order> openOrders(String side, String pair);
     void updateOrder(Order order);
-    void cancelOrder(int orderId);
+    int cancelOrder(int orderId);
+    Order getOrder(int orderId);
 
 }
