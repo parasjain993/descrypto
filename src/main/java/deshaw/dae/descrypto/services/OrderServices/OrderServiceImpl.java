@@ -147,16 +147,22 @@ public class OrderServiceImpl implements OrderService{
 
 
     public boolean ValidateWorth(Order order,double total){
-
+        //System.out.println(total);
         String coins[]=order.getOrderPair().split("-");//btc-cad
         int userId=order.getUserId();
         String pair=coins[0]+coins[1];
         try {
             tokens=cache.TokenCache();
             if(tokens.get(pair)!=null){
-            double coin1 = walletservice.getAssetCoins(userId,coins[0]);
-            double coin2 = walletservice.getAssetCoins(userId,coins[1]);
-             // System.out.println(coin1+" "+coin2);
+                double coin1=0.0;
+                double coin2=0.0;
+                try {
+                    coin1 = walletservice.getAssetCoins(userId, coins[0]);
+                    coin2 = walletservice.getAssetCoins(userId, coins[1]);
+                }catch (Exception e){
+
+                }
+          //   System.out.println(coin1+" "+coin2);
             if(order.getSide().equals("buy")){
                 if(total>coin2*tokens.get(pair).getPrice())
                 return false;
@@ -165,8 +171,10 @@ public class OrderServiceImpl implements OrderService{
 
                 if(order.getAmount()>coin1)
                     return false;
-            }}
+            }
             return true;
+            }else
+            return false;
         }catch (Exception e)
         {
             //System.out.println("no vali "+e.getMessage());
@@ -188,7 +196,7 @@ public class OrderServiceImpl implements OrderService{
                  else
                      return true;
              }
-             return true;
+             return false;
         }
         else{
             if(!map.containsKey(coins[0]))
