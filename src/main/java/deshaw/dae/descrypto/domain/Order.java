@@ -9,9 +9,6 @@ import java.time.LocalDateTime;
 public class Order {
 
     private int  orderId;//primary key
-
-
-
     private int userId;//which user has placed
     private String tradingType;//spot or margin
     private String orderPair;//btcusdt

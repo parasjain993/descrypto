@@ -63,5 +63,10 @@
         SET orderStatus = 'cancelled'
         WHERE orders.orderId = #{orderId} AND orderStatus!='filled'
     </update>
+
+    <select id="getOrder" resultMap="OrderResultMap">
+        select * from orders
+        where orderId=#{orderId}
+    </select>
 </mapper>
 

@@ -50,7 +50,7 @@ public class RegisterController {
             obj.put("Status", HttpStatus.OK);
             return
                     EntityModel.of(obj,
-                            linkTo(methodOn(LoginController.class).login(userObject)).withRel("Login")
+                            linkTo(methodOn(LoginController.class).login(null)).withRel("Login")
                     );
         }
 

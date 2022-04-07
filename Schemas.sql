@@ -18,17 +18,18 @@ create table marginwalletdb(
 CREATE table userdb(
     userId int not null identity(1,1),
 	firstName varchar(25) not null,
-	middleName varchar(25) not null,
+	middleName varchar(25) null,
 	lastName varchar(25) not null,
 	userName varchar(25) not null,
-	email varchar(25) not null,
-	password varchar(40) not null,
-	phoneNo varchar(20) not null,
-	pancardNo varchar(20) not null,
-	dob varchar(10) not null,
+	email varchar(50) not null,
+	password varchar(MAX) not null,
+	phoneNo varchar(10) not null,
+	pancardNo varchar(10) not null,
+	dob date not null,
 	nationality varchar(10) not null,
-        marginRatio float null default 999,
-    primary key(userId)
+    marginRatio float null default 999,
+    primary key(userId),
+    CONSTRAINT unique_user_constraint UNIQUE (phoneNo, pancardNo, email)
 );
 
 create table orders(
@@ -106,7 +107,8 @@ create table spotwalletdb(
    userId int not null,
    assetName varchar(50) not null,
    assetCoins int not null,
-   primary key(userId,assetName)
+   primary key(userId,assetName),
+   foreign key(userId) references userdb(userId)
 );
 
 create table trades ( 

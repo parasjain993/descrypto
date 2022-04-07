@@ -140,9 +140,11 @@ public class OrderServiceImpl implements OrderService{
     @Override
     public void updateOrder(Order order) { mapper.updateOrder(order); }
 
-    public void cancelOrder(int orderId) {
-        mapper.cancelOrder(orderId);
+    public int cancelOrder(int orderId) {
+        return mapper.cancelOrder(orderId);
     }
+
+    public Order getOrder(int orderId) { return mapper.getOrder(orderId); }
 
 
 

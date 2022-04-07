@@ -33,7 +33,7 @@ public class OrderController {
 
     @ApiOperation(value = "Endpoint for placing limit orders for spot and margin trading")
     @PostMapping("/place/limit")
-    EntityModel<?> placeLimitOrder(@RequestBody Order newLimitOrder){
+    public EntityModel<?> placeLimitOrder(@RequestBody Order newLimitOrder){
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String userName = auth.getName();
         int userId=userService.findByUserName(userName).getUserId();
@@ -149,7 +149,7 @@ public class OrderController {
 
     @ApiOperation(value = "Endpoint for checking order history using different filters", tags = { "Order History" })
     @PostMapping("/orderHistory")
-    CollectionModel<EntityModel<Order>> showOrderHistory (@RequestBody JSONObject data){
+    public CollectionModel<EntityModel<Order>> showOrderHistory (@RequestBody JSONObject data){
 
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String userName = auth.getName();
@@ -176,8 +176,34 @@ public class OrderController {
 
     @ApiOperation(value = "Endpoint for canceling orders", tags = { "Cancel Order" })
     @PostMapping("/cancel/{orderId}")
-    void cancelOrder(@PathVariable("orderId") int orderId){
-        service.cancelOrder(orderId);
+    EntityModel<?> cancelOrder(@PathVariable("orderId") int orderId){
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String userName = auth.getName();
+        int userId=userService.findByUserName(userName).getUserId();
+        int status=0;
+
+        Order order=service.getOrder(orderId);
+        JSONObject obj=new JSONObject();
+
+        if(order.getUserId()!=userId) {
+            obj.put("Error","Failed to cancel order");
+            return EntityModel.of(obj);
+        }
+        else if(order.getOrderStatus().compareTo("filled")==0) {
+            obj.put("Error","Completed orders cannot be cancelled");
+            return EntityModel.of(obj);
+        }
+        else if(order.getOrderStatus().compareTo("cancelled")==0) {
+            obj.put("Error","Order already cancelled");
+            return EntityModel.of(obj);
+        }
+
+        status=service.cancelOrder(orderId);
+        if(status==1)
+        obj.put("Success","Order cancelled");
+        else obj.put("Error","Failed to cancel order");
+        return EntityModel.of(obj);
+
     }
 
 }
