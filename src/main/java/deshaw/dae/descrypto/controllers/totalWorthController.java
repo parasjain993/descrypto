@@ -50,7 +50,7 @@ public class totalWorthController {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String userName = auth.getName();
         User user = userservice.findByUserName(userName);
-        obj.put("Total_worth", Float.toString(walletservice.totalWorthCalc(user.getUserId())));
+        obj.put("Total worth of the portfolio in usdt", Float.toString(walletservice.totalWorthCalc(user.getUserId())));
         obj.put("Status", HttpStatus.OK);
         return
                 EntityModel.of(obj,
