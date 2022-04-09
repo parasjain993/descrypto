@@ -30,5 +30,8 @@
     <insert id = "addNewWallet">
         INSERT INTO spotwalletdb(userId,assetName, assetCoins) VALUES(#{userId}, #{assetName}, #{amountToBeAdded})
     </insert>
+    <update id="removeAsset">
+        DELETE FROM spotwalletdb WHERE userId = #{userId} AND assetName = #{assetName}
+    </update>
 </mapper>
 

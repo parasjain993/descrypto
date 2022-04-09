@@ -73,4 +73,9 @@ public class WalletServiceImpl implements WalletService{
             float totalWorth  = totalWorthCalc(user.getUserId());
         }
     }
+
+    @Override
+    public void removeAsset(int userId, String assetName) {
+        walletmapper.removeAsset(userId, assetName);
+    }
 }
