@@ -1,6 +1,7 @@
 package deshaw.dae.descrypto.services;
 
 import deshaw.dae.descrypto.cache.DashboardCache;
+import deshaw.dae.descrypto.domain.FundsInfo;
 import deshaw.dae.descrypto.domain.User;
 import deshaw.dae.descrypto.domain.Wallet;
 import deshaw.dae.descrypto.mappers.UserMapper;
@@ -77,5 +78,10 @@ public class WalletServiceImpl implements WalletService{
     @Override
     public void removeAsset(int userId, String assetName) {
         walletmapper.removeAsset(userId, assetName);
+    }
+
+    @Override
+    public List<FundsInfo> fundsInfo(int userId) {
+        return walletmapper.fundsInfo(userId);
     }
 }

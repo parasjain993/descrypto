@@ -8,6 +8,10 @@
         <result column="assetName" property="assetName"/>
         <result column="assetCoins" property="assetCoins"/>
     </resultMap>
+    <resultMap id="FundsInfoMapper" type="deshaw.dae.descrypto.domain.FundsInfo">
+        <result column="assetName" property="assetName"/>
+        <result column="assetCoins" property="assetCoins"/>
+    </resultMap>
     <select id="findAssetsForUser" resultMap="WalletResultMapper">
         select assetName, assetCoins from spotwalletdb where userId = #{userId}
     </select>
@@ -33,5 +37,8 @@
     <update id="removeAsset">
         DELETE FROM spotwalletdb WHERE userId = #{userId} AND assetName = #{assetName}
     </update>
+    <select id="fundsInfo" resultMap="FundsInfoMapper">
+        SELECT assetName, assetCoins FROM spotwalletdb WHERE userId = #{userId}
+    </select>
 </mapper>
 

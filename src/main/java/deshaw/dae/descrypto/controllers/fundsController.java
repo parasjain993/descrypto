@@ -9,6 +9,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import org.apache.ibatis.javassist.compiler.ast.Pair;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.EntityModel;
@@ -20,7 +21,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import java.security.Principal;
 
+import java.util.HashMap;
 import java.util.List;
+
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
@@ -59,6 +62,15 @@ public class fundsController {
                 linkTo(methodOn(totalWorthController.class).totalWorth()).withRel("TotalWorth")
                 );
     }
+    @ApiOperation(value = "Information about Spot wallet funds")
+    @RequestMapping(value = "/spotwallet-funds", method = RequestMethod.GET)
+        public List<FundsInfo> spotWalletFunds() {
+            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+            String userName = auth.getName();
+            User user = userservice.findByUserName(userName);
+            List<FundsInfo> l = walletservice.fundsInfo(user.getUserId());
+            return l;
+        }
 
     @ApiOperation(value = "Withdrawal funds from the spot wallet")
     @RequestMapping(value = "/withdrawFunds", method= RequestMethod.PUT)
