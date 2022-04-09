@@ -1,8 +1,10 @@
 package deshaw.dae.descrypto.services;
 
+import deshaw.dae.descrypto.domain.FundsInfo;
 import deshaw.dae.descrypto.domain.Wallet;
 
 import java.util.HashMap;
+import java.util.List;
 
 public interface WalletService {
 
@@ -24,4 +26,6 @@ public interface WalletService {
     void updateTotalWorth();
 
     void removeAsset(int userId, String assetName);
+
+   List<FundsInfo> fundsInfo(int userId);
 }

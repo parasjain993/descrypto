@@ -1,7 +1,9 @@
 package deshaw.dae.descrypto.mappers;
 
+import deshaw.dae.descrypto.domain.FundsInfo;
 import deshaw.dae.descrypto.domain.Wallet;
 
+import java.util.HashMap;
 import java.util.List;
 
 public interface WalletMapper {
@@ -15,4 +17,6 @@ public interface WalletMapper {
     void addNewWallet(int userId, String assetName, float amountToBeAdded);
 
     void removeAsset(int userId, String assetName);
+
+    List<FundsInfo> fundsInfo(int userId);
 }
