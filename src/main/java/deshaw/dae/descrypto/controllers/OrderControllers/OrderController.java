@@ -44,10 +44,10 @@ public class OrderController {
             //System.out.println(instant);
             newLimitOrder.setTimestamp(instant);
             JSONObject obj1=new JSONObject();
-            obj1.put("orderPair",null); obj1.put("timestamp1",null); obj1.put("timestamp2",null);
+            obj1.put("orderPair",null); obj1.put("startTime",null); obj1.put("endTime",null);
             obj1.put("orderId",newLimitOrder.getOrderId());
             JSONObject obj2=new JSONObject();
-            obj2.put("orderPair",null); obj2.put("timestamp1",null); obj2.put("timestamp2",null);
+            obj2.put("orderPair",null); obj2.put("startTime",null); obj2.put("endTime",null);
             obj2.put("orderId",newLimitOrder.getOrderId());
             obj2.put("orderStatus","open");
             return EntityModel.of(newLimitOrder,
