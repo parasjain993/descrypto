@@ -153,18 +153,25 @@ public class OrderServiceImpl implements OrderService{
         String coins[]=order.getOrderPair().split("-");//btc-cad
         int userId=order.getUserId();
         String pair=coins[0]+coins[1];
+       // System.out.println(pair);
+         //System.out.println(coins[0]+" "+coins[1]);
         try {
             tokens=cache.TokenCache();
             if(tokens.get(pair)!=null){
                 double coin1=0.0;
                 double coin2=0.0;
                 try {
-                    coin1 = walletservice.getAssetCoins(userId, coins[0]);
-                    coin2 = walletservice.getAssetCoins(userId, coins[1]);
+                    if(order.getSide().equals("sell")) {
+                        coin1 = walletservice.getAssetCoins(userId, coins[0]);
+                        coin2 = walletservice.getAssetCoins(userId, coins[1]);
+                    }else {
+                        coin2 = walletservice.getAssetCoins(userId, coins[1]);
+                        coin1 = walletservice.getAssetCoins(userId, coins[0]);
+                    }
                 }catch (Exception e){
 
                 }
-          //   System.out.println(coin1+" "+coin2);
+           //System.out.println(coin1+" "+coin2+" "+userId);
             if(order.getSide().equals("buy")){
                 if(total>coin2*tokens.get(pair).getPrice())
                 return false;
