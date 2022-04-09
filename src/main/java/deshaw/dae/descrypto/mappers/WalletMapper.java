@@ -13,4 +13,6 @@ public interface WalletMapper {
     Wallet findWallet(int userId, String assetName);
 
     void addNewWallet(int userId, String assetName, float amountToBeAdded);
+
+    void removeAsset(int userId, String assetName);
 }

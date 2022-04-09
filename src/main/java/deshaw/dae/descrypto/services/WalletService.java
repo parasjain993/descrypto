@@ -22,4 +22,6 @@ public interface WalletService {
     void addNewWallet(int userId, String assetName, float amountToBeAdded);
 
     void updateTotalWorth();
+
+    void removeAsset(int userId, String assetName);
 }

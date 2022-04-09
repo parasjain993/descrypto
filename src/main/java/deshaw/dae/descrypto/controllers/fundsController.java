@@ -92,6 +92,10 @@ public class fundsController {
 
             } else {
                 walletservice.withdrawFund(user.getUserId(), assetName, amountToBeDeducted);
+                float amt = walletservice.getAssetCoins(user.getUserId(), assetName);
+                if(amt == 0) {
+                    walletservice.removeAsset(user.getUserId(), assetName);
+                }
                 String message = Float.toString(amountToBeDeducted) + " has been deducted from the spot wallet of " + userName + " for asset : " + assetName;
                 obj.put("success_message", message);
                 obj.put("Status", HttpStatus.OK);
