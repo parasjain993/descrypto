@@ -158,6 +158,8 @@ public class MatchingAlgo  {
         if(order.getFilled()==0) order.setOrderStatus("cancelled");
         else order.setOrderStatus("filled");
 
+        orderService.updateOrder(order);
+
         if(if_buy){
             Collections.reverse(orders);
         }
@@ -182,7 +184,7 @@ public class MatchingAlgo  {
 
         p=0;
         for(int l = 0; l < sell.size(); l++) {
-            if(sell.get(l).getOrderType().compareTo("market")==0) {
+            if(sell.get(l).getOrderType().compareTo("market")==0 ) {
                 p=matchMarket(sell.get(l),buy,p,false);
             }
             if(p>=buy.size()) break;

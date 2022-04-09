@@ -49,7 +49,7 @@
 
     <select id="openOrders" resultMap="OrderResultMap">
         select * from orders
-        where (orderStatus='open' OR orderStatus='partially_filled' ) AND side=#{side}
+        where (orderStatus='open' OR orderStatus='partially_filled' ) AND side=#{side} AND orderPair=#{pair}
     </select>
 
     <update id="updateOrder" parameterType="deshaw.dae.descrypto.domain.Order">
