@@ -29,6 +29,9 @@ public class OrderServiceImpl implements OrderService{
     public String placeLimitOrder(Order newLimitOrder){
         if(newLimitOrder.getLimitPrice()==0.0)
             return "Specify limit price";
+        if(newLimitOrder.getTradingType()==null){
+            newLimitOrder.setTradingType("spot");
+        }
        String coins[]=newLimitOrder.getOrderPair().split("-");
         String pair=coins[0]+coins[1];
         newLimitOrder.setFilled(0.0);
@@ -53,6 +56,8 @@ public class OrderServiceImpl implements OrderService{
     }
     public String placeMarketOrder(Order newMarketOrder){
         String coins[]=newMarketOrder.getOrderPair().split("-");
+        if(newMarketOrder.getTradingType()==null)
+            newMarketOrder.setTradingType("spot");
         String pair=coins[0]+coins[1];
         newMarketOrder.setAverage(0.0);
         newMarketOrder.setFilled(0.0);
@@ -81,6 +86,8 @@ public class OrderServiceImpl implements OrderService{
         if(newSLMarketOrder.getTriggerPrice()==0.0){
             return "Specify trigger price";
         }
+        if(newSLMarketOrder.getTradingType()==null)
+            newSLMarketOrder.setTradingType("spot");
         String coins[]=newSLMarketOrder.getOrderPair().split("-");
         String pair=coins[0]+coins[1];
             newSLMarketOrder.setAverage(tokens.get(pair).getPrice());
@@ -106,6 +113,8 @@ public class OrderServiceImpl implements OrderService{
         if(newSLLimitOrder.getTriggerPrice()==0.0||newSLLimitOrder.getLimitPrice()==0.0){
             return "Specify trigger price and limit price";
         }
+        if(newSLLimitOrder.getTradingType()==null)
+            newSLLimitOrder.setTradingType("spot");
         String coins[]=newSLLimitOrder.getOrderPair().split("-");
         String pair=coins[0]+coins[1];
         newSLLimitOrder.setAverage(0.0);
@@ -149,22 +158,27 @@ public class OrderServiceImpl implements OrderService{
 
 
     public boolean ValidateWorth(Order order,double total){
-        //System.out.println(total);
         String coins[]=order.getOrderPair().split("-");//btc-cad
         int userId=order.getUserId();
         String pair=coins[0]+coins[1];
+
         try {
             tokens=cache.TokenCache();
             if(tokens.get(pair)!=null){
                 double coin1=0.0;
                 double coin2=0.0;
                 try {
-                    coin1 = walletservice.getAssetCoins(userId, coins[0]);
-                    coin2 = walletservice.getAssetCoins(userId, coins[1]);
+                    if(order.getSide().equals("sell")) {
+                        coin1 = walletservice.getAssetCoins(userId, coins[0]);
+                        coin2 = walletservice.getAssetCoins(userId, coins[1]);
+                    }else {
+                        coin2 = walletservice.getAssetCoins(userId, coins[1]);
+                        coin1 = walletservice.getAssetCoins(userId, coins[0]);
+                    }
                 }catch (Exception e){
 
                 }
-          //   System.out.println(coin1+" "+coin2);
+
             if(order.getSide().equals("buy")){
                 if(total>coin2*tokens.get(pair).getPrice())
                 return false;
@@ -179,7 +193,6 @@ public class OrderServiceImpl implements OrderService{
             return false;
         }catch (Exception e)
         {
-            //System.out.println("no vali "+e.getMessage());
             return false;
         }
     }
