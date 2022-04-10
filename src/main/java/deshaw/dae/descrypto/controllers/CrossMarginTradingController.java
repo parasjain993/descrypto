@@ -6,7 +6,9 @@ import deshaw.dae.descrypto.domain.*;
 import deshaw.dae.descrypto.services.UserService;
 import deshaw.dae.descrypto.services.WalletService;
 import deshaw.dae.descrypto.services.CrossMarginWalletService;
+import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.EntityModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -31,27 +33,34 @@ public class CrossMarginTradingController {
     private DashboardCache TokenCache = DashboardCache.getDashboardCache();
 
     @PutMapping ("user/transferFundstoMargin")
-    public ResponseEntity<?> transferFundtoMargin(@RequestBody TransferFunds transferSpotFund) {
+    public Object transferFundtoMargin(@RequestBody TransferFunds transferSpotFund) {
         String assetName = transferSpotFund.getAssetName();
         float amountToBeTransferred = transferSpotFund.getAmountToBeTransferred();
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String userName = auth.getName();
         User user = userservice.findByUserName(userName);
         Wallet spotWallet = walletservice.findWallet(user.getUserId(), assetName);
-
+        JSONObject obj = new JSONObject();
+        String message;
         if(spotWallet == null) {
-           return new ResponseEntity<>("Spot wallet for " + userName + " for asset " + assetName + " does not exist!",HttpStatus.OK);
+            message = "Spot wallet for " + userName + " for asset " + assetName + " does not exist!";
+            obj.put("failure-meesage",message);
+           return obj;
         }
         CrossMarginWallet marginWallet = CrossMarginWalletService.findMarginWallet(user.getUserId(), assetName);
         if(marginWallet==null){
             CrossMarginWalletService.addNewMarginWallet(user.getUserId(), assetName, 0);
         }
         if(walletservice.getAssetCoins(user.getUserId(), assetName)< amountToBeTransferred){
-            return new ResponseEntity<>("Spot wallet has amount " + spotWallet.getAssetCoins() + " for asset " + assetName + ". Not enough amout to be transferred",HttpStatus.OK);
+            message = "Spot wallet has amount " + spotWallet.getAssetCoins() + " for asset " + assetName + ". Not enough amout to be transferred";
+            obj.put("failure-meesage",message);
+            return obj;
         }
         else{
             CrossMarginWalletService.transferFundtoMargin(user.getUserId(), assetName, amountToBeTransferred);
-            return new ResponseEntity<>(amountToBeTransferred +" coins for " + assetName + " have been transferred successfully to " + userName + "'s margin wallet!",HttpStatus.OK);
+            message = amountToBeTransferred +" coins for " + assetName + " have been transferred successfully to " + userName + "'s margin wallet!";
+            obj.put("success-meesage",message);
+            return obj;
         }
     }
 
