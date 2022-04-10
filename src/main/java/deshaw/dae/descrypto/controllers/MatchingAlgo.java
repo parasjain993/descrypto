@@ -47,7 +47,7 @@ public class MatchingAlgo  {
             Order o1 = (Order) a;
             Order o2 = (Order) b;
 
-            if(o1.getLimitPrice()==o2.getLimitPrice()) return o1.getTimestamp().compareTo(o2.getTimestamp());
+            if(o1.getLimitPrice()==o2.getLimitPrice()) return o2.getTimestamp().compareTo(o1.getTimestamp());
 
             return Double.compare(o1.getLimitPrice(),o2.getLimitPrice());
         }
@@ -56,7 +56,7 @@ public class MatchingAlgo  {
     void calAverageAndTotal(Order order){
 
         JSONObject data=new JSONObject();
-        data.put("orderPair",null); data.put("timestamp1",null); data.put("timestamp2",null);
+        data.put("orderPair",null); data.put("endTime",null); data.put("startTime",null);
         data.put("orderId",order.getOrderId());
         List<Trade> trades=new ArrayList<Trade>();
         trades=tradeService.tradeHistory(data,order.getUserId());
@@ -158,6 +158,8 @@ public class MatchingAlgo  {
         if(order.getFilled()==0) order.setOrderStatus("cancelled");
         else order.setOrderStatus("filled");
 
+        orderService.updateOrder(order);
+
         if(if_buy){
             Collections.reverse(orders);
         }
@@ -182,7 +184,7 @@ public class MatchingAlgo  {
 
         p=0;
         for(int l = 0; l < sell.size(); l++) {
-            if(sell.get(l).getOrderType().compareTo("market")==0) {
+            if(sell.get(l).getOrderType().compareTo("market")==0 ) {
                 p=matchMarket(sell.get(l),buy,p,false);
             }
             if(p>=buy.size()) break;
@@ -213,7 +215,6 @@ public class MatchingAlgo  {
 
             Collections.sort(buy, cmp);
             Collections.sort(sell, cmp);
-            //System.out.println(buy+" "+sell);
 
             Integer j = sell.size() - 1;
             Integer i = buy.size() - 1;

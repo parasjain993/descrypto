@@ -26,8 +26,8 @@
         <if test="data.orderPair != null">
             AND orders.orderPair=#{data.orderPair}
         </if>
-        <if test="data.timestamp1 !=null and data.timestamp2 !=null ">
-            AND trades.timestamp BETWEEN #{data.timestamp1} and #{data.timestamp2}
+        <if test="data.startTime !=null and data.endTime !=null ">
+            AND trades.timestamp BETWEEN #{data.startTime} and #{data.endTime}
         </if>
     </select>
 

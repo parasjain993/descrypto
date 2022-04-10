@@ -77,7 +77,12 @@ public class CrossMarginWalletServiceImpl implements CrossMarginWalletService{
         HashMap<String, Float> borrowedAssetsOfUser =  findBorrowedAssetsForUser(userId);
         float total_interest = 0;
         for (String assets : borrowedAssetsOfUser.keySet()) {
-            total_interest = (float) (total_interest + TokenCache.TokenCache.get(assets + "usdt").getPrice() *findBorrowWallet(userId, assets).getInterest());
+            if(assets.equals("usdt")){
+                total_interest = (total_interest+ findBorrowWallet(userId, assets).getInterest());
+            }
+            else {
+                total_interest = (float) (total_interest + TokenCache.TokenCache.get(assets + "usdt").getPrice() *findBorrowWallet(userId, assets).getInterest());
+            }
         }
         return total_interest;
     }
@@ -91,7 +96,9 @@ public class CrossMarginWalletServiceImpl implements CrossMarginWalletService{
             if(assets.equals("usdt")){
                 total_worth = (total_worth+ borrowedAssetsOfUser.get(assets));
             }
-            else total_worth = (float) (total_worth + TokenCache.TokenCache.get(assets + "usdt").getPrice() * borrowedAssetsOfUser.get(assets));
+            else {
+                total_worth = (float) (total_worth + TokenCache.TokenCache.get(assets + "usdt").getPrice()*borrowedAssetsOfUser.get(assets));
+            }
 
         }
         return total_worth;
@@ -167,26 +174,27 @@ public class CrossMarginWalletServiceImpl implements CrossMarginWalletService{
 
     }
 
-    @Scheduled(fixedRate = 600000)
+    @Scheduled(fixedRate = 60000)
     private void updateMR() {
         List<User> users = usermapper.getAllUsers();
         for (User user: users) {
-            try{
-                float borrowedAssets =borrowedWalletValue(user.getUserId());
+            try {
+                float borrowedAssets = borrowedWalletValue(user.getUserId());
                 float totalAssets = totalCrossWalletValue(user.getUserId());
-                float interest= interest(user.getUserId());
+                float interest = interest(user.getUserId());
                 float marginRatio = 999;
-                if(borrowedAssets +interest!=0){
-                    marginRatio = totalAssets/(borrowedAssets+interest);
+                if (borrowedAssets + interest != 0) {
+                    marginRatio = totalAssets / (borrowedAssets + interest);
+                    usermapper.updateMarginRatio(user.getUserId(), marginRatio);
                 }
-                if(marginRatio<1.1){
+                if (marginRatio < 1.1) {
                     liquidateAssets(user.getUserId());
                     System.out.println("Assets liquidated");
+                    usermapper.updateMarginRatio(user.getUserId(), 999);
                 }
-                usermapper.updateMarginRatio(user.getUserId(),marginRatio);
             }
-            catch(Exception nullpt){
-                System.out.println("Token not Initialised");
+            catch(Exception e){
+                System.out.println("Token not initialised");
             }
         }
     }
