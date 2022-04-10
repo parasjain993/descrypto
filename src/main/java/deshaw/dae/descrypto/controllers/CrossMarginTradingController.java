@@ -135,7 +135,10 @@ public class CrossMarginTradingController {
         }
         float borrowWalletValue= CrossMarginWalletService.borrowedWalletValue(user.getUserId());
         if(2*marginWalletValue< amountInUSDT + borrowWalletValue){
-            float valueInAsset= (2*marginWalletValue- borrowWalletValue)/((float) TokenCache.TokenCache.get(assetName + "usdt").getPrice());
+
+
+            float valueInAsset= 2*marginWalletValue- borrowWalletValue;
+            if(!assetName.equals("usdt")) valueInAsset= (2*marginWalletValue- borrowWalletValue)/((float) TokenCache.TokenCache.get(assetName + "usdt").getPrice());
             obj.put("status","failed");
             obj.put("message","Margin wallet for " + userName + " values "+ marginWalletValue+ " usdt and "+ borrowWalletValue +" usdt already borrowed. Can't borrow the asked amount at 3x! Maximum "+ valueInAsset +assetName+" can be borrowed");
             return EntityModel.of(obj,linkTo(methodOn(CrossMarginTradingController.class).repayBorrowed(null)).withRel("repay borrowed"));
