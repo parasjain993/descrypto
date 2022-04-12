@@ -54,7 +54,8 @@ public class OrderController {
                     linkTo(methodOn(OrderController.class).showOrderHistory(obj1)).withRel("Order History"),
                     linkTo(methodOn(OrderController.class).showOrderHistory(obj2)).
                             withRel("Open Orders"),
-                    linkTo(methodOn(OrderController.class).placeMarketOrder(null)).withRel("Market Order"));
+                    linkTo(methodOn(OrderController.class).placeMarketOrder(null)).withRel("Market Order"),
+                    linkTo(methodOn(OrderController.class).placeStopLossLimitOrder(null)).withRel("stop-loss limit"));
         }
         else {
             JSONObject obj=new JSONObject();
@@ -68,7 +69,7 @@ public class OrderController {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String userName = auth.getName();
         int userId=userService.findByUserName(userName).getUserId();
-        //System.out.println(userId);
+
         newMarketOrder.setUserId(userId);
         String status=service.placeMarketOrder(newMarketOrder);
         if(status.equals("ok")) {
@@ -80,7 +81,8 @@ public class OrderController {
             return EntityModel.of(newMarketOrder,
                     linkTo(methodOn(OrderController.class).showOrderHistory(obj1)).withRel("Order History"),
                     linkTo(methodOn(OrderController.class).showOrderHistory(obj2)).
-                            withRel("Open Orders"),linkTo(methodOn(OrderController.class).placeLimitOrder(null)).withRel("Limit Order"));
+                            withRel("Open Orders"),linkTo(methodOn(OrderController.class).placeLimitOrder(null)).withRel("Limit Order"),
+                    linkTo(methodOn(OrderController.class).placeStopLossMarketOrder(null)).withRel("stop-loss market"));
         }
         else {
             JSONObject obj=new JSONObject();

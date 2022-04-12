@@ -18,6 +18,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+
 @EnableScheduling
 @RestController
 @RequestMapping("/")
@@ -33,34 +36,39 @@ public class CrossMarginTradingController {
     private DashboardCache TokenCache = DashboardCache.getDashboardCache();
 
     @PutMapping ("user/transferFundstoMargin")
-    public Object transferFundtoMargin(@RequestBody TransferFunds transferSpotFund) {
+    public EntityModel<?> transferFundtoMargin(@RequestBody TransferFunds transferSpotFund) {
         String assetName = transferSpotFund.getAssetName();
         float amountToBeTransferred = transferSpotFund.getAmountToBeTransferred();
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String userName = auth.getName();
         User user = userservice.findByUserName(userName);
         Wallet spotWallet = walletservice.findWallet(user.getUserId(), assetName);
-        JSONObject obj = new JSONObject();
-        String message;
+        JSONObject obj=new JSONObject();
         if(spotWallet == null) {
-            message = "Spot wallet for " + userName + " for asset " + assetName + " does not exist!";
-            obj.put("failure-meesage",message);
-           return obj;
+            obj.put("status","failed");
+            obj.put("message","Spot wallet for  " + userName + " for asset " + assetName + " does not exist!");
+            return EntityModel.of(obj,linkTo(methodOn(CrossMarginTradingController.class).borrowFunds(null)).withRel("borrow funs"),
+                    linkTo(methodOn(CrossMarginTradingController.class).repayBorrowed(null)).withRel("repay borrowed"));
+
         }
         CrossMarginWallet marginWallet = CrossMarginWalletService.findMarginWallet(user.getUserId(), assetName);
         if(marginWallet==null){
             CrossMarginWalletService.addNewMarginWallet(user.getUserId(), assetName, 0);
         }
         if(walletservice.getAssetCoins(user.getUserId(), assetName)< amountToBeTransferred){
-            message = "Spot wallet has amount " + spotWallet.getAssetCoins() + " for asset " + assetName + ". Not enough amout to be transferred";
-            obj.put("failure-meesage",message);
-            return obj;
+            obj.put("status","failed");
+            obj.put("message","Spot wallet has amount " + spotWallet.getAssetCoins() + " for asset " + assetName + ". Not enough amout to be transferred");
+            return EntityModel.of(obj,linkTo(methodOn(CrossMarginTradingController.class).borrowFunds(null)).withRel("borrow funs"),
+                    linkTo(methodOn(CrossMarginTradingController.class).repayBorrowed(null)).withRel("repay borrowed"));
+
         }
         else{
             CrossMarginWalletService.transferFundtoMargin(user.getUserId(), assetName, amountToBeTransferred);
-            message = amountToBeTransferred +" coins for " + assetName + " have been transferred successfully to " + userName + "'s margin wallet!";
-            obj.put("success-meesage",message);
-            return obj;
+            obj.put("status","success");
+            obj.put("message",amountToBeTransferred +" coins for " + assetName + " have been transferred successfully to " + userName + "'s margin wallet!");
+            return EntityModel.of(obj,linkTo(methodOn(CrossMarginTradingController.class).borrowFunds(null)).withRel("borrow funs"),
+                    linkTo(methodOn(CrossMarginTradingController.class).repayBorrowed(null)).withRel("repay borrowed"));
+
         }
     }
 
@@ -75,7 +83,7 @@ public class CrossMarginTradingController {
         float marginRatio=userservice.getMarginRatio(user);
         CrossMarginWallet marginWallet = CrossMarginWalletService.findMarginWallet(user.getUserId(), assetName);
         if(marginWallet == null) {
-           return new ResponseEntity<>("Margin wallet for " + userName + " for asset " + assetName + " does not exist!",HttpStatus.OK);
+            return new ResponseEntity<>("Margin wallet for " + userName + " for asset " + assetName + " does not exist!",HttpStatus.OK);
         }
         if(marginRatio<=2){
             return new ResponseEntity<>("Margin ratio is " + marginRatio + " which is <=2 no asset can be transferred to spot wallet! " ,HttpStatus.OK);
@@ -92,7 +100,7 @@ public class CrossMarginTradingController {
     }
 
     @PutMapping("user/borrowAssets")
-    public ResponseEntity<?> borrowFunds(@RequestBody BorrowAmount borrowAmount) {
+    public EntityModel<?> borrowFunds(@RequestBody BorrowAmount borrowAmount) {
         String assetName = borrowAmount.getAssetName();
         float amountToBeBorrowed = borrowAmount.getAmountToBeBorrowed();
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -107,12 +115,18 @@ public class CrossMarginTradingController {
         float marginRatio=userservice.getMarginRatio(user);
         HashMap<String, Float> marginWallet = CrossMarginWalletService.findMarginAssetsForUser(user.getUserId());
         HashMap<String, Float> borrowWallet = CrossMarginWalletService.findBorrowedAssetsForUser(user.getUserId());
-
+        JSONObject obj =new JSONObject();
         if(marginWallet.isEmpty()) {
-            return new ResponseEntity<>("Margin wallet for " + userName + " does not exist!",HttpStatus.OK);
+            obj.put("status","failed");
+            obj.put("message","Margin wallet for " + userName + " does not exist!");
+            return EntityModel.of(obj,linkTo(methodOn(CrossMarginTradingController.class).repayBorrowed(null)).withRel("repay borrowed"));
+
         }
         if(marginRatio<=1.5){
-            return new ResponseEntity<>("Margin ratio for " + userName + " is "+marginRatio + " which is <=1.5! Can not borrow more assets",HttpStatus.OK);
+            obj.put("status","failed");
+            obj.put("message","Margin ratio for " + userName + " is "+marginRatio + " which is <=1.5! Can not borrow more assets");
+            return EntityModel.of(obj,linkTo(methodOn(CrossMarginTradingController.class).repayBorrowed(null)).withRel("repay borrowed"));
+
         }
         float marginWalletValue= CrossMarginWalletService.marginWalletValue(user.getUserId());
 
@@ -121,50 +135,78 @@ public class CrossMarginTradingController {
         }
         float borrowWalletValue= CrossMarginWalletService.borrowedWalletValue(user.getUserId());
         if(2*marginWalletValue< amountInUSDT + borrowWalletValue){
+
+
             float valueInAsset= 2*marginWalletValue- borrowWalletValue;
             if(!assetName.equals("usdt")) valueInAsset= (2*marginWalletValue- borrowWalletValue)/((float) TokenCache.TokenCache.get(assetName + "usdt").getPrice());
-            return new ResponseEntity<>("Margin wallet for " + userName + " values "+ marginWalletValue+ " usdt and "+ borrowWalletValue +" usdt already borrowed. Can't borrow the asked amount at 3x! Maximum "+ valueInAsset +assetName+" can be borrowed",HttpStatus.OK);
+            obj.put("status","failed");
+            obj.put("message","Margin wallet for " + userName + " values "+ marginWalletValue+ " usdt and "+ borrowWalletValue +" usdt already borrowed. Can't borrow the asked amount at 3x! Maximum "+ valueInAsset +assetName+" can be borrowed");
+            return EntityModel.of(obj,linkTo(methodOn(CrossMarginTradingController.class).repayBorrowed(null)).withRel("repay borrowed"));
+
+
         }
         else {
             CrossMarginWalletService.borrowFund(user.getUserId(), assetName, amountToBeBorrowed);
-            return new ResponseEntity<>(amountToBeBorrowed +" coins for " + assetName + " have been borrowed successfully! " ,HttpStatus.OK);
+            obj.put("status","success");
+            obj.put("message",amountToBeBorrowed +" coins for " + assetName + " have been borrowed successfully! ");
+            return EntityModel.of(obj,linkTo(methodOn(CrossMarginTradingController.class).repayBorrowed(null)).withRel("repay borrowed"));
+
+
+
         }
 
     }
 
     @PutMapping("user/repayBorrowed")
-    public ResponseEntity<?> repayBorrowed(@RequestBody RepayAmount repayAmount) {
+    public EntityModel<?> repayBorrowed(@RequestBody RepayAmount repayAmount) {
         String assetName = repayAmount.getAssetName();
         float amountToBeRepaid = repayAmount.getAmountToBeRepaid();
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String userName = auth.getName();
         User user = userservice.findByUserName(userName);
         BorrowWallet borrowWallet = CrossMarginWalletService.findBorrowWallet(user.getUserId(), assetName);
+        JSONObject obj =new JSONObject();
         if(borrowWallet == null) {
-            return new ResponseEntity<>("Cannot repay as no borrowed wallet exists for " + assetName + " for " + userName,HttpStatus.OK);
+            obj.put("status","failed");
+            obj.put("message","Cannot repay as no borrowed wallet exists for " + assetName + " for " + userName);
+            return EntityModel.of(obj,linkTo(methodOn(CrossMarginTradingController.class).getMarginRatio()).withRel("margin ratio"));
+
         }
         else {
             float borrowWalletValue= CrossMarginWalletService.borrowedWalletValue(user.getUserId());
             if(amountToBeRepaid> borrowWallet.getAssetCoins() + borrowWallet.getInterest()){
-                return new ResponseEntity<>(amountToBeRepaid +" " + assetName + " cannot be repaid as no repayment amount exceeds borrowed value "+ borrowWallet.getAssetCoins() + " for " +assetName,HttpStatus.OK);
+                obj.put("status","failed");
+                obj.put("message",amountToBeRepaid +" " + assetName + " cannot be repaid as no repayment amount exceeds borrowed value "+ borrowWallet.getAssetCoins() + " for " +assetName);
+                return EntityModel.of(obj,linkTo(methodOn(CrossMarginTradingController.class).getMarginRatio()).withRel("margin ratio"));
+
             }
             CrossMarginWalletService.repayFund(user.getUserId(), assetName, 0, amountToBeRepaid);
         }
-        return new ResponseEntity<>(amountToBeRepaid +" " + assetName + " have been returned successfully! " ,HttpStatus.OK);
+        obj.put("status","success");
+        obj.put("message",amountToBeRepaid +" " + assetName + " have been returned successfully! ");
+        return EntityModel.of(obj,linkTo(methodOn(CrossMarginTradingController.class).getMarginRatio()).withRel("margin ratio"));
+
     }
 
 
     @GetMapping("user/getMarginRatio")
-    public ResponseEntity<?> getMarginRatio() {
-      
+    public EntityModel<?> getMarginRatio() {
+
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String userName = auth.getName();
         User user = userservice.findByUserName(userName);
         HashMap<String, Float> marginWallet = CrossMarginWalletService.findMarginAssetsForUser(user.getUserId());
+        JSONObject obj = new JSONObject();
         if(marginWallet.isEmpty()) {
-            return new ResponseEntity<>("Margin wallet for " + userName + " does not exist!",HttpStatus.OK);
+            obj.put("status","failed");
+            obj.put("message","Margin wallet for " + userName + " does not exist!");
+            return EntityModel.of(obj,linkTo(methodOn(CrossMarginTradingController.class).transferFundtoSpot(null)).withRel("transfer to spot"));
+
         }
         float marginRatio = userservice.getMarginRatio(user);
-        return new ResponseEntity<>(user.getUserName() + "'s Margin Ratio is " + marginRatio,HttpStatus.OK);
+        obj.put("status","success");
+        obj.put("message",user.getUserName() + "'s Margin Ratio is " + marginRatio);
+        return EntityModel.of(obj,linkTo(methodOn(CrossMarginTradingController.class).transferFundtoSpot(null)).withRel("transfer to spot"));
+
     }
 }
